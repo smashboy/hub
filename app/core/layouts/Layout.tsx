@@ -149,7 +149,7 @@ const Layout = ({ title, disableContainer, disableNavigation, children }: MainLa
   return (
     <>
       <Head>
-        <title>{title || "projecthub"}</title>
+        <title>{`${title} | Project Hub` || "Project Hub"}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {!disableNavigation && (

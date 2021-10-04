@@ -66,6 +66,9 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({
                   color: "text.primary",
                 },
               }}
+              secondaryTypographyProps={{
+                component: "div",
+              }}
             />
           </ListItem>
         </Link>
