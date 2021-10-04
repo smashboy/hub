@@ -7,10 +7,11 @@ import getProjects, { GetProjectsInput } from "../queries/getProjects"
 import ProjectListItem from "./ProjectListItem"
 import { animationTimeout } from "app/core/utils/blitz"
 import { useDebounce } from "use-debounce"
+import LoadingAnimation from "app/core/components/LoadingAnimation"
 
 const getProjectsInput =
   (searchQuery?: string) =>
-  (page: GetProjectsInput = { take: 25, skip: 0, searchQuery }) =>
+  (page: GetProjectsInput = { take: 10, skip: 0, searchQuery }) =>
     page
 
 const ProjectsList: React.FC<{ searchQuery: string }> = ({ searchQuery }) => {
@@ -34,15 +35,19 @@ const ProjectsList: React.FC<{ searchQuery: string }> = ({ searchQuery }) => {
         </List>
       )),
       item: VirtualListItem,
-      // Footer: () =>
-      //   isFetchingNextPage ? (
-      //     <Box width="100%" display="flex" justifyContent="center" p={2}>
-      //       <LoadingAnimation />
-      //     </Box>
-      //   ) : null,
+      Footer: () =>
+        isFetchingNextPage ? (
+          <Box width="100%" display="flex" justifyContent="center" p={2}>
+            <LoadingAnimation />
+          </Box>
+        ) : null,
     }),
     []
   )
+
+  const handleFetchNext = () => {
+    if (hasNextPage) fetchNextPage()
+  }
 
   return (
     <Box
@@ -53,13 +58,12 @@ const ProjectsList: React.FC<{ searchQuery: string }> = ({ searchQuery }) => {
       <Virtuoso
         data={projects}
         components={Components}
-        // endReached={() => (hasNextPage ? fetchNextPage() : undefined)}
+        endReached={handleFetchNext}
         style={{ height: "100%" }}
         itemContent={(index, project) => (
           <ProjectListItem
             key={project.slug}
             project={{ ...project, role: project.members[0]?.role ?? null }}
-            animationTimeout={animationTimeout(index)}
           />
         )}
       />

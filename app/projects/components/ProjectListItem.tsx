@@ -19,15 +19,14 @@ type ProjectListItemProps = {
     description: string | null
     role: ProjectMemberRole | null
   }
-  animationTimeout: number
+  // animationTimeout: number
 }
 
 const ProjectListItem: React.FC<ProjectListItemProps> = ({
   project: { name, color, slug, logoUrl, description, role },
-  animationTimeout,
 }) => {
   return (
-    <Fade in timeout={animationTimeout}>
+    <Fade in timeout={500}>
       <ListItem alignItems="flex-start" button divider>
         <ListItemAvatar>
           <Avatar src={logoUrl || ""} alt="name" sx={{ bgcolor: color, width: 45, height: 45 }} />

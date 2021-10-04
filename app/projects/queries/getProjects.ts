@@ -6,7 +6,7 @@ export interface GetProjectsInput extends Pick<Prisma.ProjectFindManyArgs, "skip
 }
 
 export default resolver.pipe(
-  async ({ skip = 0, take = 25, searchQuery }: GetProjectsInput, ctx) => {
+  async ({ skip = 0, take = 10, searchQuery }: GetProjectsInput, ctx) => {
     const authUserId = ctx.session.userId!
 
     let where: Prisma.ProjectWhereInput = {
