@@ -22,6 +22,7 @@ const ProjectsList: React.FC<{ searchQuery: string }> = ({ searchQuery }) => {
     getProjectsInput(debouncedSearchQuery || undefined),
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
+      refetchOnWindowFocus: false,
     }
   )
 
