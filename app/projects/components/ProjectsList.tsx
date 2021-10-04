@@ -1,21 +1,24 @@
 import { forwardRef, useMemo } from "react"
 import { useInfiniteQuery } from "blitz"
 import { Components, Virtuoso } from "react-virtuoso"
-import { Container, List } from "@mui/material"
+import { List, Box } from "@mui/material"
 import VirtualListItem from "app/core/components/VirtualListItem"
 import getProjects, { GetProjectsInput } from "../queries/getProjects"
 import ProjectListItem from "./ProjectListItem"
 import { animationTimeout } from "app/core/utils/blitz"
+import { useDebounce } from "use-debounce"
 
 const getProjectsInput =
-  (userCreated: boolean) =>
-  (page: GetProjectsInput = { take: 25, skip: 0, userCreated }) =>
+  (searchQuery?: string) =>
+  (page: GetProjectsInput = { take: 25, skip: 0, searchQuery }) =>
     page
 
-const ProjectsList: React.FC<{ userCreated: boolean }> = ({ userCreated }) => {
+const ProjectsList: React.FC<{ searchQuery: string }> = ({ searchQuery }) => {
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 1000)
+
   const [projectPages, { isFetchingNextPage, fetchNextPage, hasNextPage }] = useInfiniteQuery(
     getProjects,
-    getProjectsInput(userCreated),
+    getProjectsInput(debouncedSearchQuery || undefined),
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
     }
@@ -42,19 +45,25 @@ const ProjectsList: React.FC<{ userCreated: boolean }> = ({ userCreated }) => {
   )
 
   return (
-    <Virtuoso
-      data={projects}
-      components={Components}
-      // endReached={() => (hasNextPage ? fetchNextPage() : undefined)}
-      style={{ height: "calc(100vh - 435px)" }}
-      itemContent={(index, project) => (
-        <ProjectListItem
-          key={project.slug}
-          project={project}
-          animationTimeout={animationTimeout(index)}
-        />
-      )}
-    />
+    <Box
+      sx={{
+        height: "calc(100vh - 285px)",
+      }}
+    >
+      <Virtuoso
+        data={projects}
+        components={Components}
+        // endReached={() => (hasNextPage ? fetchNextPage() : undefined)}
+        style={{ height: "100%" }}
+        itemContent={(index, project) => (
+          <ProjectListItem
+            key={project.slug}
+            project={{ ...project, role: project.members[0]?.role ?? null }}
+            animationTimeout={animationTimeout(index)}
+          />
+        )}
+      />
+    </Box>
   )
 }
 

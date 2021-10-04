@@ -67,6 +67,7 @@ const NewProjectPage: BlitzPage = () => {
               <LabeledTextField
                 label="Description"
                 name="description"
+                helperText="A short description of your project so that users can understand what it is about."
                 multiline
                 rows={4}
                 maxRows={4}

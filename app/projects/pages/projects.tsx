@@ -1,39 +1,29 @@
 import { useState, Suspense } from "react"
 import { BlitzPage } from "blitz"
-import { Typography, Grid, Fade, Tabs, Tab, Container } from "@mui/material"
+import { Grid, Container } from "@mui/material"
 import Layout from "app/core/layouts/Layout"
 import ProjectsList from "../components/ProjectsList"
 import ProjectsListPlaceholder from "../components/ProjectsListPlaceholder"
+import ProjectsPageHeader from "../components/ProjectsPageHeader"
 import { authConfig } from "app/core/configs/authConfig"
 
 const ProjectsPage: BlitzPage = () => {
-  const [value, setValue] = useState(0)
+  const [searchQuery, setSearchQuery] = useState("")
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => setValue(newValue)
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setSearchQuery(event.currentTarget.value)
 
   return (
-    <Grid container spacing={2} sx={{ marginTop: 3 }}>
-      <Grid item xs={12}>
-        <Fade in timeout={500}>
-          <Typography variant="h4" color="text.primary" align="center">
-            Your Projects
-          </Typography>
-        </Fade>
-      </Grid>
-      <Grid item xs={12}>
-        <Tabs value={value} onChange={handleChange} centered>
-          <Tab label="Following" />
-          <Tab label="Created" />
-        </Tabs>
-      </Grid>
-      <Grid item xs={12}>
-        <Container maxWidth="md">
+    <Container maxWidth="md">
+      <Grid container spacing={2} sx={{ marginTop: 3 }}>
+        <ProjectsPageHeader onSearch={handleChange} />
+        <Grid item xs={12}>
           <Suspense fallback={<ProjectsListPlaceholder />}>
-            <ProjectsList userCreated={!Boolean(value)} />
+            <ProjectsList searchQuery={searchQuery} />
           </Suspense>
-        </Container>
+        </Grid>
       </Grid>
-    </Grid>
+    </Container>
   )
 }
 

@@ -48,6 +48,11 @@ export const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
         variant="outlined"
         disabled={disabled || isSubmitting}
         error={Boolean(error)}
+        sx={{
+          "& .MuiFormHelperText-root": {
+            marginLeft: 0,
+          },
+        }}
         helperText={error?.message || error || helperText || undefined}
         fullWidth
         InputProps={{

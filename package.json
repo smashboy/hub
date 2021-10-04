@@ -44,6 +44,7 @@
     "react-hook-form": "7.17.0",
     "react-virtuoso": "2.2.1",
     "slugify": "1.6.0",
+    "use-debounce": "7.0.0",
     "zod": "3.9.5"
   },
   "devDependencies": {

@@ -2,50 +2,44 @@ import { resolver, paginate } from "blitz"
 import db, { Prisma, ProjectMemberRole } from "db"
 
 export interface GetProjectsInput extends Pick<Prisma.ProjectFindManyArgs, "skip" | "take"> {
-  userCreated: boolean
+  searchQuery?: string
 }
 
 export default resolver.pipe(
-  async ({ userCreated, skip = 0, take = 25 }: GetProjectsInput, ctx) => {
+  async ({ skip = 0, take = 25, searchQuery }: GetProjectsInput, ctx) => {
     const authUserId = ctx.session.userId!
 
-    const where = userCreated
+    let where: Prisma.ProjectWhereInput = {
+      members: {
+        some: {
+          userId: authUserId,
+        },
+      },
+    }
+
+    where = searchQuery
       ? {
-          members: {
-            some: {
-              userId: authUserId,
-              role: ProjectMemberRole.FOLLOWER,
-            },
+          ...where,
+          ...{
+            OR: [
+              {
+                name: {
+                  contains: searchQuery,
+                  mode: "insensitive",
+                },
+              },
+              {
+                description: {
+                  contains: searchQuery,
+                  mode: "insensitive",
+                },
+              },
+            ],
           },
         }
-      : {
-          OR: [
-            {
-              members: {
-                some: {
-                  userId: authUserId,
-                  role: ProjectMemberRole.CREATOR,
-                },
-              },
-            },
-            {
-              members: {
-                some: {
-                  userId: authUserId,
-                  role: ProjectMemberRole.ADMIN,
-                },
-              },
-            },
-            {
-              members: {
-                some: {
-                  userId: authUserId,
-                  role: ProjectMemberRole.MODERATOR,
-                },
-              },
-            },
-          ],
-        }
+      : where
+
+    console.log(where)
 
     const {
       items: projects,
@@ -69,6 +63,14 @@ export default resolver.pipe(
             slug: true,
             logoUrl: true,
             description: true,
+            members: {
+              where: {
+                userId: authUserId,
+              },
+              select: {
+                role: true,
+              },
+            },
           },
         }),
     })

@@ -33,11 +33,9 @@ export const RouteLink: React.FC<
   )
 }
 
-export const ButtonRouteLink: React.FC<{ href: string } & ButtonProps> = ({
-  href,
-  children,
-  ...otherProps
-}) => (
+export const ButtonRouteLink: React.FC<
+  { href: string | RouteUrlObject } & Omit<ButtonProps, "href">
+> = ({ href, children, ...otherProps }) => (
   <BlitzLink href={href} passHref>
     <Button {...otherProps}>{children}</Button>
   </BlitzLink>
