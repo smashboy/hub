@@ -13,7 +13,7 @@ import lightTheme from "app/core/theme/lightTheme"
 import darkTheme from "app/core/theme/darkTheme"
 
 export default function App({ Component, pageProps }: AppProps) {
-  const getLayout = Component.getLayout || ((page) => page)
+  const getLayout = Component.getLayout || ((page, pageProps) => page)
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -23,7 +23,7 @@ export default function App({ Component, pageProps }: AppProps) {
           onReset={useQueryErrorResetBoundary().reset}
         >
           <GlobalStyles styles={{ body: { margin: 0, backgroundColor: "#121212" } }} />
-          {getLayout(<Component {...pageProps} />)}
+          {getLayout(<Component {...pageProps} />, pageProps)}
         </ErrorBoundary>
       </SnackbarProvider>
     </ThemeProvider>

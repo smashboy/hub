@@ -10,7 +10,7 @@ export const LoadingAnimation = () => {
       alignItems="center"
       p={10}
     >
-      <CircularProgress />
+      <CircularProgress color="primary" />
     </Box>
   )
 }

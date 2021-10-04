@@ -40,3 +40,14 @@ export const ButtonRouteLink: React.FC<
     <Button {...otherProps}>{children}</Button>
   </BlitzLink>
 )
+
+export const ButtonWebLink: React.FC<{ href: string } & Omit<ButtonProps, "href">> = ({
+  href,
+  children,
+  ...otherProps
+}) => (
+  // @ts-ignore
+  <Button {...otherProps} href={href} target="_blank" rel="noopener noreferrer" component="a">
+    {children}
+  </Button>
+)

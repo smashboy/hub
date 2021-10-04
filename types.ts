@@ -1,4 +1,4 @@
-import { DefaultCtx, SessionContext, SimpleRolesIsAuthorized } from "blitz"
+import { DefaultCtx, SessionContext, SimpleRolesIsAuthorized, NextPage } from "blitz"
 import { User, UserRole } from "db"
 
 declare module "blitz" {
@@ -11,5 +11,9 @@ declare module "blitz" {
       userId: User["id"]
       role: UserRole
     }
+  }
+
+  export interface BlitzPage<P = {}, IP = P> extends Omit<NextPage<P, IP>, "getLayout"> {
+    getLayout?: (component: JSX.Element, pageProps: P) => JSX.Element
   }
 }

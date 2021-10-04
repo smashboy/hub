@@ -1,3 +1,4 @@
+import { Link, Routes } from "blitz"
 import {
   ListItem,
   ListItemAvatar,
@@ -7,6 +8,7 @@ import {
   Grid,
   Typography,
   Chip,
+  Box,
 } from "@mui/material"
 import { ProjectMemberRole } from "db"
 
@@ -27,34 +29,47 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({
 }) => {
   return (
     <Fade in timeout={500}>
-      <ListItem alignItems="flex-start" button divider>
-        <ListItemAvatar>
-          <Avatar src={logoUrl || ""} alt="name" sx={{ bgcolor: color, width: 45, height: 45 }} />
-        </ListItemAvatar>
-        <ListItemText
-          primary={name}
-          secondary={
-            <Grid container spacing={2}>
-              {description && (
-                <Grid item xs={12}>
-                  <Typography variant="subtitle1">{description}</Typography>
+      <Box>
+        <Link
+          href={Routes.ProjectLandingPage({
+            slug,
+          })}
+          passHref
+        >
+          <ListItem alignItems="flex-start" component="a" button divider>
+            <ListItemAvatar>
+              <Avatar
+                src={logoUrl || ""}
+                alt="name"
+                sx={{ bgcolor: color, width: 45, height: 45 }}
+              />
+            </ListItemAvatar>
+            <ListItemText
+              primary={name}
+              secondary={
+                <Grid container spacing={2}>
+                  {description && (
+                    <Grid item xs={12}>
+                      <Typography variant="subtitle1">{description}</Typography>
+                    </Grid>
+                  )}
+                  {role && (
+                    <Grid item xs={12}>
+                      <Chip label={role.toLowerCase()} size="small" />
+                    </Grid>
+                  )}
                 </Grid>
-              )}
-              {role && (
-                <Grid item xs={12}>
-                  <Chip label={role.toLowerCase()} size="small" />
-                </Grid>
-              )}
-            </Grid>
-          }
-          primaryTypographyProps={{
-            variant: "h6",
-            sx: {
-              color: "text.primary",
-            },
-          }}
-        />
-      </ListItem>
+              }
+              primaryTypographyProps={{
+                variant: "h6",
+                sx: {
+                  color: "text.primary",
+                },
+              }}
+            />
+          </ListItem>
+        </Link>
+      </Box>
     </Fade>
   )
 }

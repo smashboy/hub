@@ -36,7 +36,7 @@ const ProjectsPageHeader: React.FC<{
               onChange={onSearch}
               InputProps={{
                 startAdornment: (
-                  <Box paddingRight={1} paddingLeft={1}>
+                  <Box paddingRight={1} paddingTop={0.5}>
                     <SearchIcon />
                   </Box>
                 ),
