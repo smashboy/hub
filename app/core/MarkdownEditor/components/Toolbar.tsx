@@ -96,19 +96,21 @@ const Toolbar = () => {
           </Grid>
         </Hidden>
       </Grid>
-      <Paper
-        sx={{ position: "fixed", bottom: 0, left: 0, right: 0, overflowX: "auto" }}
-        elevation={3}
-      >
-        <BottomNavigation sx={{ bgcolor: "transparent" }}>
-          {markButtons.map(({ icon, format }) => (
-            <BottomNavigationAction key={format} icon={icon} />
-          ))}
-          {blockButtons.map(({ icon, format }) => (
-            <BottomNavigationAction key={format} icon={icon} />
-          ))}
-        </BottomNavigation>
-      </Paper>
+      <Hidden smUp>
+        <Paper
+          sx={{ position: "fixed", bottom: 0, left: 0, right: 0, overflowX: "auto" }}
+          elevation={3}
+        >
+          <BottomNavigation sx={{ bgcolor: "transparent" }}>
+            {markButtons.map(({ icon, format }) => (
+              <BottomNavigationAction key={format} icon={icon} />
+            ))}
+            {blockButtons.map(({ icon, format }) => (
+              <BottomNavigationAction key={format} icon={icon} />
+            ))}
+          </BottomNavigation>
+        </Paper>
+      </Hidden>
     </>
   )
 }
