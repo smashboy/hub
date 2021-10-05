@@ -5,7 +5,7 @@ import { LoadingButton } from "@mui/lab"
 import { authConfig } from "app/core/configs/authConfig"
 import { getProjectInfo, ProjectPageProps } from "../../common"
 import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
-import MarkdownEditor from "app/core/MarkdownEditor"
+import MarkdownEditor from "app/core/markdown/Editor"
 
 type FeedbackSelectOption = { label: string; value: RequestType }
 
