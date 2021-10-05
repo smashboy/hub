@@ -6,6 +6,7 @@ import type { Slate as SlateType } from "slate-react"
 import { Grid } from "@mui/material"
 import Toolbar from "./components/Toolbar"
 import Editor from "./components/Editor"
+import { EditorProvider } from "./EditorContext"
 
 const Slate = dynamic(() => import("slate-react").then((mod) => mod.Slate), {
   ssr: false,
@@ -24,12 +25,14 @@ const MarkdownEditor = () => {
   ])
 
   return (
-    <Slate value={content} onChange={setContent} editor={editor}>
-      <Grid container spacing={2}>
-        <Toolbar />
-        <Editor />
-      </Grid>
-    </Slate>
+    <EditorProvider>
+      <Slate value={content} onChange={setContent} editor={editor}>
+        <Grid container spacing={2}>
+          <Toolbar />
+          <Editor />
+        </Grid>
+      </Slate>
+    </EditorProvider>
   )
 }
 

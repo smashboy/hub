@@ -55,6 +55,11 @@ export type BlockButtonProps = { icon: SvgIconComponent; format: ElementType; is
 
 export type CustomElement = HeadingElement | LinkElement | ImageElement | CustomElementBase
 
+export type EditorStore = {
+  isFocused: boolean
+  setIsFocused: (newValue) => void
+}
+
 declare module "slate" {
   interface CustomTypes {
     Editor: CustomEditor

@@ -1,4 +1,4 @@
-import { Grid, ButtonGroup, Hidden, BottomNavigation, Paper } from "@mui/material"
+import { Grid, ButtonGroup, Hidden, BottomNavigation, Paper, Slide } from "@mui/material"
 import BoldIcon from "@mui/icons-material/FormatBold"
 import ItalicIcon from "@mui/icons-material/FormatItalic"
 import UnderlinedIcon from "@mui/icons-material/FormatUnderlined"
@@ -12,6 +12,7 @@ import BlockIcon from "@mui/icons-material/FormatQuote"
 import { MarkButtonProps, BlockButtonProps } from "../types"
 import { BlockButton, MarkButton } from "./buttons"
 import HeadingSelector from "./HeadingSelector"
+import { useEditor } from "../EditorContext"
 
 // export type MarkdownEditorMode = "editor" | "preview"
 
@@ -62,6 +63,8 @@ const blockButtons: BlockButtonProps[] = [
 ]
 
 const Toolbar = () => {
+  const { isFocused } = useEditor()
+
   return (
     <>
       <Grid container item xs={12}>
@@ -88,26 +91,28 @@ const Toolbar = () => {
         </Hidden>
       </Grid>
       <Hidden smUp>
-        <Paper
-          sx={{
-            position: "fixed",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            overflowX: "auto",
-          }}
-          elevation={3}
-        >
-          <BottomNavigation sx={{ bgcolor: "transparent", width: "calc(80px * 11)" }}>
-            <HeadingSelector isMobile />
-            {markButtons.map(({ icon, format }) => (
-              <MarkButton key={format} icon={icon} format={format} isMobile />
-            ))}
-            {blockButtons.map(({ icon, format }) => (
-              <BlockButton key={format} icon={icon} format={format} isMobile />
-            ))}
-          </BottomNavigation>
-        </Paper>
+        <Slide in={isFocused} direction="up" timeout={350}>
+          <Paper
+            sx={{
+              position: "fixed",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              overflowX: "auto",
+            }}
+            elevation={3}
+          >
+            <BottomNavigation sx={{ bgcolor: "transparent", width: "calc(80px * 11)" }}>
+              <HeadingSelector isMobile />
+              {markButtons.map(({ icon, format }) => (
+                <MarkButton key={format} icon={icon} format={format} isMobile />
+              ))}
+              {blockButtons.map(({ icon, format }) => (
+                <BlockButton key={format} icon={icon} format={format} isMobile />
+              ))}
+            </BottomNavigation>
+          </Paper>
+        </Slide>
       </Hidden>
     </>
   )

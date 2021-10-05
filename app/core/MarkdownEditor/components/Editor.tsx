@@ -5,6 +5,7 @@ import { alpha } from "@mui/material/styles"
 import type { Editable as EditableType } from "slate-react"
 import Element from "./Element"
 import Leaf from "./Leaf"
+import { useEditor } from "../EditorContext"
 
 const Editable = dynamic(() => import("slate-react").then((mod) => mod.Editable), {
   ssr: false,
@@ -12,6 +13,8 @@ const Editable = dynamic(() => import("slate-react").then((mod) => mod.Editable)
 
 const Editor = () => {
   const theme = useTheme()
+
+  const { setIsFocused } = useEditor()
 
   const renderElement = useCallback((props) => <Element {...props} />, [])
   const renderLeaf = useCallback((props) => <Leaf {...props} />, [])
@@ -29,7 +32,13 @@ const Editor = () => {
           padding: 1,
         }}
       >
-        <Editable renderElement={renderElement} renderLeaf={renderLeaf} />
+        <Editable
+          style={{ height: "100%" }}
+          renderElement={renderElement}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          renderLeaf={renderLeaf}
+        />
       </Box>
     </Grid>
   )

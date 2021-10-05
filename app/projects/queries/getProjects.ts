@@ -39,8 +39,6 @@ export default resolver.pipe(
         }
       : where
 
-    console.log(where)
-
     const {
       items: projects,
       hasMore,
