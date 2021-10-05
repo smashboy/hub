@@ -1,11 +1,11 @@
 import { RequestType } from "db"
 import { BlitzPage } from "blitz"
-import { Container, Grid, TextField, MenuItem } from "@mui/material"
+import { Container, Grid, TextField, MenuItem, Hidden } from "@mui/material"
 import { LoadingButton } from "@mui/lab"
 import { authConfig } from "app/core/configs/authConfig"
 import { getProjectInfo, ProjectPageProps } from "../../common"
 import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
-import MarkdownEditor from "app/core/components/MarkdownEditor"
+import MarkdownEditor from "app/core/MarkdownEditor"
 
 type FeedbackSelectOption = { label: string; value: RequestType }
 
@@ -26,7 +26,7 @@ const feedbackOptions: FeedbackSelectOption[] = [
 
 const FeedbackPage: BlitzPage = () => {
   return (
-    <Container maxWidth="md" sx={{ marginTop: 4 }}>
+    <Container maxWidth="md" disableGutters sx={{ marginTop: 4 }}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField label="Title" size="small" fullWidth />
@@ -43,11 +43,13 @@ const FeedbackPage: BlitzPage = () => {
         <Grid item xs={12}>
           <MarkdownEditor />
         </Grid>
-        <Grid item xs={12}>
-          <LoadingButton variant="contained" fullWidth disabled>
-            Submit feedback
-          </LoadingButton>
-        </Grid>
+        <Hidden smDown>
+          <Grid item xs={12}>
+            <LoadingButton variant="contained" fullWidth disabled>
+              Submit feedback
+            </LoadingButton>
+          </Grid>
+        </Hidden>
       </Grid>
     </Container>
   )

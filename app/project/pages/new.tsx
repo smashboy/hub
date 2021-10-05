@@ -37,7 +37,7 @@ const NewProjectPage: BlitzPage = () => {
       </Grid>
       <Grid item xs={12}>
         <Fade in timeout={900}>
-          <Container maxWidth="md">
+          <Container maxWidth="md" disableGutters>
             <Form
               submitText="Create"
               schema={CreateProject}

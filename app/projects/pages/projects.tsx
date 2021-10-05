@@ -14,7 +14,7 @@ const ProjectsPage: BlitzPage = () => {
     setSearchQuery(event.currentTarget.value)
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" disableGutters>
       <Grid container spacing={2} sx={{ marginTop: 3 }}>
         <ProjectsPageHeader onSearch={handleChange} />
         <Grid item xs={12}>

@@ -46,6 +46,8 @@
     "react-markdown": "7.0.1",
     "react-markdown-editor-lite": "1.3.1",
     "react-virtuoso": "2.2.1",
+    "slate": "0.66.5",
+    "slate-react": "0.66.4",
     "slugify": "1.6.0",
     "use-debounce": "7.0.0",
     "zod": "3.9.5"
