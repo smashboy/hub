@@ -1,15 +1,4 @@
-import { useState } from "react"
-import {
-  Grid,
-  Tab,
-  Tabs,
-  ButtonGroup,
-  Hidden,
-  BottomNavigation,
-  BottomNavigationAction,
-  Paper,
-} from "@mui/material"
-import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
+import { Grid, ButtonGroup, Hidden, BottomNavigation, Paper } from "@mui/material"
 import BoldIcon from "@mui/icons-material/FormatBold"
 import ItalicIcon from "@mui/icons-material/FormatItalic"
 import UnderlinedIcon from "@mui/icons-material/FormatUnderlined"
@@ -19,94 +8,103 @@ import BulListIcon from "@mui/icons-material/FormatListBulleted"
 import NumListIcon from "@mui/icons-material/FormatListNumbered"
 import LinkIcon from "@mui/icons-material/Link"
 import ImageIcon from "@mui/icons-material/Image"
+import BlockIcon from "@mui/icons-material/FormatQuote"
 import { MarkButtonProps, BlockButtonProps } from "../types"
 import { BlockButton, MarkButton } from "./buttons"
+import HeadingSelector from "./HeadingSelector"
 
-export type MarkdownEditorMode = "editor" | "preview"
+// export type MarkdownEditorMode = "editor" | "preview"
 
 const markButtons: MarkButtonProps[] = [
   {
     format: "bold",
-    icon: <BoldIcon />,
+    icon: BoldIcon,
   },
   {
     format: "italic",
-    icon: <ItalicIcon />,
+    icon: ItalicIcon,
   },
   {
     format: "underlined",
-    icon: <UnderlinedIcon />,
+    icon: UnderlinedIcon,
   },
   {
     format: "code",
-    icon: <CodeIcon />,
+    icon: CodeIcon,
   },
   {
     format: "strike",
-    icon: <StrikeIcon />,
+    icon: StrikeIcon,
   },
 ]
 
 const blockButtons: BlockButtonProps[] = [
   {
+    format: "block",
+    icon: BlockIcon,
+  },
+  {
     format: "link",
-    icon: <LinkIcon />,
+    icon: LinkIcon,
   },
   {
     format: "image",
-    icon: <ImageIcon />,
+    icon: ImageIcon,
   },
   {
     format: "bul-list",
-    icon: <BulListIcon />,
+    icon: BulListIcon,
   },
   {
     format: "num-list",
-    icon: <NumListIcon />,
+    icon: NumListIcon,
   },
 ]
 
 const Toolbar = () => {
-  const isSM = useIsSmallDevice()
-
-  const [mode, setMode] = useState<MarkdownEditorMode>("editor")
-
-  const handleModeChange = (event: React.SyntheticEvent, newValue: MarkdownEditorMode) =>
-    setMode(newValue)
-
   return (
     <>
       <Grid container item xs={12}>
-        <Grid item xs={12} md={3}>
+        {/* <Grid item xs={12} md={3}>
           <Tabs value={mode} onChange={handleModeChange} centered={isSM}>
             <Tab value="editor" label="Editor" />
             <Tab value="preview" label="Preview" />
           </Tabs>
-        </Grid>
+        </Grid> */}
         <Hidden smDown>
-          <Grid container item xs={12} md={9} alignItems="center" justifyContent="flex-end">
-            <ButtonGroup>
-              {markButtons.map(({ icon, format }) => (
-                <MarkButton key={format} icon={icon} format={format} />
-              ))}
-              {blockButtons.map(({ icon, format }) => (
-                <BlockButton key={format} icon={icon} format={format} />
-              ))}
-            </ButtonGroup>
+          <Grid container item xs={12} alignItems="center">
+            <Paper sx={{ width: "100%" }}>
+              <ButtonGroup>
+                <HeadingSelector />
+                {markButtons.map(({ icon, format }) => (
+                  <MarkButton key={format} icon={icon} format={format} />
+                ))}
+                {blockButtons.map(({ icon, format }) => (
+                  <BlockButton key={format} icon={icon} format={format} />
+                ))}
+              </ButtonGroup>
+            </Paper>
           </Grid>
         </Hidden>
       </Grid>
       <Hidden smUp>
         <Paper
-          sx={{ position: "fixed", bottom: 0, left: 0, right: 0, overflowX: "auto" }}
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            overflowX: "auto",
+          }}
           elevation={3}
         >
-          <BottomNavigation sx={{ bgcolor: "transparent" }}>
+          <BottomNavigation sx={{ bgcolor: "transparent", width: "calc(80px * 11)" }}>
+            <HeadingSelector isMobile />
             {markButtons.map(({ icon, format }) => (
-              <BottomNavigationAction key={format} icon={icon} />
+              <MarkButton key={format} icon={icon} format={format} isMobile />
             ))}
             {blockButtons.map(({ icon, format }) => (
-              <BottomNavigationAction key={format} icon={icon} />
+              <BlockButton key={format} icon={icon} format={format} isMobile />
             ))}
           </BottomNavigation>
         </Paper>

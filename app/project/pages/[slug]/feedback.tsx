@@ -46,7 +46,7 @@ const FeedbackPage: BlitzPage = () => {
         <Hidden smDown>
           <Grid item xs={12}>
             <LoadingButton variant="contained" fullWidth disabled>
-              Submit feedback
+              Send feedback
             </LoadingButton>
           </Grid>
         </Hidden>

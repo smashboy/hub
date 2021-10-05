@@ -102,7 +102,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
             >
               <Tab value="landing" label="Home" />
               <Tab value="changelog" label="Changelog" />
-              <Tab value="feedback" label="Your feedback" disabled={!Boolean(user)} />
+              <Tab value="feedback" label="Feedback" disabled={!Boolean(user)} />
               <Tab value="roadmap" label="Roadmap" />
               <Tab value="jobs" label="Jobs" />
             </Tabs>
