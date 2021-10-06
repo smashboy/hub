@@ -1,5 +1,5 @@
 import { Editor, Element, Transforms, Range } from "slate"
-import isUrl from "is-url"
+import { isUrl } from "app/core/utils/common"
 import { ElementLeafType, ElementType, LinkElement } from "./types"
 
 const LIST_TYPES: ElementType[] = ["num-list", "bul-list"]

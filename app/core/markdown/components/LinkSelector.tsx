@@ -12,42 +12,31 @@ import Dialog from "app/core/components/Dialog"
 import { handleToolbarOptionClick, insertLink, isLinkActive, unwrapLink } from "../utils"
 import { useSlate } from "slate-react"
 import { BaseSelection, Editor } from "slate"
+import DialogForm from "app/core/components/DialogForm"
+import { LinkForm } from "../validations"
+import LabeledTextField from "app/core/components/LabeledTextField"
 
 const LinkDialog: React.FC<{
   open: boolean
   onClose: () => void
   onSubmit: (link: string) => void
 }> = ({ open, onClose, onSubmit }) => {
-  const [link, setLink] = useState("")
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setLink(event.currentTarget.value)
-
-  const handleClearInput = () => setLink("")
-
-  const handleCloseDialog = () => {
-    handleClearInput()
+  const handleSubmit = (link: string) => {
+    onSubmit(link)
     onClose()
   }
 
-  const handleSubmit = () => {
-    onSubmit(link)
-    handleCloseDialog()
-  }
-
   return (
-    <Dialog open={open} onClose={handleCloseDialog}>
-      <DialogTitle>Insert link</DialogTitle>
-      <DialogContent>
-        <TextField onChange={handleChange} fullWidth size="small" />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleCloseDialog}>Close</Button>
-        <Button onClick={handleSubmit} disabled={!link}>
-          Submit
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <DialogForm
+      schema={LinkForm}
+      submitText="Submit"
+      title="Insert link"
+      open={open}
+      onClose={onClose}
+      onSubmit={async ({ link }) => handleSubmit(link)}
+    >
+      <LabeledTextField label="Link" name="link" size="small" />
+    </DialogForm>
   )
 }
 

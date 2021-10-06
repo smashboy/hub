@@ -19,9 +19,8 @@ const MarkdownEditor = () => {
 
   const [content, setContent] = useState<Descendant[]>([
     {
-      type: "heading",
-      level: 6,
-      children: [{ text: "Here is a heading!" }],
+      type: "paragraph",
+      children: [{ text: "" }],
     },
   ])
 

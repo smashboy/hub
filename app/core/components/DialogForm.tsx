@@ -3,17 +3,10 @@ import { FormProvider, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FormProps, FORM_ERROR } from "./Form"
 import { useState } from "react"
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Button,
-  Grid,
-  DialogProps,
-} from "@mui/material"
+import { DialogActions, DialogContent, DialogTitle, Button, Grid, DialogProps } from "@mui/material"
 import { LoadingButton } from "@mui/lab"
 import Alert from "./Alert"
+import Dialog from "./Dialog"
 
 export interface DiaogFormProps<S extends z.ZodType<any, any>> extends FormProps<S> {
   title?: string

@@ -29,7 +29,7 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
       )
     default:
       return (
-        <Typography variant="body1" {...attributes}>
+        <Typography variant="body1" color="text.secondary" {...attributes}>
           {children}
         </Typography>
       )

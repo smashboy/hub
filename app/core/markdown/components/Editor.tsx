@@ -24,6 +24,7 @@ const Editor = () => {
       <Box
         sx={{
           height: 350,
+          maxHeight: 350,
           borderRadius: 1,
           borderWidth: 1,
           borderStyle: "solid",
@@ -33,10 +34,11 @@ const Editor = () => {
         }}
       >
         <Editable
-          style={{ height: "100%" }}
+          style={{ height: "100%", maxHeight: 350, overflowY: "auto" }}
           renderElement={renderElement}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
+          placeholder="Leave a comment..."
           renderLeaf={renderLeaf}
         />
       </Box>
