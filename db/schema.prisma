@@ -115,39 +115,42 @@ model ProjectRoadmap {
   title       String
   description String?
   feedback    ProjectFeedback[]
-  Project     Project?          @relation(fields: [projectId], references: [id])
+  project     Project?          @relation(fields: [projectId], references: [id])
   projectId   String?
 }
 
 model ProjectFeedback {
-  id               String                 @id @default(cuid())
-  createdAt        DateTime               @default(now())
-  updatedAt        DateTime               @updatedAt
-  title            String
-  label            ProjectFeedbackLabel[]
-  type             FeedbackType
-  upvotes          Int                    @default(0)
-  projectRoadmap   ProjectRoadmap?        @relation(fields: [projectRoadmapId], references: [id])
-  projectRoadmapId Int?
+  id        String                 @id @default(cuid())
+  createdAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
+  title     String
+  labels    ProjectFeedbackLabel[]
+  type      FeedbackType
+  upvotes   Int                    @default(0)
+  roadmap   ProjectRoadmap?        @relation(fields: [roadmapId], references: [id])
+  roadmapId Int?
 }
 
 model ProjectSettings {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  project   Project  @relation(fields: [projectId], references: [id])
+  id        Int                    @id @default(autoincrement())
+  createdAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
+  project   Project                @relation(fields: [projectId], references: [id])
+  labels    ProjectFeedbackLabel[]
   projectId String
 }
 
 model ProjectFeedbackLabel {
-  id                String           @id @default(cuid())
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  name              String
-  description       String?
-  color             String
-  projectFeedback   ProjectFeedback? @relation(fields: [projectFeedbackId], references: [id])
-  projectFeedbackId String?
+  id          String           @id @default(cuid())
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  name        String
+  description String?
+  color       String
+  feedback    ProjectFeedback? @relation(fields: [feedbackId], references: [id])
+  feedbackId  String?
+  settings    ProjectSettings? @relation(fields: [settingsId], references: [id])
+  settingsId  Int?
 }
 
 enum FeedbackType {

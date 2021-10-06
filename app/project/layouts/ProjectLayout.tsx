@@ -1,13 +1,16 @@
-import { useMemo } from "react"
-import { Routes } from "blitz"
-import { Avatar, Typography, Grid, Container, Tabs, Tab, Fade } from "@mui/material"
+import { useMemo, useState } from "react"
+import { Routes, useMutation } from "blitz"
+import { Avatar, Typography, Grid, Container, Tabs, Tab, Fade, Button } from "@mui/material"
 import { ButtonWebLink, ButtonRouteLink } from "app/core/components/links"
 import Layout, { LayoutProps } from "app/core/layouts/Layout"
 import OpenIcon from "@mui/icons-material/OpenInNew"
 import EditIcon from "@mui/icons-material/Edit"
+import FollowIcon from "@mui/icons-material/Stars"
 import { ProjectPageProps } from "../common"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
+import followProject from "../mutations/followProject"
+import { LoadingButton } from "@mui/lab"
 
 type ProjectLayoutProps = {
   selectedTab: "landing" | "changelog" | "roadmap" | "jobs" | "feedback"
@@ -17,9 +20,13 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
   title,
   children,
   selectedTab,
-  project: { name, description, logoUrl, websiteUrl, color, slug },
+  project: { name, description, logoUrl, websiteUrl, color, slug, isFollowing },
 }) => {
   const isSM = useIsSmallDevice()
+
+  const [following, setIsFollowing] = useState(isFollowing)
+
+  const [followMutation, { isLoading: isLoadingFollow }] = useMutation(followProject)
 
   const user = useCurrentUser({
     options: {
@@ -62,6 +69,37 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
               </Fade>
               <Fade in timeout={500}>
                 <Grid container item xs={12} spacing={1} sx={{ marginTop: 2 }}>
+                  {user && following !== false && (
+                    <Grid item xs={12} md={3}>
+                      <ButtonRouteLink
+                        href={Routes.CreateFeedbackPage({ slug })}
+                        variant="contained"
+                        size="small"
+                        endIcon={<EditIcon />}
+                        fullWidth
+                      >
+                        Give feedback
+                      </ButtonRouteLink>
+                    </Grid>
+                  )}
+                  {user && following !== null && (
+                    <Grid item xs={12} md={2}>
+                      <LoadingButton
+                        variant="contained"
+                        color="secondary"
+                        size="small"
+                        loading={isLoadingFollow}
+                        onClick={async () => {
+                          const newStatus = await followMutation({ slug })
+                          setIsFollowing(newStatus)
+                        }}
+                        endIcon={<FollowIcon />}
+                        fullWidth
+                      >
+                        {following ? "Unfollow" : "Follow"}
+                      </LoadingButton>
+                    </Grid>
+                  )}
                   {websiteHost && websiteUrl && (
                     <Grid item xs={12} md={2}>
                       <ButtonWebLink
@@ -72,21 +110,10 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                         endIcon={<OpenIcon />}
                         fullWidth
                       >
-                        {websiteHost}
+                        website
                       </ButtonWebLink>
                     </Grid>
                   )}
-                  <Grid item xs={12} md={3}>
-                    <ButtonRouteLink
-                      href={Routes.FeedbackPage({ slug })}
-                      variant="contained"
-                      size="small"
-                      endIcon={<EditIcon />}
-                      fullWidth
-                    >
-                      Give feedback
-                    </ButtonRouteLink>
-                  </Grid>
                 </Grid>
               </Fade>
             </Grid>

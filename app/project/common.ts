@@ -1,5 +1,5 @@
-import db from "db"
-import { GetServerSideProps } from "blitz"
+import db, { ProjectMemberRole } from "db"
+import { GetServerSideProps, getSession } from "blitz"
 
 export type ProjectPageProps = {
   project: {
@@ -10,11 +10,16 @@ export type ProjectPageProps = {
     description: string | null
     websiteUrl: string | null
     logoUrl: string | null
+    isFollowing: boolean | null
   }
 }
 
-export const getProjectInfo: GetServerSideProps = async (ctx) => {
-  const slug = (ctx.params?.slug as string) || null
+export const getProjectInfo: GetServerSideProps = async ({ params, req, res }) => {
+  const session = await getSession(req, res)
+
+  const userId = session?.userId || undefined
+
+  const slug = (params?.slug as string) || null
 
   if (!slug)
     return {
@@ -32,6 +37,14 @@ export const getProjectInfo: GetServerSideProps = async (ctx) => {
       description: true,
       websiteUrl: true,
       logoUrl: true,
+      members: {
+        where: {
+          userId,
+        },
+        select: {
+          role: true,
+        },
+      },
     },
   })
 
@@ -40,8 +53,16 @@ export const getProjectInfo: GetServerSideProps = async (ctx) => {
       notFound: true,
     }
 
+  const { members, ...otherProjectProps } = project
+
+  const isFollowing = !members[0]
+    ? false
+    : members[0].role !== ProjectMemberRole.FOLLOWER
+    ? null
+    : true
+
   const props: ProjectPageProps = {
-    project: { ...project, slug },
+    project: { ...otherProjectProps, slug, isFollowing },
   }
 
   return {

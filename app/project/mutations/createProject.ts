@@ -25,6 +25,9 @@ export default resolver.pipe(
         isPrivate,
         color,
         slug,
+        settings: {
+          create: {},
+        },
         members: {
           create: {
             user: {

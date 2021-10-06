@@ -11,3 +11,17 @@ export const CreateProject = z.object({
   color: z.string(),
   isPrivate: z.boolean(),
 })
+
+export const GetCreateFeedbackInfo = z.object({
+  slug: z.string(),
+})
+
+export const CreateLabel = z.object({
+  name: z.string().min(1).max(25),
+  color: z.string(),
+  description: z.string().max(100).optional(),
+})
+
+export const FollowProject = z.object({
+  slug: z.string(),
+})

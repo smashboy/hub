@@ -30,7 +30,7 @@ function DialogForm<S extends z.ZodType<any, any>>({
   const ctx = useForm<z.infer<S>>({
     mode: "onChange",
     resolver: schema ? zodResolver(schema) : undefined,
-    defaultValues: initialValues,
+    defaultValues: typeof initialValues === "function" ? initialValues() : initialValues,
   })
   const [formError, setFormError] = useState<string | null>(null)
 

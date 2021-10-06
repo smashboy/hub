@@ -130,7 +130,7 @@ CREATE TABLE "ProjectFeedback" (
     "title" TEXT NOT NULL,
     "type" "FeedbackType" NOT NULL,
     "upvotes" INTEGER NOT NULL DEFAULT 0,
-    "projectRoadmapId" INTEGER,
+    "roadmapId" INTEGER,
 
     CONSTRAINT "ProjectFeedback_pkey" PRIMARY KEY ("id")
 );
@@ -153,7 +153,8 @@ CREATE TABLE "ProjectFeedbackLabel" (
     "name" TEXT NOT NULL,
     "description" TEXT,
     "color" TEXT NOT NULL,
-    "projectFeedbackId" TEXT,
+    "feedbackId" TEXT,
+    "settingsId" INTEGER,
 
     CONSTRAINT "ProjectFeedbackLabel_pkey" PRIMARY KEY ("id")
 );
@@ -204,10 +205,13 @@ ALTER TABLE "ProjectChangelog" ADD CONSTRAINT "ProjectChangelog_projectId_fkey" 
 ALTER TABLE "ProjectRoadmap" ADD CONSTRAINT "ProjectRoadmap_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProjectFeedback" ADD CONSTRAINT "ProjectFeedback_projectRoadmapId_fkey" FOREIGN KEY ("projectRoadmapId") REFERENCES "ProjectRoadmap"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ProjectFeedback" ADD CONSTRAINT "ProjectFeedback_roadmapId_fkey" FOREIGN KEY ("roadmapId") REFERENCES "ProjectRoadmap"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ProjectSettings" ADD CONSTRAINT "ProjectSettings_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProjectFeedbackLabel" ADD CONSTRAINT "ProjectFeedbackLabel_projectFeedbackId_fkey" FOREIGN KEY ("projectFeedbackId") REFERENCES "ProjectFeedback"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ProjectFeedbackLabel" ADD CONSTRAINT "ProjectFeedbackLabel_feedbackId_fkey" FOREIGN KEY ("feedbackId") REFERENCES "ProjectFeedback"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProjectFeedbackLabel" ADD CONSTRAINT "ProjectFeedbackLabel_settingsId_fkey" FOREIGN KEY ("settingsId") REFERENCES "ProjectSettings"("id") ON DELETE SET NULL ON UPDATE CASCADE;

@@ -33,6 +33,9 @@ const LinkDialog: React.FC<{
       title="Insert link"
       open={open}
       onClose={onClose}
+      DialogProps={{
+        maxWidth: "xs",
+      }}
       onSubmit={async ({ link }) => handleSubmit(link)}
     >
       <LabeledTextField label="Link" name="link" size="small" />

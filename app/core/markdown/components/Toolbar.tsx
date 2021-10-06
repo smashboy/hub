@@ -66,14 +66,15 @@ const Toolbar = () => {
 
   return (
     <>
-      <Grid container item xs={12}>
-        {/* <Grid item xs={12} md={3}>
+      <Hidden smDown>
+        <Grid container item xs={12}>
+          {/* <Grid item xs={12} md={3}>
           <Tabs value={mode} onChange={handleModeChange} centered={isSM}>
             <Tab value="editor" label="Editor" />
             <Tab value="preview" label="Preview" />
           </Tabs>
         </Grid> */}
-        <Hidden smDown>
+
           <Grid container item xs={12} alignItems="center">
             <Paper sx={{ width: "100%" }}>
               <ButtonGroup>
@@ -88,8 +89,8 @@ const Toolbar = () => {
               </ButtonGroup>
             </Paper>
           </Grid>
-        </Hidden>
-      </Grid>
+        </Grid>
+      </Hidden>
       <Hidden smUp>
         <Slide in={isFocused} direction="up" timeout={350}>
           <Paper

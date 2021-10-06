@@ -14,7 +14,9 @@ export interface FormProps<S extends z.ZodType<any, any>>
   submitText?: string
   schema?: S
   onSubmit: (values: z.infer<S>) => void | Promise<void | OnSubmitResult>
-  initialValues?: UseFormProps<z.infer<S>>["defaultValues"]
+  initialValues?:
+    | (() => UseFormProps<z.infer<S>>["defaultValues"])
+    | UseFormProps<z.infer<S>>["defaultValues"]
 }
 
 interface OnSubmitResult {
@@ -35,7 +37,7 @@ export function Form<S extends z.ZodType<any, any>>({
   const ctx = useForm<z.infer<S>>({
     mode: "onChange",
     resolver: schema ? zodResolver(schema) : undefined,
-    defaultValues: initialValues,
+    defaultValues: typeof initialValues === "function" ? initialValues() : initialValues,
   })
   const [formError, setFormError] = useState<string | null>(null)
 
