@@ -108,26 +108,26 @@ model ProjectChangelog {
 }
 
 model ProjectRoadmap {
-  id          Int              @id @default(autoincrement())
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  slug        String           @unique
+  id          Int               @id @default(autoincrement())
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  slug        String            @unique
   title       String
   description String?
-  requests    ProjectRequest[]
-  Project     Project?         @relation(fields: [projectId], references: [id])
+  feedback    ProjectFeedback[]
+  Project     Project?          @relation(fields: [projectId], references: [id])
   projectId   String?
 }
 
-model ProjectRequest {
-  id               String                @id @default(cuid())
-  createdAt        DateTime              @default(now())
-  updatedAt        DateTime              @updatedAt
+model ProjectFeedback {
+  id               String                 @id @default(cuid())
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
   title            String
-  label            ProjectRequestLabel[]
-  type             RequestType
-  upvotes          Int                   @default(0)
-  projectRoadmap   ProjectRoadmap?       @relation(fields: [projectRoadmapId], references: [id])
+  label            ProjectFeedbackLabel[]
+  type             FeedbackType
+  upvotes          Int                    @default(0)
+  projectRoadmap   ProjectRoadmap?        @relation(fields: [projectRoadmapId], references: [id])
   projectRoadmapId Int?
 }
 
@@ -139,18 +139,18 @@ model ProjectSettings {
   projectId String
 }
 
-model ProjectRequestLabel {
-  id               String          @id @default(cuid())
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  name             String
-  description      String?
-  color            String
-  projectRequest   ProjectRequest? @relation(fields: [projectRequestId], references: [id])
-  projectRequestId String?
+model ProjectFeedbackLabel {
+  id                String           @id @default(cuid())
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  name              String
+  description       String?
+  color             String
+  projectFeedback   ProjectFeedback? @relation(fields: [projectFeedbackId], references: [id])
+  projectFeedbackId String?
 }
 
-enum RequestType {
+enum FeedbackType {
   BUG
   FEATURE
   IMPROVEMENT
@@ -162,12 +162,14 @@ enum TokenType {
 
 enum UserRole {
   ADMIN
+  MODERATOR
   USER
 }
 
 enum ProjectMemberRole {
-  CREATOR
+  FOUNDER
   ADMIN
   MODERATOR
+  MEMBER
   FOLLOWER
 }

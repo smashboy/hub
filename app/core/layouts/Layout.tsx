@@ -65,13 +65,13 @@ const AuthNavigation = () => {
                 Projects
               </RouteLink>
               <RouteLink
-                href="/requests"
+                href="/feedback"
                 variant="button"
                 color="#fff"
                 sx={{ marginRight: 3 }}
                 withAlpha
               >
-                Requests
+                Feedback
               </RouteLink>
             </Hidden>
             <Avatar
@@ -89,7 +89,7 @@ const AuthNavigation = () => {
             </MenuItem>
           </Link>
           <MenuItem onClick={handleCloseMenu}>
-            <ListItemText primary="Your requests" />
+            <ListItemText primary="Your feedback" />
           </MenuItem>
           <Divider variant="middle" />
           <Link href={Routes.NewProjectPage()} passHref>

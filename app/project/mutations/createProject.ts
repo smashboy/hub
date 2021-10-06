@@ -32,7 +32,7 @@ export default resolver.pipe(
                 id: authUserId,
               },
             },
-            role: ProjectMemberRole.CREATOR,
+            role: ProjectMemberRole.FOUNDER,
           },
         },
       },

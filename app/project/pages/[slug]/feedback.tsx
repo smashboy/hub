@@ -1,4 +1,4 @@
-import { RequestType } from "db"
+import { FeedbackType } from "db"
 import { BlitzPage } from "blitz"
 import { Container, Grid, TextField, MenuItem, Hidden } from "@mui/material"
 import { LoadingButton } from "@mui/lab"
@@ -7,20 +7,20 @@ import { getProjectInfo, ProjectPageProps } from "../../common"
 import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
 import MarkdownEditor from "app/core/markdown/Editor"
 
-type FeedbackSelectOption = { label: string; value: RequestType }
+type FeedbackSelectOption = { label: string; value: FeedbackType }
 
 const feedbackOptions: FeedbackSelectOption[] = [
   {
     label: "Feature",
-    value: RequestType.FEATURE,
+    value: FeedbackType.FEATURE,
   },
   {
     label: "Improvement",
-    value: RequestType.IMPROVEMENT,
+    value: FeedbackType.IMPROVEMENT,
   },
   {
     label: "Bug",
-    value: RequestType.BUG,
+    value: FeedbackType.BUG,
   },
 ]
 
