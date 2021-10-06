@@ -13,6 +13,7 @@ import { MarkButtonProps, BlockButtonProps } from "../types"
 import { BlockButton, MarkButton } from "./buttons"
 import HeadingSelector from "./HeadingSelector"
 import { useEditor } from "../EditorContext"
+import LinkSelector from "./LinkSelector"
 
 // export type MarkdownEditorMode = "editor" | "preview"
 
@@ -45,10 +46,6 @@ const blockButtons: BlockButtonProps[] = [
     icon: BlockIcon,
   },
   {
-    format: "link",
-    icon: LinkIcon,
-  },
-  {
     format: "image",
     icon: ImageIcon,
   },
@@ -61,6 +58,8 @@ const blockButtons: BlockButtonProps[] = [
     icon: NumListIcon,
   },
 ]
+
+const optionsCount = [...markButtons, ...blockButtons].length + 3
 
 const Toolbar = () => {
   const { isFocused } = useEditor()
@@ -82,6 +81,7 @@ const Toolbar = () => {
                 {markButtons.map(({ icon, format }) => (
                   <MarkButton key={format} icon={icon} format={format} />
                 ))}
+                <LinkSelector />
                 {blockButtons.map(({ icon, format }) => (
                   <BlockButton key={format} icon={icon} format={format} />
                 ))}
@@ -99,14 +99,18 @@ const Toolbar = () => {
               left: 0,
               right: 0,
               overflowX: "auto",
+              zIndex: 10,
             }}
             elevation={3}
           >
-            <BottomNavigation sx={{ bgcolor: "transparent", width: "calc(80px * 11)" }}>
+            <BottomNavigation
+              sx={{ bgcolor: "transparent", width: `calc(80px * ${optionsCount})` }}
+            >
               <HeadingSelector isMobile />
               {markButtons.map(({ icon, format }) => (
                 <MarkButton key={format} icon={icon} format={format} isMobile />
               ))}
+              <LinkSelector isMobile />
               {blockButtons.map(({ icon, format }) => (
                 <BlockButton key={format} icon={icon} format={format} isMobile />
               ))}

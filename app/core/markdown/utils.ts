@@ -1,7 +1,16 @@
-import { Editor, Element, Transforms } from "slate"
-import { ElementLeafType, ElementType } from "./types"
+import { Editor, Element, Transforms, Range } from "slate"
+import isUrl from "is-url"
+import { ElementLeafType, ElementType, LinkElement } from "./types"
 
 const LIST_TYPES: ElementType[] = ["num-list", "bul-list"]
+
+export const handleToolbarOptionClick = (
+  event: React.MouseEvent<HTMLButtonElement>,
+  callback?: () => void
+) => {
+  event.preventDefault()
+  callback?.()
+}
 
 export const toggleMark = (editor: Editor, format: ElementLeafType) => {
   const isActive = isMarkActive(editor, format)
@@ -26,6 +35,7 @@ const isBlockActive = (editor: Editor, format: ElementType) => {
 
   return !!match
 }
+
 export const toggleBlock = (editor: Editor, format: ElementType) => {
   const isActive = isBlockActive(editor, format)
   const isList = LIST_TYPES.includes(format)
@@ -47,4 +57,69 @@ export const toggleBlock = (editor: Editor, format: ElementType) => {
     const block = { type: format, children: [] }
     Transforms.wrapNodes(editor, block)
   }
+}
+
+export const withLinks = (editor: Editor) => {
+  const { insertData, insertText, isInline } = editor
+
+  editor.isInline = (element) => {
+    return element.type === "link" ? true : isInline(element)
+  }
+
+  editor.insertText = (text) => {
+    if (text && isUrl(text)) {
+      wrapLink(editor, text)
+    } else {
+      insertText(text)
+    }
+  }
+
+  editor.insertData = (data) => {
+    const text = data.getData("text/plain")
+
+    if (text && isUrl(text)) {
+      wrapLink(editor, text)
+    } else {
+      insertData(data)
+    }
+  }
+
+  return editor
+}
+
+export const isLinkActive = (editor: Editor) => {
+  // @ts-ignore
+  const [link] = Editor.nodes(editor, {
+    match: (n) => !Editor.isEditor(n) && Element.isElement(n) && n.type === "link",
+  })
+  return !!link
+}
+
+export const unwrapLink = (editor: Editor) => {
+  Transforms.unwrapNodes(editor, {
+    match: (n) => !Editor.isEditor(n) && Element.isElement(n) && n.type === "link",
+  })
+}
+
+export const wrapLink = (editor: Editor, url: string) => {
+  if (isLinkActive(editor)) return unwrapLink(editor)
+
+  const { selection } = editor
+  const isCollapsed = selection && Range.isCollapsed(selection)
+  const link: LinkElement = {
+    type: "link",
+    url,
+    children: isCollapsed ? [{ text: url }] : [],
+  }
+
+  if (isCollapsed) {
+    Transforms.insertNodes(editor, link)
+  } else {
+    Transforms.wrapNodes(editor, link, { split: true })
+    Transforms.collapse(editor, { edge: "end" })
+  }
+}
+
+export const insertLink = (editor: Editor, url: string) => {
+  if (editor.selection) wrapLink(editor, url)
 }

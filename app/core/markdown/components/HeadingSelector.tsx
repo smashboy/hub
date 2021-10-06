@@ -13,7 +13,6 @@ import {
   FormControlLabel,
   Radio,
   Grid,
-  Typography,
 } from "@mui/material"
 import HeadingSize from "@mui/icons-material/FormatSize"
 import Dialog from "app/core/components/Dialog"
@@ -81,6 +80,7 @@ const HeadingSelector: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
 
   const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) =>
     setAnchorEl(event.currentTarget)
+
   const handleClose = () => setAnchorEl(null)
 
   if (isMobile)

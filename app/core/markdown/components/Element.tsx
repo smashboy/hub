@@ -1,6 +1,7 @@
 import { Typography } from "@mui/material"
 import { RenderElementProps } from "slate-react"
-import { HeadingElement } from "../types"
+import { Link } from "@mui/material"
+import { HeadingElement, LinkElement } from "../types"
 
 const Element = ({ attributes, children, element }: RenderElementProps) => {
   switch (element.type) {
@@ -11,7 +12,7 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
     case "heading":
       const headingElement = element as HeadingElement
       return (
-        <Typography variant={`h${headingElement.level}`} color="text.primary">
+        <Typography {...attributes} variant={`h${headingElement.level}`} color="text.primary">
           {children}
         </Typography>
       )
@@ -19,6 +20,13 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
       return <li {...attributes}>{children}</li>
     case "num-list":
       return <ol {...attributes}>{children}</ol>
+    case "link":
+      const linkElemet = element as LinkElement
+      return (
+        <Link {...attributes} href={linkElemet.url} target="_blank" rel="noopener noreferrer">
+          {children}
+        </Link>
+      )
     default:
       return (
         <Typography variant="body1" {...attributes}>

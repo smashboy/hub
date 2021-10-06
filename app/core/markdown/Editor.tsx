@@ -7,6 +7,7 @@ import { Grid } from "@mui/material"
 import Toolbar from "./components/Toolbar"
 import Editor from "./components/Editor"
 import { EditorProvider } from "./EditorContext"
+import { withLinks } from "./utils"
 
 const Slate = dynamic(() => import("slate-react").then((mod) => mod.Slate), {
   ssr: false,
@@ -14,7 +15,7 @@ const Slate = dynamic(() => import("slate-react").then((mod) => mod.Slate), {
 
 const MarkdownEditor = () => {
   // @ts-ignore
-  const editor = useMemo(() => withReact(createEditor()), [])
+  const editor = useMemo(() => withLinks(withReact(createEditor())), [])
 
   const [content, setContent] = useState<Descendant[]>([
     {
