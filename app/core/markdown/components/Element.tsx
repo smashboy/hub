@@ -17,7 +17,11 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
         </Typography>
       )
     case "list-item":
-      return <li {...attributes}>{children}</li>
+      return (
+        <Typography {...attributes} variant="body1" color="text.secondary" component="li">
+          {children}
+        </Typography>
+      )
     case "num-list":
       return <ol {...attributes}>{children}</ol>
     case "link":
@@ -29,7 +33,7 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
       )
     default:
       return (
-        <Typography variant="body1" color="text.secondary" {...attributes}>
+        <Typography {...attributes} variant="body1" color="text.secondary">
           {children}
         </Typography>
       )

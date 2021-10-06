@@ -27,7 +27,7 @@ export const isMarkActive = (editor: Editor, format: ElementLeafType) => {
   return marks ? marks[format] === true : false
 }
 
-const isBlockActive = (editor: Editor, format: ElementType) => {
+export const isBlockActive = (editor: Editor, format: ElementType) => {
   // @ts-ignore
   const [match] = Editor.nodes(editor, {
     match: (n) => !Editor.isEditor(n) && Element.isElement(n) && n.type === format,

@@ -13,7 +13,7 @@ import lightTheme from "app/core/theme/lightTheme"
 import darkTheme from "app/core/theme/darkTheme"
 
 export default function App({ Component, pageProps }: AppProps) {
-  const getLayout = Component.getLayout || ((page, pageProps) => page)
+  const getLayout = Component.getLayout || ((page) => page)
 
   return (
     <ThemeProvider theme={darkTheme}>

@@ -2,7 +2,13 @@ import { useMemo } from "react"
 import { useSlate } from "slate-react"
 import { Button, BottomNavigationAction } from "@mui/material"
 import { MarkButtonProps, BlockButtonProps } from "../types"
-import { handleToolbarOptionClick, isMarkActive, toggleMark } from "../utils"
+import {
+  handleToolbarOptionClick,
+  isBlockActive,
+  isMarkActive,
+  toggleBlock,
+  toggleMark,
+} from "../utils"
 
 export const MarkButton: React.FC<MarkButtonProps> = ({ icon, format, isMobile }) => {
   const editor = useSlate()
@@ -33,12 +39,21 @@ export const BlockButton: React.FC<BlockButtonProps> = ({ icon, format, isMobile
 
   const Icon = icon
 
-  // const color = useMemo(
-  //   () => (isMarkActive(editor, format) ? "primary" : "action"),
-  //   [editor, format]
-  // )
+  const color = isBlockActive(editor, format) ? "primary" : "action"
 
-  if (isMobile) return <BottomNavigationAction icon={<Icon color="action" />} />
+  const handleToggle = () => toggleBlock(editor, format)
 
-  return <Button>{<Icon color="action" />}</Button>
+  if (isMobile)
+    return (
+      <BottomNavigationAction
+        onMouseDown={(e) => handleToolbarOptionClick(e, handleToggle)}
+        icon={<Icon color={color} />}
+      />
+    )
+
+  return (
+    <Button onMouseDown={(e) => handleToolbarOptionClick(e, handleToggle)}>
+      {<Icon color={color} />}
+    </Button>
+  )
 }
