@@ -5,7 +5,7 @@ const FeedbackEditor = () => {
   return (
     <Fade in timeout={750}>
       <Grid item xs={12}>
-        <MarkdownEditor />
+        <MarkdownEditor submitText="Submit feedback" />
       </Grid>
     </Fade>
   )

@@ -7,6 +7,7 @@ const EditorContext = createContext<EditorStore | null>(null)
 export const EditorProvider: React.FC<EditorProps> = ({
   children,
   disableSubmit: disableSubmitProp,
+  submitText,
 }) => {
   const [content, setContent] = useState<Descendant[]>([
     {
@@ -17,6 +18,8 @@ export const EditorProvider: React.FC<EditorProps> = ({
 
   const [isFocused, setisFocused] = useState(false)
   const [disableSubmit, setDisableSubmit] = useState(disableSubmitProp || false)
+
+  submitText = submitText || "Submit"
 
   useEffect(() => {
     if (disableSubmitProp !== undefined) setDisableSubmit(disableSubmitProp)
@@ -33,6 +36,7 @@ export const EditorProvider: React.FC<EditorProps> = ({
         content,
         isFocused,
         disableSubmit,
+        submitText,
         setIsFocused: handleSetIsFocused,
         setDisableSubmit: handleSetDisableSubmit,
         setContent: handleSetContent,

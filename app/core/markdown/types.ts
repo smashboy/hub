@@ -59,6 +59,7 @@ export type EditorStore = {
   content: Descendant[]
   isFocused: boolean
   disableSubmit: boolean
+  submitText: string
   setIsFocused: (newValue: boolean) => void
   setContent: (newContent: Descendant[]) => void
   setDisableSubmit: (newValue: boolean) => void

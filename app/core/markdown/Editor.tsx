@@ -5,9 +5,9 @@ import { EditorProvider } from "./EditorContext"
 import SlateLayer from "./components/SlateLayer"
 import { EditorProps } from "./types"
 
-const MarkdownEditor: React.FC<EditorProps> = ({ disableSubmit }) => {
+const MarkdownEditor: React.FC<EditorProps> = (props) => {
   return (
-    <EditorProvider disableSubmit={disableSubmit}>
+    <EditorProvider {...props}>
       <SlateLayer>
         <Grid container spacing={2}>
           <Toolbar />

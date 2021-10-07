@@ -15,7 +15,7 @@ const Editable = dynamic(() => import("slate-react").then((mod) => mod.Editable)
 const Editor = () => {
   const theme = useTheme()
 
-  const { setIsFocused } = useEditor()
+  const { setIsFocused, submitText } = useEditor()
 
   const renderElement = useCallback((props) => <Element {...props} />, [])
   const renderLeaf = useCallback((props) => <Leaf {...props} />, [])
@@ -48,7 +48,7 @@ const Editor = () => {
       <Hidden smDown>
         <Grid item xs={12}>
           <LoadingButton variant="contained" fullWidth disabled>
-            Submit
+            {submitText}
           </LoadingButton>
         </Grid>
       </Hidden>
