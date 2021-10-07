@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import { useState } from "react"
 import { useQuery } from "blitz"
 import {
   Paper,
@@ -17,14 +17,15 @@ import {
 } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
 import DialogForm from "app/core/components/DialogForm"
-import getCreateFeedbackInfo from "../queries/getCreateFeedbackInfo"
-import { CreateLabel } from "../validations"
+import getCreateFeedbackInfo from "../../queries/getCreateFeedbackInfo"
+import { CreateLabel } from "../../validations"
 import LabeledTextField from "app/core/components/LabeledTextField"
 import ColorPicker from "app/core/components/ColorPicker"
 import randomcolor from "randomcolor"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
-import createLabel from "../mutations/createLabel"
+import createLabel from "../../mutations/createLabel"
 import { FORM_ERROR } from "app/core/components/Form"
+import { useFeedbackEditor } from "app/project/store/FeedbackEditorContext"
 
 const generateNewLabelValues = () => ({
   name: "",
@@ -32,7 +33,9 @@ const generateNewLabelValues = () => ({
   description: "",
 })
 
-const FeedbackSidebar: React.FC<{ slug: string }> = ({ slug }) => {
+const FeedbackSidebar = () => {
+  const { slug } = useFeedbackEditor()
+
   const [project, { refetch }] = useQuery(getCreateFeedbackInfo, {
     slug,
   })

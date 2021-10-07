@@ -1,5 +1,5 @@
 import { SvgIconComponent } from "@mui/icons-material"
-import { BaseEditor } from "slate"
+import { BaseEditor, Descendant } from "slate"
 import { ReactEditor } from "slate-react"
 
 export type CustomEditor = BaseEditor & ReactEditor
@@ -56,8 +56,16 @@ export type BlockButtonProps = { icon: SvgIconComponent; format: ElementType; is
 export type CustomElement = HeadingElement | LinkElement | ImageElement | CustomElementBase
 
 export type EditorStore = {
+  content: Descendant[]
   isFocused: boolean
-  setIsFocused: (newValue) => void
+  disableSubmit: boolean
+  setIsFocused: (newValue: boolean) => void
+  setContent: (newContent: Descendant[]) => void
+  setDisableSubmit: (newValue: boolean) => void
+}
+
+export type EditorProps = Partial<Pick<EditorStore, "disableSubmit">> & {
+  submitText?: string
 }
 
 declare module "slate" {
