@@ -63,7 +63,7 @@ export const LoginForm = () => {
                 }
               }}
             >
-              <LabeledTextField name="password" label="Password" type="password" />
+              <LabeledTextField name="password" label="Password" type="password" autoFocus />
             </Form>
           </Grid>
           <Grid item xs={12}>

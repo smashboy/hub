@@ -93,7 +93,7 @@ export const SignupForm = () => {
                 }
               }}
             >
-              <LabeledTextField name="username" label="Username" />
+              <LabeledTextField name="username" label="Username" autoFocus />
             </Form>
           </Grid>
           <Grid item xs={12}>
@@ -129,7 +129,7 @@ export const SignupForm = () => {
                 }
               }}
             >
-              <LabeledTextField name="password" label="Password" type="password" />
+              <LabeledTextField name="password" label="Password" type="password" autoFocus />
             </Form>
           </Grid>
           <Grid item xs={12}>

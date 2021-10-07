@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react"
 import { Routes, useMutation } from "blitz"
-import { Avatar, Typography, Grid, Container, Tabs, Tab, Fade, Button } from "@mui/material"
+import { Avatar, Typography, Grid, Container, Tabs, Tab, Fade } from "@mui/material"
 import { ButtonWebLink, ButtonRouteLink } from "app/core/components/links"
 import Layout, { LayoutProps } from "app/core/layouts/Layout"
 import OpenIcon from "@mui/icons-material/OpenInNew"
 import EditIcon from "@mui/icons-material/Edit"
 import FollowIcon from "@mui/icons-material/Stars"
+import SettingsIcon from "@mui/icons-material/Settings"
 import { ProjectPageProps } from "../common"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
@@ -112,6 +113,22 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                       >
                         website
                       </ButtonWebLink>
+                    </Grid>
+                  )}
+                  {user && isFollowing === null && (
+                    <Grid item xs={12} md={2}>
+                      <ButtonRouteLink
+                        href={Routes.SettingsPage({
+                          slug,
+                        })}
+                        variant="contained"
+                        size="small"
+                        color="inherit"
+                        endIcon={<SettingsIcon />}
+                        fullWidth
+                      >
+                        Settings
+                      </ButtonRouteLink>
                     </Grid>
                   )}
                 </Grid>

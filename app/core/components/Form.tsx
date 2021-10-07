@@ -4,7 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Grid } from "@mui/material"
 import Alert from "./Alert"
-import { LoadingButton } from "@mui/lab"
+import { LoadingButton, LoadingButtonProps } from "@mui/lab"
+import { useIsSmallDevice } from "../hooks/useIsSmallDevice"
 
 export interface FormProps<S extends z.ZodType<any, any>>
   extends Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit"> {
@@ -12,6 +13,8 @@ export interface FormProps<S extends z.ZodType<any, any>>
   children?: ReactNode
   /** Text to display in the submit button */
   submitText?: string
+  updateButton?: boolean
+  ButtonProps?: Omit<LoadingButtonProps, "loading" | "type" | "disabled">
   schema?: S
   onSubmit: (values: z.infer<S>) => void | Promise<void | OnSubmitResult>
   initialValues?:
@@ -30,10 +33,14 @@ export function Form<S extends z.ZodType<any, any>>({
   children,
   submitText,
   schema,
+  updateButton,
   initialValues,
   onSubmit,
+  ButtonProps,
   ...props
 }: FormProps<S>) {
+  const isSM = useIsSmallDevice()
+
   const ctx = useForm<z.infer<S>>({
     mode: "onChange",
     resolver: schema ? zodResolver(schema) : undefined,
@@ -42,6 +49,8 @@ export function Form<S extends z.ZodType<any, any>>({
   const [formError, setFormError] = useState<string | null>(null)
 
   const disableSubmit = !ctx.formState.isValid
+
+  const enableUpdateButton = updateButton && !isSM
 
   return (
     <FormProvider {...ctx}>
@@ -70,16 +79,17 @@ export function Form<S extends z.ZodType<any, any>>({
               <Alert severity="error">{formError}</Alert>
             </Grid>
           )}
-          <Grid item xs={12}>
+          <Grid container item xs={12} justifyContent={enableUpdateButton ? "flex-end" : "center"}>
             <LoadingButton
               variant="contained"
               color="primary"
               type="submit"
               size="large"
-              loading={ctx.formState.isSubmitting}
-              disabled={disableSubmit}
               disableElevation
-              fullWidth
+              {...ButtonProps}
+              loading={ctx.formState.isSubmitting}
+              fullWidth={!enableUpdateButton}
+              disabled={disableSubmit}
             >
               {submitText}
             </LoadingButton>

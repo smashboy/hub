@@ -17,7 +17,7 @@ import {
 } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
 import DialogForm from "app/core/components/DialogForm"
-import getCreateFeedbackInfo from "../../queries/getCreateFeedbackInfo"
+import getFeedbackOptions from "../../queries/getFeedbackOptions"
 import { CreateLabel } from "../../validations"
 import LabeledTextField from "app/core/components/LabeledTextField"
 import ColorPicker from "app/core/components/ColorPicker"
@@ -36,7 +36,7 @@ const generateNewLabelValues = () => ({
 const FeedbackSidebar = () => {
   const { slug } = useFeedbackEditor()
 
-  const [project, { refetch }] = useQuery(getCreateFeedbackInfo, {
+  const [project, { refetch }] = useQuery(getFeedbackOptions, {
     slug,
   })
 
