@@ -79,7 +79,7 @@ CREATE TABLE "ProjectMember" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "role" "ProjectMemberRole" NOT NULL DEFAULT E'FOLLOWER',
-    "projectId" TEXT,
+    "projectId" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
 
     CONSTRAINT "ProjectMember_pkey" PRIMARY KEY ("id")
@@ -104,7 +104,7 @@ CREATE TABLE "ProjectChangelog" (
     "title" TEXT NOT NULL,
     "description" TEXT,
     "content" TEXT NOT NULL,
-    "projectId" TEXT,
+    "projectId" TEXT NOT NULL,
 
     CONSTRAINT "ProjectChangelog_pkey" PRIMARY KEY ("id")
 );
@@ -117,7 +117,7 @@ CREATE TABLE "ProjectRoadmap" (
     "slug" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT,
-    "projectId" TEXT,
+    "projectId" TEXT NOT NULL,
 
     CONSTRAINT "ProjectRoadmap_pkey" PRIMARY KEY ("id")
 );
@@ -154,7 +154,7 @@ CREATE TABLE "ProjectFeedbackLabel" (
     "description" TEXT,
     "color" TEXT NOT NULL,
     "feedbackId" TEXT,
-    "settingsId" INTEGER,
+    "settingsId" INTEGER NOT NULL,
 
     CONSTRAINT "ProjectFeedbackLabel_pkey" PRIMARY KEY ("id")
 );
@@ -181,7 +181,10 @@ CREATE UNIQUE INDEX "ProjectLanding_projectId_unique" ON "ProjectLanding"("proje
 CREATE UNIQUE INDEX "ProjectRoadmap_slug_key" ON "ProjectRoadmap"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ProjectSettings_projectId_unique" ON "ProjectSettings"("projectId");
+CREATE UNIQUE INDEX "ProjectRoadmap_projectId_key" ON "ProjectRoadmap"("projectId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ProjectSettings_projectId_key" ON "ProjectSettings"("projectId");
 
 -- AddForeignKey
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -193,16 +196,16 @@ ALTER TABLE "Token" ADD CONSTRAINT "Token_userId_fkey" FOREIGN KEY ("userId") RE
 ALTER TABLE "ProjectMember" ADD CONSTRAINT "ProjectMember_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProjectMember" ADD CONSTRAINT "ProjectMember_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ProjectMember" ADD CONSTRAINT "ProjectMember_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ProjectLanding" ADD CONSTRAINT "ProjectLanding_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProjectChangelog" ADD CONSTRAINT "ProjectChangelog_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ProjectChangelog" ADD CONSTRAINT "ProjectChangelog_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProjectRoadmap" ADD CONSTRAINT "ProjectRoadmap_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ProjectRoadmap" ADD CONSTRAINT "ProjectRoadmap_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ProjectFeedback" ADD CONSTRAINT "ProjectFeedback_roadmapId_fkey" FOREIGN KEY ("roadmapId") REFERENCES "ProjectRoadmap"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -214,4 +217,4 @@ ALTER TABLE "ProjectSettings" ADD CONSTRAINT "ProjectSettings_projectId_fkey" FO
 ALTER TABLE "ProjectFeedbackLabel" ADD CONSTRAINT "ProjectFeedbackLabel_feedbackId_fkey" FOREIGN KEY ("feedbackId") REFERENCES "ProjectFeedback"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProjectFeedbackLabel" ADD CONSTRAINT "ProjectFeedbackLabel_settingsId_fkey" FOREIGN KEY ("settingsId") REFERENCES "ProjectSettings"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ProjectFeedbackLabel" ADD CONSTRAINT "ProjectFeedbackLabel_settingsId_fkey" FOREIGN KEY ("settingsId") REFERENCES "ProjectSettings"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -12,6 +12,12 @@ export default resolver.pipe(
         slug,
       },
       select: {
+        roadmaps: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
         members: {
           where: {
             role: {
@@ -21,7 +27,21 @@ export default resolver.pipe(
           select: {
             user: {
               select: {
+                id: true,
                 username: true,
+                avatarUrl: true,
+              },
+            },
+          },
+        },
+        settings: {
+          select: {
+            labels: {
+              select: {
+                id: true,
+                name: true,
+                color: true,
+                description: true,
               },
             },
           },

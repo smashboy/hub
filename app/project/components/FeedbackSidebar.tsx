@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useQuery } from "blitz"
 import {
   Paper,
@@ -10,6 +10,10 @@ import {
   Avatar,
   Button,
   Divider,
+  MenuItem,
+  ListItemAvatar,
+  ListItemText,
+  Box,
 } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
 import DialogForm from "app/core/components/DialogForm"
@@ -18,6 +22,9 @@ import { CreateLabel } from "../validations"
 import LabeledTextField from "app/core/components/LabeledTextField"
 import ColorPicker from "app/core/components/ColorPicker"
 import randomcolor from "randomcolor"
+import useCustomMutation from "app/core/hooks/useCustomMutation"
+import createLabel from "../mutations/createLabel"
+import { FORM_ERROR } from "app/core/components/Form"
 
 const generateNewLabelValues = () => ({
   name: "",
@@ -26,8 +33,14 @@ const generateNewLabelValues = () => ({
 })
 
 const FeedbackSidebar: React.FC<{ slug: string }> = ({ slug }) => {
-  const [project] = useQuery(getCreateFeedbackInfo, {
+  const [project, { refetch }] = useQuery(getCreateFeedbackInfo, {
     slug,
+  })
+
+  const projectLabels = project.settings?.labels || []
+
+  const [createLabelMutation] = useCustomMutation(createLabel, {
+    successNotification: "New label has been created successfully!",
   })
 
   const [openCreateLabelDialog, setOpenCreateLabelDialog] = useState(false)
@@ -46,19 +59,29 @@ const FeedbackSidebar: React.FC<{ slug: string }> = ({ slug }) => {
             <Grid item xs={12}>
               <Autocomplete
                 disablePortal
-                options={project.members.map(({ user: { username } }) => username)}
+                options={project.members}
                 fullWidth
                 freeSolo
                 multiple
                 size="small"
-                renderTags={(members: readonly string[], getTagProps) =>
-                  members.map((username, index) => (
+                renderOption={(props, { user: { username, id } }, { selected }) =>
+                  selected ? null : (
+                    <MenuItem {...props} key={id} divider>
+                      <ListItemAvatar>
+                        <Avatar alt={username} src="broken" sx={{ width: 24, height: 24 }} />
+                      </ListItemAvatar>
+                      <ListItemText primary={username} />
+                    </MenuItem>
+                  )
+                }
+                renderTags={(members, getTagProps) =>
+                  members.map(({ user: { username, id } }, index) => (
                     <Chip
+                      {...getTagProps({ index })}
                       avatar={<Avatar alt={username} src="broken" />}
                       variant="outlined"
                       label={username}
-                      {...getTagProps({ index })}
-                      key={username}
+                      key={id}
                     />
                   ))
                 }
@@ -71,6 +94,44 @@ const FeedbackSidebar: React.FC<{ slug: string }> = ({ slug }) => {
             <Grid item xs={12}>
               <Autocomplete
                 size="small"
+                fullWidth
+                options={projectLabels}
+                freeSolo
+                disablePortal
+                multiple
+                renderOption={(props, { name, id, color, description }, { selected }) =>
+                  selected ? null : (
+                    <MenuItem
+                      {...props}
+                      key={id}
+                      divider
+                      sx={{ display: "flex", flexWrap: "wrap" }}
+                    >
+                      <Box sx={{ width: "100%" }}>
+                        <Chip
+                          label={name}
+                          size="small"
+                          sx={{ bgcolor: color, cursor: "pointer" }}
+                        />
+                      </Box>
+
+                      {description && (
+                        <ListItemText secondary={description} sx={{ paddingTop: 1 }} />
+                      )}
+                    </MenuItem>
+                  )
+                }
+                renderTags={(labels, getTagProps) =>
+                  labels.map(({ id, color, name }, index) => (
+                    <Chip
+                      {...getTagProps({ index })}
+                      label={name}
+                      key={id}
+                      size="small"
+                      sx={{ bgcolor: color }}
+                    />
+                  ))
+                }
                 renderInput={(params) => <TextField {...params} label="Labels" />}
               />
             </Grid>
@@ -90,6 +151,28 @@ const FeedbackSidebar: React.FC<{ slug: string }> = ({ slug }) => {
             <Grid item xs={12}>
               <Autocomplete
                 size="small"
+                fullWidth
+                options={project.roadmaps}
+                freeSolo
+                disablePortal
+                multiple
+                renderOption={(props, { title, id }, { selected }) =>
+                  selected ? null : (
+                    <MenuItem {...props} key={id} divider>
+                      {title}
+                    </MenuItem>
+                  )
+                }
+                renderTags={(roadmaps, getTagProps) =>
+                  roadmaps.map(({ title, id }, index) => (
+                    <Chip
+                      {...getTagProps({ index })}
+                      variant="outlined"
+                      label={title}
+                      key={title}
+                    />
+                  ))
+                }
                 renderInput={(params) => <TextField {...params} label="Roadmap" />}
               />
             </Grid>
@@ -103,10 +186,20 @@ const FeedbackSidebar: React.FC<{ slug: string }> = ({ slug }) => {
         DialogProps={{
           maxWidth: "sm",
         }}
-        schema={CreateLabel}
+        schema={CreateLabel.omit({ projectSlug: true })}
         initialValues={generateNewLabelValues}
         onClose={handleCloseCreateLabelDialog}
-        onSubmit={async () => {}}
+        onSubmit={async (values) => {
+          try {
+            await createLabelMutation({ ...values, projectSlug: slug })
+            refetch()
+          } catch (error) {
+            return {
+              [FORM_ERROR]:
+                "Sorry, we had an unexpected error. Please try again. - " + error.toString(),
+            }
+          }
+        }}
       >
         <LabeledTextField name="name" label="Name" size="small" />
         <ColorPicker name="color" label="Color" />

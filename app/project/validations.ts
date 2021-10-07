@@ -19,6 +19,7 @@ export const GetCreateFeedbackInfo = z.object({
 export const CreateLabel = z.object({
   name: z.string().min(1).max(25),
   color: z.string(),
+  projectSlug: z.string(),
   description: z.string().max(100).optional(),
 })
 

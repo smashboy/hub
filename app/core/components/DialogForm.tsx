@@ -11,6 +11,7 @@ import Dialog from "./Dialog"
 export interface DiaogFormProps<S extends z.ZodType<any, any>> extends FormProps<S> {
   title?: string
   open: boolean
+  disableCloseOnSubmit?: boolean
   onClose: () => void
   DialogProps?: Omit<DialogProps, "open" | "onClose">
 }
@@ -23,6 +24,7 @@ function DialogForm<S extends z.ZodType<any, any>>({
   onSubmit,
   title,
   open,
+  disableCloseOnSubmit,
   DialogProps,
   onClose,
   ...props
@@ -48,7 +50,14 @@ function DialogForm<S extends z.ZodType<any, any>>({
         <form
           onSubmit={ctx.handleSubmit(async (values) => {
             const result = (await onSubmit(values)) || {}
-            for (const [key, value] of Object.entries(result)) {
+            const errors = Object.entries(result)
+
+            if (errors.length === 0) {
+              if (!disableCloseOnSubmit) handleCloseDialog()
+              return
+            }
+
+            for (const [key, value] of errors) {
               if (key === FORM_ERROR) {
                 setFormError(value)
               } else {

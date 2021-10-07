@@ -60,17 +60,8 @@ const CreateFeedbackPage: BlitzPage<ProjectPageProps> = ({
             </Grid>
           </Fade>
           <Fade in timeout={750}>
-            <Grid container item spacing={2} xs={12}>
-              <Grid item xs={12}>
-                <MarkdownEditor />
-              </Grid>
-              <Hidden smDown>
-                <Grid item xs={12}>
-                  <LoadingButton variant="contained" fullWidth disabled>
-                    Send feedback
-                  </LoadingButton>
-                </Grid>
-              </Hidden>
+            <Grid item xs={12}>
+              <MarkdownEditor />
             </Grid>
           </Fade>
         </Grid>
