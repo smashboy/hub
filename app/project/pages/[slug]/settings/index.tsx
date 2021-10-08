@@ -9,19 +9,39 @@ import SwitchField from "app/core/components/SwitchField"
 import { authConfig } from "app/core/configs/authConfig"
 import { getProjectInfo, ProjectPageProps } from "app/project/helpers"
 import ProjectSettingsLayout from "app/project/layouts/ProjectSettingsLayout"
-import { CreateProject } from "app/project/validations"
+import { UpdateProject, UpdateIsProjectPrivateDanger } from "app/project/validations"
+import useCustomMutation from "app/core/hooks/useCustomMutation"
+import updateGeneralSettings from "app/project/mutations/updateGeneralSettings"
+import updateIsPrivateSetting from "app/project/mutations/updateIsPrivateSetting"
 
-const SettingsPage: BlitzPage<ProjectPageProps> = () => {
+const SettingsPage: BlitzPage<ProjectPageProps> = ({
+  project: { name, description, websiteUrl, color, isPrivate, slug },
+}: ProjectPageProps) => {
+  const [updateGeneralSettingsMutation] = useCustomMutation(updateGeneralSettings, {
+    successNotification: "General settings has been updated successfully!",
+  })
+
+  const [updateIsPrivateSettingMutation] = useCustomMutation(updateIsPrivateSetting, {
+    successNotification: "Privacy visibility setting has been updated successfully!",
+  })
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <PaperBox title="General">
           <Form
-            schema={CreateProject.omit({ isPrivate: true })}
-            submitText="Update"
-            ButtonProps={{
-              size: "medium",
+            schema={UpdateProject.omit({ slug: true })}
+            initialValues={{
+              name,
+              description,
+              websiteUrl,
+              color,
             }}
+            submitText="Update"
+            onSubmit={async (values) => {
+              await updateGeneralSettingsMutation({ ...values, slug })
+            }}
+            resetOnSuccess
             updateButton
           >
             <LabeledTextField label="Project name" name="name" size="small" />
@@ -44,12 +64,16 @@ const SettingsPage: BlitzPage<ProjectPageProps> = () => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Form
-                schema={CreateProject.omit({ isPrivate: true })}
+                schema={UpdateIsProjectPrivateDanger.omit({ slug: true })}
                 submitText="Update"
-                ButtonProps={{
-                  size: "medium",
+                initialValues={{
+                  isPrivate,
+                }}
+                onSubmit={async (values) => {
+                  await updateIsPrivateSettingMutation({ ...values, slug })
                 }}
                 updateButton
+                resetOnSuccess
               >
                 <SwitchField
                   label="Private project"

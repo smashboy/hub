@@ -40,6 +40,9 @@ export const SignupForm = () => {
               submitText="Next"
               schema={Signup.omit({ password: true, username: true })}
               initialValues={{ email }}
+              ButtonProps={{
+                size: "large",
+              }}
               onSubmit={async (values) => {
                 try {
                   const newEmail = values.email
@@ -75,6 +78,9 @@ export const SignupForm = () => {
               submitText="Next"
               schema={Signup.omit({ email: true, password: true })}
               initialValues={{ username }}
+              ButtonProps={{
+                size: "large",
+              }}
               onSubmit={async (values) => {
                 try {
                   const newUsername = values.username
@@ -118,6 +124,9 @@ export const SignupForm = () => {
               submitText="Next"
               schema={Signup.omit({ email: true, username: true })}
               initialValues={{ password: "" }}
+              ButtonProps={{
+                size: "large",
+              }}
               onSubmit={async (values) => {
                 try {
                   await signupMutation({ email, username, password: values.password })

@@ -14,6 +14,8 @@ export interface FormProps<S extends z.ZodType<any, any>>
   /** Text to display in the submit button */
   submitText?: string
   updateButton?: boolean
+  resetOnSuccess?: boolean
+  forceEnableSubmit?: boolean
   ButtonProps?: Omit<LoadingButtonProps, "loading" | "type" | "disabled">
   schema?: S
   onSubmit: (values: z.infer<S>) => void | Promise<void | OnSubmitResult>
@@ -34,6 +36,8 @@ export function Form<S extends z.ZodType<any, any>>({
   submitText,
   schema,
   updateButton,
+  resetOnSuccess,
+  forceEnableSubmit,
   initialValues,
   onSubmit,
   ButtonProps,
@@ -48,7 +52,7 @@ export function Form<S extends z.ZodType<any, any>>({
   })
   const [formError, setFormError] = useState<string | null>(null)
 
-  const disableSubmit = !ctx.formState.isValid
+  const disableSubmit = !forceEnableSubmit && (!ctx.formState.isValid || !ctx.formState.isDirty)
 
   const enableUpdateButton = updateButton && !isSM
 
@@ -57,6 +61,23 @@ export function Form<S extends z.ZodType<any, any>>({
       <form
         onSubmit={ctx.handleSubmit(async (values) => {
           const result = (await onSubmit(values)) || {}
+
+          const errors = Object.entries(result)
+
+          if (errors.length === 0) {
+            if (resetOnSuccess)
+              ctx.reset(
+                updateButton
+                  ? values
+                  : typeof initialValues === "function"
+                  ? // @ts-ignore
+                    initialValues()
+                  : undefined
+              )
+
+            return
+          }
+
           for (const [key, value] of Object.entries(result)) {
             if (key === FORM_ERROR) {
               setFormError(value)
@@ -84,7 +105,7 @@ export function Form<S extends z.ZodType<any, any>>({
               variant="contained"
               color="primary"
               type="submit"
-              size="large"
+              size="medium"
               disableElevation
               {...ButtonProps}
               loading={ctx.formState.isSubmitting}

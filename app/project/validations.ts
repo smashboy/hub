@@ -26,3 +26,14 @@ export const CreateLabel = z.object({
 export const FollowProject = z.object({
   slug: z.string(),
 })
+
+export const UpdateProject = CreateProject.omit({ isPrivate: true }).merge(
+  z.object({
+    slug: z.string(),
+  })
+)
+
+export const UpdateIsProjectPrivateDanger = z.object({
+  slug: z.string(),
+  isPrivate: z.boolean(),
+})

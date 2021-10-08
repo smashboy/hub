@@ -25,6 +25,9 @@ export const LoginForm = () => {
               submitText="Next"
               schema={Login.omit({ password: true })}
               initialValues={{ email }}
+              ButtonProps={{
+                size: "large",
+              }}
               onSubmit={(values) => {
                 setEmailStep({ email: values.email })
                 handleNext()
@@ -47,6 +50,9 @@ export const LoginForm = () => {
               submitText="Login"
               schema={Login.omit({ email: true })}
               initialValues={{ password: "" }}
+              ButtonProps={{
+                size: "large",
+              }}
               onSubmit={async ({ password }) => {
                 try {
                   await loginMutation({ email, password })
