@@ -11,7 +11,7 @@ import { signupStepsStore } from "../store/signupStepsStore"
 import checkEmail from "../mutations/checkEmail"
 import checkUsername from "../mutations/checkUsername"
 
-const steps = ["Email", "Username", "Passowrd"]
+const steps = ["Email", "Username", "Password"]
 
 export const SignupForm = () => {
   const [signupMutation] = useMutation(signup)
