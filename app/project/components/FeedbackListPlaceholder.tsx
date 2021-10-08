@@ -2,9 +2,6 @@ import { Skeleton, ListItem, List, ListItemAvatar, ListItemText, Fade } from "@m
 
 const FirstVariant = () => (
   <ListItem>
-    <ListItemAvatar>
-      <Skeleton variant="circular" width={45} height={45} />
-    </ListItemAvatar>
     <ListItemText
       primary={<Skeleton variant="text" width="25%" />}
       secondary={<Skeleton variant="text" width="50%" />}
@@ -14,9 +11,6 @@ const FirstVariant = () => (
 
 const SecondVariant = () => (
   <ListItem>
-    <ListItemAvatar>
-      <Skeleton variant="circular" width={45} height={45} />
-    </ListItemAvatar>
     <ListItemText
       primary={<Skeleton variant="text" width="25%" />}
       secondary={
@@ -34,7 +28,7 @@ const items = new Array(10).fill(null).map((_, index) => {
   return <Variant key={index} />
 })
 
-const ProjectsListPlaceholder = () => {
+const FeedbackListPlaceholder = () => {
   return (
     <Fade in timeout={750}>
       <List>{items}</List>
@@ -42,4 +36,4 @@ const ProjectsListPlaceholder = () => {
   )
 }
 
-export default ProjectsListPlaceholder
+export default FeedbackListPlaceholder

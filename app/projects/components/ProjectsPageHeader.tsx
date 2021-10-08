@@ -1,8 +1,8 @@
 import { Routes } from "blitz"
-import { Typography, Grid, Fade, Paper, Box, TextField, Button } from "@mui/material"
-import SearchIcon from "@mui/icons-material/Search"
+import { Typography, Grid, Fade } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
 import { ButtonRouteLink } from "app/core/components/links"
+import SearchField from "app/core/components/SearchField"
 
 const ProjectsPageHeader: React.FC<{
   onSearch: (event: React.ChangeEvent<HTMLInputElement>) => void
@@ -28,21 +28,7 @@ const ProjectsPageHeader: React.FC<{
         }}
       >
         <Grid container item xs={12} justifyContent="center">
-          <Paper sx={{ width: "100%" }}>
-            <TextField
-              fullWidth
-              placeholder="Search projects..."
-              size="small"
-              onChange={onSearch}
-              InputProps={{
-                startAdornment: (
-                  <Box paddingRight={1} paddingTop={0.5}>
-                    <SearchIcon />
-                  </Box>
-                ),
-              }}
-            />
-          </Paper>
+          <SearchField onChange={onSearch} placeholder="Search projects..." />
         </Grid>
         <Grid item xs={12} md={3}>
           <ButtonRouteLink

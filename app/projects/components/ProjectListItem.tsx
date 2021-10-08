@@ -1,3 +1,4 @@
+import { ProjectMemberRole } from "db"
 import { Link, Routes } from "blitz"
 import {
   ListItem,
@@ -10,7 +11,6 @@ import {
   Chip,
   Box,
 } from "@mui/material"
-import { ProjectMemberRole } from "db"
 
 type ProjectListItemProps = {
   project: {
@@ -62,6 +62,7 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({
               }
               primaryTypographyProps={{
                 variant: "h6",
+                component: "div",
                 sx: {
                   color: "text.primary",
                 },

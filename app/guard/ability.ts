@@ -30,12 +30,13 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
       // TODO: maybe additional check for private project
       can("follow", "project")
 
+      // Feedback
       can(
         "create",
         "feedback",
         async (slug: string) => await checkCreateFeedbackPermissions(slug, authUserId)
       )
-
+      can("read", "feedback")
       can(
         "manage",
         "feedback.settings",

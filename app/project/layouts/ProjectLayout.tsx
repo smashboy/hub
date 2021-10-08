@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react"
-import { Routes, useMutation } from "blitz"
+import { Routes, useMutation, useRouter } from "blitz"
 import { Avatar, Typography, Grid, Container, Tabs, Tab, Fade } from "@mui/material"
 import { ButtonWebLink, ButtonRouteLink } from "app/core/components/links"
 import Layout, { LayoutProps } from "app/core/layouts/Layout"
@@ -7,7 +7,7 @@ import OpenIcon from "@mui/icons-material/OpenInNew"
 import EditIcon from "@mui/icons-material/Edit"
 import FollowIcon from "@mui/icons-material/Stars"
 import SettingsIcon from "@mui/icons-material/Settings"
-import { ProjectPageProps } from "../common"
+import { ProjectPageProps } from "../helpers"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import followProject from "../mutations/followProject"
@@ -23,6 +23,8 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
   selectedTab,
   project: { name, description, logoUrl, websiteUrl, color, slug, isFollowing },
 }) => {
+  const router = useRouter()
+
   const isSM = useIsSmallDevice()
 
   const [following, setIsFollowing] = useState(isFollowing)
@@ -144,9 +146,25 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
               scrollButtons="auto"
               centered={!isSM}
             >
-              <Tab value="landing" label="Home" />
-              <Tab value="changelog" label="Changelog" />
-              <Tab value="feedback" label="Feedback" disabled={!Boolean(user)} />
+              <Tab
+                value="landing"
+                label="Home"
+                component="a"
+                onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+                  event.preventDefault()
+                  router.push(Routes.ProjectLandingPage({ slug }))
+                }}
+              />
+              <Tab value="changelog" label="Changelog" component="a" />
+              <Tab
+                value="feedback"
+                label="Feedback"
+                component="a"
+                onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+                  event.preventDefault()
+                  router.push(Routes.FeedbackPage({ slug }))
+                }}
+              />
               <Tab value="roadmap" label="Roadmap" />
               <Tab value="jobs" label="Jobs" />
             </Tabs>

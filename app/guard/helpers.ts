@@ -84,8 +84,6 @@ export const checkCreateFeedbackPermissions = async (slug: string, userId: numbe
     },
   })
 
-  console.log("WTF", member, slug)
-
   if (!member) return false
 
   return true

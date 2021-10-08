@@ -3,7 +3,7 @@ import { Routes } from "blitz"
 import { Avatar, Typography, Grid, Container, Fade, Hidden } from "@mui/material"
 import { RouteLink } from "app/core/components/links"
 import Layout, { LayoutProps } from "app/core/layouts/Layout"
-import { ProjectPageProps } from "../common"
+import { ProjectPageProps } from "../helpers"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 
 const ProjectMiniLayout: React.FC<LayoutProps & ProjectPageProps> = ({
