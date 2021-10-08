@@ -1,11 +1,11 @@
 import db from "db"
 import { resolver } from "blitz"
 import { CreateFeedback } from "../validations"
-import { authorizePipe } from "app/guard/helpers"
+import Guard from "app/guard/ability"
 
 export default resolver.pipe(
   resolver.zod(CreateFeedback),
-  authorizePipe("create", "feedback"),
+  Guard.authorizePipe("create", "feedback"),
   async ({ projectSlug, title, category, content, participants, roadmaps, labels }, ctx) => {
     const authUserId = ctx.session.userId!
 

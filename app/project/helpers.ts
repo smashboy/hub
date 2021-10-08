@@ -61,7 +61,7 @@ export const getProjectInfo = async (
     ? null
     : true
 
-  if (isPrivate && isFollowing) return null
+  if (isPrivate && (!member || isFollowing)) return null
 
   const props: ProjectPageProps = {
     project: { ...otherProjectProps, slug, isFollowing, isPrivate },
@@ -69,7 +69,7 @@ export const getProjectInfo = async (
 
   if (!allowedRoles) return props
 
-  if (!allowedRoles.includes(member?.role) || (isPrivate && isFollowing)) return null
+  if (!allowedRoles.includes(member?.role)) return null
 
   return props
 }

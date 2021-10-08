@@ -19,7 +19,11 @@ type FeedbackListItemProps = {
     title: string
     category: FeedbackCategory
     createdAt: Date
+    author: {
+      username: string
+    }
     labels: {
+      id: string
       name: string
       color: string
     }[]
@@ -27,7 +31,13 @@ type FeedbackListItemProps = {
 }
 
 const FeedbackListItem: React.FC<FeedbackListItemProps> = ({
-  feedback: { title, id, createdAt, labels },
+  feedback: {
+    title,
+    id,
+    createdAt,
+    labels,
+    author: { username },
+  },
 }) => {
   return (
     <Fade in timeout={500}>
@@ -37,10 +47,13 @@ const FeedbackListItem: React.FC<FeedbackListItemProps> = ({
             primary={title}
             secondary={
               <Grid container spacing={1}>
-                <Grid item xs={12}>{`#${id} opened ${formatRelative(createdAt, new Date())}`}</Grid>
+                <Grid item xs={12}>{`#${id} opened ${formatRelative(
+                  createdAt,
+                  new Date()
+                )} by ${username}`}</Grid>
                 <Grid container item xs={12} spacing={1}>
-                  {labels.map(({ name, color }) => (
-                    <Grid key={name} item xs="auto">
+                  {labels.map(({ id, name, color }) => (
+                    <Grid key={id} item xs="auto">
                       <Chip label={name} key={name} sx={{ bgcolor: color }} size="small" />
                     </Grid>
                   ))}

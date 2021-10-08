@@ -72,7 +72,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
               </Fade>
               <Fade in timeout={500}>
                 <Grid container item xs={12} spacing={1} sx={{ marginTop: 2 }}>
-                  {user && following !== false && (
+                  {user && (
                     <Grid item xs={12} md={3}>
                       <ButtonRouteLink
                         href={Routes.CreateFeedbackPage({ slug })}

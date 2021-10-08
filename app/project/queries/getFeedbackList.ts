@@ -35,8 +35,14 @@ export default resolver.pipe(
             title: true,
             category: true,
             createdAt: true,
+            author: {
+              select: {
+                username: true,
+              },
+            },
             labels: {
               select: {
+                id: true,
                 name: true,
                 color: true,
               },

@@ -27,13 +27,7 @@ export const getServerSideProps: GetServerSideProps<ProjectPageProps> = async ({
   const session = await getSession(req, res)
   const slug = (params?.slug as string) || null
 
-  const props = await getProjectInfo(slug, session, [
-    ProjectMemberRole.ADMIN,
-    ProjectMemberRole.FOLLOWER,
-    ProjectMemberRole.FOUNDER,
-    ProjectMemberRole.MEMBER,
-    ProjectMemberRole.MODERATOR,
-  ])
+  const props = await getProjectInfo(slug, session)
 
   if (!props)
     return {

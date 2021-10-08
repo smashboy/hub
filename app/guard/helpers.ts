@@ -65,30 +65,6 @@ export const checkGeneralSettingsManagePersmissions = async (slug: string, userI
   return member.role === ProjectMemberRole.ADMIN || member.role === ProjectMemberRole.FOUNDER
 }
 
-export const checkCreateFeedbackPermissions = async (slug: string, userId: number) => {
-  const member = await db.projectMember.findFirst({
-    where: {
-      AND: [
-        {
-          project: {
-            slug,
-          },
-        },
-        {
-          userId,
-        },
-      ],
-    },
-    select: {
-      role: true,
-    },
-  })
-
-  if (!member) return false
-
-  return true
-}
-
 export interface IAuthorizePipe {
   <I>(
     ability: AbilityType<ExtendedAbilityTypes>,
