@@ -1,5 +1,5 @@
 import db, { ProjectMemberRole } from "db"
-import { GetServerSideProps, getSession } from "blitz"
+import { SessionContext } from "blitz"
 
 export type ProjectPageProps = {
   project: {
@@ -14,17 +14,18 @@ export type ProjectPageProps = {
   }
 }
 
-export const getProjectInfo: GetServerSideProps = async ({ params, req, res }) => {
-  const session = await getSession(req, res)
+// const session = await getSession(req, res)
+// const userId = session?.userId || undefined
+// const slug = (params?.slug as string) || null
 
+export const getProjectInfo = async (
+  slug: string | null,
+  session: SessionContext,
+  allowedRoles?: Array<ProjectMemberRole | undefined>
+): Promise<ProjectPageProps | null> => {
   const userId = session?.userId || undefined
 
-  const slug = (params?.slug as string) || null
-
-  if (!slug)
-    return {
-      notFound: true,
-    }
+  if (!slug) return null
 
   const project = await db.project.findFirst({
     where: {
@@ -48,12 +49,11 @@ export const getProjectInfo: GetServerSideProps = async ({ params, req, res }) =
     },
   })
 
-  if (!project)
-    return {
-      notFound: true,
-    }
+  if (!project) return null
 
-  const { members, ...otherProjectProps } = project
+  const { members, isPrivate, ...otherProjectProps } = project
+
+  const member = members[0]
 
   const isFollowing = !members[0]
     ? false
@@ -61,11 +61,15 @@ export const getProjectInfo: GetServerSideProps = async ({ params, req, res }) =
     ? null
     : true
 
+  if (isPrivate && isFollowing) return null
+
   const props: ProjectPageProps = {
-    project: { ...otherProjectProps, slug, isFollowing },
+    project: { ...otherProjectProps, slug, isFollowing, isPrivate },
   }
 
-  return {
-    props,
-  }
+  if (!allowedRoles) return props
+
+  if (!allowedRoles.includes(member?.role) || (isPrivate && isFollowing)) return null
+
+  return props
 }

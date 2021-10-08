@@ -1,3 +1,5 @@
+import { ProjectMemberRole } from "db"
+import { BlitzPage, getSession, GetServerSideProps } from "blitz"
 import { Grid, Divider, Typography, Button } from "@mui/material"
 import ColorPicker from "app/core/components/ColorPicker"
 import Form from "app/core/components/Form"
@@ -5,10 +7,9 @@ import LabeledTextField from "app/core/components/LabeledTextField"
 import PaperBox from "app/core/components/PaperBox"
 import SwitchField from "app/core/components/SwitchField"
 import { authConfig } from "app/core/configs/authConfig"
-import { getProjectInfo, ProjectPageProps } from "app/project/common"
+import { getProjectInfo, ProjectPageProps } from "app/project/helpers"
 import ProjectSettingsLayout from "app/project/layouts/ProjectSettingsLayout"
 import { CreateProject } from "app/project/validations"
-import { BlitzPage } from "blitz"
 
 const SettingsPage: BlitzPage<ProjectPageProps> = () => {
   return (
@@ -94,6 +95,27 @@ SettingsPage.getLayout = (page, props: ProjectPageProps) => (
   </ProjectSettingsLayout>
 )
 
-export const getServerSideProps = getProjectInfo
+export const getServerSideProps: GetServerSideProps<ProjectPageProps> = async ({
+  params,
+  req,
+  res,
+}) => {
+  const session = await getSession(req, res)
+  const slug = (params?.slug as string) || null
+
+  const props = await getProjectInfo(slug, session, [
+    ProjectMemberRole.ADMIN,
+    ProjectMemberRole.FOUNDER,
+  ])
+
+  if (!props)
+    return {
+      notFound: true,
+    }
+
+  return {
+    props,
+  }
+}
 
 export default SettingsPage

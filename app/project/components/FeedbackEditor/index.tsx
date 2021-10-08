@@ -11,11 +11,12 @@ import Sidebar from "./Sidebar"
 const FeedbackEditor: React.FC<{ slug: string }> = ({ slug }) => {
   const isSM = useIsSmallDevice()
 
-  const [res] = useQuery(getAbility, [["manage", "feedback-settings", slug]], {
+  const [res] = useQuery(getAbility, [["manage", "feedback.settings", slug]], {
     suspense: false,
+    refetchOnWindowFocus: false,
   })
 
-  const canManageSettings = (res && res[0]?.can) || false
+  const canManageSettings = res?.[0]?.can || false
 
   return (
     <FeedbackEditorProvider slug={slug}>

@@ -5,9 +5,10 @@ import { checkFeedbackSettingsManagePermissions } from "./helpers"
 export type ExtendedResourceTypes =
   | "user"
   | "feedback"
-  | "feedback-settings"
+  | "feedback.settings"
   | "project"
   | "projects"
+
 export type ExtendedAbilityTypes = "follow"
 
 const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
@@ -26,7 +27,7 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
 
       can(
         "manage",
-        "feedback-settings",
+        "feedback.settings",
         async (slug: string) => await checkFeedbackSettingsManagePermissions(slug, authUserId)
       )
 

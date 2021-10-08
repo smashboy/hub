@@ -58,7 +58,7 @@ const SwitchField: React.FC<SwitchFieldProps> = ({
             )}
           </Grid>
           <Grid container item xs={2} md={4} justifyContent="flex-end">
-            <Box paddingRight={isSM ? 0 : 5} display="flex" alignItems="center">
+            <Box paddingRight={isSM ? 0 : 2.5} display="flex" alignItems="center">
               <Switch
                 ref={ref}
                 {...fieldProps}

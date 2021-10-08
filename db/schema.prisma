@@ -77,14 +77,16 @@ model Project {
 }
 
 model ProjectMember {
-  id        Int               @id @default(autoincrement())
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
-  user      User              @relation(fields: [userId], references: [id])
-  role      ProjectMemberRole @default(FOLLOWER)
-  project   Project           @relation(fields: [projectId], references: [id])
-  projectId String
-  userId    Int
+  id                Int               @id @default(autoincrement())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  user              User              @relation(fields: [userId], references: [id])
+  role              ProjectMemberRole @default(FOLLOWER)
+  project           Project           @relation(fields: [projectId], references: [id])
+  projectId         String
+  userId            Int
+  projectFeedback   ProjectFeedback?  @relation(fields: [projectFeedbackId], references: [id])
+  projectFeedbackId String?
 }
 
 model ProjectLanding {
@@ -93,7 +95,7 @@ model ProjectLanding {
   updatedAt DateTime @updatedAt
   content   String
   project   Project  @relation(fields: [projectId], references: [id])
-  projectId String
+  projectId String   @unique
 }
 
 model ProjectChangelog {
@@ -120,15 +122,16 @@ model ProjectRoadmap {
 }
 
 model ProjectFeedback {
-  id        String                 @id @default(cuid())
-  createdAt DateTime               @default(now())
-  updatedAt DateTime               @updatedAt
-  title     String
-  labels    ProjectFeedbackLabel[]
-  type      FeedbackType
-  upvotes   Int                    @default(0)
-  roadmap   ProjectRoadmap?        @relation(fields: [roadmapId], references: [id])
-  roadmapId Int?
+  id           String                 @id @default(cuid())
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
+  title        String
+  labels       ProjectFeedbackLabel[]
+  type         FeedbackType
+  participants ProjectMember[]
+  upvotes      Int                    @default(0)
+  roadmap      ProjectRoadmap?        @relation(fields: [roadmapId], references: [id])
+  roadmapId    Int?
 }
 
 model ProjectSettings {

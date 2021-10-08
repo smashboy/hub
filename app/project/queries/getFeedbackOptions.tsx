@@ -5,7 +5,7 @@ import { authorizePipe } from "app/guard/helpers"
 
 export default resolver.pipe(
   resolver.zod(GetCreateFeedbackInfo),
-  authorizePipe("manage", "feedback-settings", ({ slug }) => slug),
+  authorizePipe("manage", "feedback.settings", ({ slug }) => slug),
   async ({ slug }) => {
     const project = await db.project.findFirst({
       where: {

@@ -36,9 +36,15 @@ const generateNewLabelValues = () => ({
 const FeedbackSidebar = () => {
   const { slug } = useFeedbackEditor()
 
-  const [project, { refetch }] = useQuery(getFeedbackOptions, {
-    slug,
-  })
+  const [project, { refetch }] = useQuery(
+    getFeedbackOptions,
+    {
+      slug,
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  )
 
   const projectLabels = project.settings?.labels || []
 
