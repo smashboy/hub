@@ -6,7 +6,9 @@ import { authorizePipe } from "app/guard/helpers"
 export default resolver.pipe(
   resolver.zod(CreateFeedback),
   authorizePipe("create", "feedback"),
-  async ({ projectSlug, title, category, content, participants, roadmaps, labels }) => {
+  async ({ projectSlug, title, category, content, participants, roadmaps, labels }, ctx) => {
+    const authUserId = ctx.session.userId!
+
     title = title.trim()
 
     const feedback = await db.projectFeedback.create({
@@ -14,6 +16,11 @@ export default resolver.pipe(
         title,
         category,
         content,
+        author: {
+          connect: {
+            id: authUserId,
+          },
+        },
         project: {
           connect: {
             slug: projectSlug,

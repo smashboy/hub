@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "FeedbackType" AS ENUM ('BUG', 'FEATURE', 'IMPROVEMENT');
+CREATE TYPE "FeedbackCategory" AS ENUM ('BUG', 'FEATURE', 'IMPROVEMENT');
 
 -- CreateEnum
 CREATE TYPE "TokenType" AS ENUM ('RESET_PASSWORD');
@@ -81,7 +81,7 @@ CREATE TABLE "ProjectMember" (
     "role" "ProjectMemberRole" NOT NULL DEFAULT E'FOLLOWER',
     "projectId" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
-    "projectFeedbackId" TEXT,
+    "projectFeedbackId" INTEGER,
 
     CONSTRAINT "ProjectMember_pkey" PRIMARY KEY ("id")
 );
@@ -125,13 +125,15 @@ CREATE TABLE "ProjectRoadmap" (
 
 -- CreateTable
 CREATE TABLE "ProjectFeedback" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "title" TEXT NOT NULL,
-    "category" "FeedbackType" NOT NULL,
+    "category" "FeedbackCategory" NOT NULL,
+    "content" TEXT NOT NULL,
     "upvotes" INTEGER NOT NULL DEFAULT 0,
-    "roadmapId" INTEGER,
+    "projectId" TEXT,
+    "authorId" INTEGER NOT NULL,
 
     CONSTRAINT "ProjectFeedback_pkey" PRIMARY KEY ("id")
 );
@@ -154,10 +156,16 @@ CREATE TABLE "ProjectFeedbackLabel" (
     "name" TEXT NOT NULL,
     "description" TEXT,
     "color" TEXT NOT NULL,
-    "feedbackId" TEXT,
+    "feedbackId" INTEGER,
     "settingsId" INTEGER NOT NULL,
 
     CONSTRAINT "ProjectFeedbackLabel_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "_ProjectFeedbackToProjectRoadmap" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
 );
 
 -- CreateIndex
@@ -187,6 +195,12 @@ CREATE UNIQUE INDEX "ProjectRoadmap_projectId_key" ON "ProjectRoadmap"("projectI
 -- CreateIndex
 CREATE UNIQUE INDEX "ProjectSettings_projectId_key" ON "ProjectSettings"("projectId");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "_ProjectFeedbackToProjectRoadmap_AB_unique" ON "_ProjectFeedbackToProjectRoadmap"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_ProjectFeedbackToProjectRoadmap_B_index" ON "_ProjectFeedbackToProjectRoadmap"("B");
+
 -- AddForeignKey
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
@@ -212,7 +226,10 @@ ALTER TABLE "ProjectChangelog" ADD CONSTRAINT "ProjectChangelog_projectId_fkey" 
 ALTER TABLE "ProjectRoadmap" ADD CONSTRAINT "ProjectRoadmap_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProjectFeedback" ADD CONSTRAINT "ProjectFeedback_roadmapId_fkey" FOREIGN KEY ("roadmapId") REFERENCES "ProjectRoadmap"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ProjectFeedback" ADD CONSTRAINT "ProjectFeedback_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProjectFeedback" ADD CONSTRAINT "ProjectFeedback_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ProjectSettings" ADD CONSTRAINT "ProjectSettings_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -222,3 +239,9 @@ ALTER TABLE "ProjectFeedbackLabel" ADD CONSTRAINT "ProjectFeedbackLabel_feedback
 
 -- AddForeignKey
 ALTER TABLE "ProjectFeedbackLabel" ADD CONSTRAINT "ProjectFeedbackLabel_settingsId_fkey" FOREIGN KEY ("settingsId") REFERENCES "ProjectSettings"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ProjectFeedbackToProjectRoadmap" ADD FOREIGN KEY ("A") REFERENCES "ProjectFeedback"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ProjectFeedbackToProjectRoadmap" ADD FOREIGN KEY ("B") REFERENCES "ProjectRoadmap"("id") ON DELETE CASCADE ON UPDATE CASCADE;

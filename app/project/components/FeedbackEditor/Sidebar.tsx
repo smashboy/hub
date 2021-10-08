@@ -34,7 +34,7 @@ const generateNewLabelValues = () => ({
 })
 
 const FeedbackSidebar = () => {
-  const { slug, setMemberIds } = useFeedbackEditor()
+  const { slug, setMemberIds, setLabels } = useFeedbackEditor()
 
   const [project, { refetch }] = useQuery(
     getFeedbackOptions,
@@ -76,7 +76,6 @@ const FeedbackSidebar = () => {
                   // @ts-ignore
                   setMemberIds(value.map(({ user: { id } }) => id))
                 }}
-                getOptionLabel={({ user: { username } }) => username}
                 size="small"
                 renderOption={(props, { user: { username, id } }, { selected }) =>
                   selected ? null : (
@@ -113,6 +112,10 @@ const FeedbackSidebar = () => {
                 freeSolo
                 disablePortal
                 multiple
+                onChange={(event, value) => {
+                  // @ts-ignore
+                  setLabels(value.map(({ id }) => id))
+                }}
                 renderOption={(props, { name, id, color, description }, { selected }) =>
                   selected ? null : (
                     <MenuItem

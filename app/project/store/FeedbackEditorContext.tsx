@@ -18,6 +18,7 @@ export type FeedbackEditorStore = {
   setTitle: (newTitle: string) => void
   setCategory: (newCategory: CategoryType) => void
   setMemberIds: (members: number[]) => void
+  setLabels: (labels: string[]) => void
   submit: (content: Descendant[]) => void
 }
 
@@ -39,13 +40,14 @@ export const FeedbackEditorProvider: React.FC<{ slug: string }> = ({ children, s
   const [disableSubmit, setDisableSubmit] = useState(false)
 
   useEffect(() => {
-    if (!title || category === "none" || memberIds.length === 0) return setDisableSubmit(true)
+    if (!title || category === "none") return setDisableSubmit(true)
     setDisableSubmit(false)
   }, [title, category, memberIds])
 
   const handleSetTitle = (newTitle: string) => setTitle(newTitle)
   const handleSetCategory = (newCategory: CategoryType) => setCategory(newCategory)
   const handleSetMemberIds = (members: number[]) => setMemberIds(members)
+  const handleSetLabelIds = (labels: string[]) => setLabelIds(labels)
 
   const handleSubmit = async (content: Descendant[]) => {
     await createFeedbackMutation({
@@ -73,6 +75,7 @@ export const FeedbackEditorProvider: React.FC<{ slug: string }> = ({ children, s
         setTitle: handleSetTitle,
         setCategory: handleSetCategory,
         setMemberIds: handleSetMemberIds,
+        setLabels: handleSetLabelIds,
         submit: handleSubmit,
       }}
     >

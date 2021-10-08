@@ -40,7 +40,9 @@ const FeedbackListItem: React.FC<FeedbackListItemProps> = ({
                 <Grid item xs={12}>{`#${id} opened ${formatRelative(createdAt, new Date())}`}</Grid>
                 <Grid container item xs={12} spacing={1}>
                   {labels.map(({ name, color }) => (
-                    <Chip label={name} key={name} sx={{ bgcolor: color }} />
+                    <Grid key={name} item xs="auto">
+                      <Chip label={name} key={name} sx={{ bgcolor: color }} size="small" />
+                    </Grid>
                   ))}
                 </Grid>
               </Grid>
