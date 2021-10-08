@@ -1,5 +1,5 @@
-import { resolver } from "blitz"
 import db, { ProjectMemberRole } from "db"
+import { resolver } from "blitz"
 import slugify from "slugify"
 import { CreateProject } from "../validations"
 

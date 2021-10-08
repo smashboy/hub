@@ -68,6 +68,7 @@ model Project {
   description String?
   websiteUrl  String?
   logoUrl     String?
+  feedback    ProjectFeedback[]
   members     ProjectMember[]
   landing     ProjectLanding?
   changelogs  ProjectChangelog[]
@@ -86,7 +87,7 @@ model ProjectMember {
   projectId         String
   userId            Int
   projectFeedback   ProjectFeedback?  @relation(fields: [projectFeedbackId], references: [id])
-  projectFeedbackId String?
+  projectFeedbackId Int?
 }
 
 model ProjectLanding {
@@ -122,16 +123,18 @@ model ProjectRoadmap {
 }
 
 model ProjectFeedback {
-  id           String                 @id @default(cuid())
+  id           Int                    @id @default(autoincrement())
   createdAt    DateTime               @default(now())
   updatedAt    DateTime               @updatedAt
   title        String
+  category     FeedbackCategory
+  content      String
   labels       ProjectFeedbackLabel[]
-  type         FeedbackType
   participants ProjectMember[]
   upvotes      Int                    @default(0)
-  roadmap      ProjectRoadmap?        @relation(fields: [roadmapId], references: [id])
-  roadmapId    Int?
+  roadmaps     ProjectRoadmap[]
+  project      Project?               @relation(fields: [projectId], references: [id])
+  projectId    String?
 }
 
 model ProjectSettings {
@@ -151,12 +154,12 @@ model ProjectFeedbackLabel {
   description String?
   color       String
   feedback    ProjectFeedback? @relation(fields: [feedbackId], references: [id])
-  feedbackId  String?
+  feedbackId  Int?
   settings    ProjectSettings  @relation(fields: [settingsId], references: [id])
   settingsId  Int
 }
 
-enum FeedbackType {
+enum FeedbackCategory {
   BUG
   FEATURE
   IMPROVEMENT

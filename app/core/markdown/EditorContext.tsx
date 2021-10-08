@@ -7,14 +7,18 @@ const EditorContext = createContext<EditorStore | null>(null)
 export const EditorProvider: React.FC<EditorProps> = ({
   children,
   disableSubmit: disableSubmitProp,
+  initialContent,
   submitText,
+  onSubmit,
 }) => {
-  const [content, setContent] = useState<Descendant[]>([
-    {
-      type: "paragraph",
-      children: [{ text: "" }],
-    },
-  ])
+  const [content, setContent] = useState<Descendant[]>(
+    initialContent || [
+      {
+        type: "paragraph",
+        children: [{ text: "" }],
+      },
+    ]
+  )
 
   const [isFocused, setisFocused] = useState(false)
   const [disableSubmit, setDisableSubmit] = useState(disableSubmitProp || false)
@@ -40,6 +44,7 @@ export const EditorProvider: React.FC<EditorProps> = ({
         setIsFocused: handleSetIsFocused,
         setDisableSubmit: handleSetDisableSubmit,
         setContent: handleSetContent,
+        onSubmit,
       }}
     >
       {children}

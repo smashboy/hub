@@ -81,6 +81,7 @@ CREATE TABLE "ProjectMember" (
     "role" "ProjectMemberRole" NOT NULL DEFAULT E'FOLLOWER',
     "projectId" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
+    "projectFeedbackId" TEXT,
 
     CONSTRAINT "ProjectMember_pkey" PRIMARY KEY ("id")
 );
@@ -128,7 +129,7 @@ CREATE TABLE "ProjectFeedback" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "title" TEXT NOT NULL,
-    "type" "FeedbackType" NOT NULL,
+    "category" "FeedbackType" NOT NULL,
     "upvotes" INTEGER NOT NULL DEFAULT 0,
     "roadmapId" INTEGER,
 
@@ -175,7 +176,7 @@ CREATE UNIQUE INDEX "Token_hashedToken_type_key" ON "Token"("hashedToken", "type
 CREATE UNIQUE INDEX "Project_slug_key" ON "Project"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ProjectLanding_projectId_unique" ON "ProjectLanding"("projectId");
+CREATE UNIQUE INDEX "ProjectLanding_projectId_key" ON "ProjectLanding"("projectId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ProjectRoadmap_slug_key" ON "ProjectRoadmap"("slug");
@@ -197,6 +198,9 @@ ALTER TABLE "ProjectMember" ADD CONSTRAINT "ProjectMember_userId_fkey" FOREIGN K
 
 -- AddForeignKey
 ALTER TABLE "ProjectMember" ADD CONSTRAINT "ProjectMember_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProjectMember" ADD CONSTRAINT "ProjectMember_projectFeedbackId_fkey" FOREIGN KEY ("projectFeedbackId") REFERENCES "ProjectFeedback"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ProjectLanding" ADD CONSTRAINT "ProjectLanding_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

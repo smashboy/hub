@@ -1,5 +1,6 @@
 import { GuardBuilder } from "@blitz-guard/core"
 import {
+  checkCreateFeedbackPermissions,
   checkFeedbackSettingsManagePermissions,
   checkGeneralSettingsManagePersmissions,
 } from "./helpers"
@@ -28,6 +29,12 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
 
       // TODO: maybe additional check for private project
       can("follow", "project")
+
+      can(
+        "create",
+        "feedback",
+        async (slug: string) => await checkCreateFeedbackPermissions(slug, authUserId)
+      )
 
       can(
         "manage",

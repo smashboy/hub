@@ -1,4 +1,5 @@
-import { z } from "zod"
+import { FeedbackCategory } from "db"
+import * as z from "zod"
 
 export const projectName = z
   .string()
@@ -36,4 +37,14 @@ export const UpdateProject = CreateProject.omit({ isPrivate: true }).merge(
 export const UpdateIsProjectPrivateDanger = z.object({
   slug: z.string(),
   isPrivate: z.boolean(),
+})
+
+export const CreateFeedback = z.object({
+  projectSlug: z.string(),
+  title: z.string().min(1).max(75),
+  category: z.enum([FeedbackCategory.BUG, FeedbackCategory.FEATURE, FeedbackCategory.IMPROVEMENT]),
+  content: z.string(),
+  participants: z.array(z.number()),
+  roadmaps: z.array(z.number()),
+  labels: z.array(z.string()),
 })

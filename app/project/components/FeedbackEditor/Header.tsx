@@ -1,4 +1,4 @@
-import { FeedbackType } from "db"
+import { FeedbackCategory } from "db"
 import { Grid, TextField, MenuItem, Fade } from "@mui/material"
 import { CategoryType, useFeedbackEditor } from "app/project/store/FeedbackEditorContext"
 
@@ -7,15 +7,15 @@ type FeedbackSelectOption = { label: string; value: CategoryType }
 const feedbackOptions: FeedbackSelectOption[] = [
   {
     label: "Feature",
-    value: FeedbackType.FEATURE,
+    value: FeedbackCategory.FEATURE,
   },
   {
     label: "Improvement",
-    value: FeedbackType.IMPROVEMENT,
+    value: FeedbackCategory.IMPROVEMENT,
   },
   {
     label: "Bug",
-    value: FeedbackType.BUG,
+    value: FeedbackCategory.BUG,
   },
   {
     label: "Select category...",

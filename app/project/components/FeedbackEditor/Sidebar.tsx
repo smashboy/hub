@@ -34,7 +34,7 @@ const generateNewLabelValues = () => ({
 })
 
 const FeedbackSidebar = () => {
-  const { slug } = useFeedbackEditor()
+  const { slug, setMemberIds } = useFeedbackEditor()
 
   const [project, { refetch }] = useQuery(
     getFeedbackOptions,
@@ -72,6 +72,11 @@ const FeedbackSidebar = () => {
                 fullWidth
                 freeSolo
                 multiple
+                onChange={(event, value) => {
+                  // @ts-ignore
+                  setMemberIds(value.map(({ user: { id } }) => id))
+                }}
+                getOptionLabel={({ user: { username } }) => username}
                 size="small"
                 renderOption={(props, { user: { username, id } }, { selected }) =>
                   selected ? null : (
@@ -94,7 +99,7 @@ const FeedbackSidebar = () => {
                     />
                   ))
                 }
-                renderInput={(params) => <TextField {...params} label="Assigned" />}
+                renderInput={(params) => <TextField {...params} label="Participants" />}
               />
             </Grid>
             <Grid item xs={12}>

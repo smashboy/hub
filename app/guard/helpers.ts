@@ -20,10 +20,16 @@ export const checkEmailVerification = async (ctx: Ctx) => {
 export const checkFeedbackSettingsManagePermissions = async (slug: string, userId: number) => {
   const member = await db.projectMember.findFirst({
     where: {
-      project: {
-        slug,
-      },
-      userId,
+      AND: [
+        {
+          project: {
+            slug,
+          },
+        },
+        {
+          userId,
+        },
+      ],
     },
     select: {
       role: true,
@@ -38,10 +44,16 @@ export const checkFeedbackSettingsManagePermissions = async (slug: string, userI
 export const checkGeneralSettingsManagePersmissions = async (slug: string, userId: number) => {
   const member = await db.projectMember.findFirst({
     where: {
-      project: {
-        slug,
-      },
-      userId,
+      AND: [
+        {
+          project: {
+            slug,
+          },
+        },
+        {
+          userId,
+        },
+      ],
     },
     select: {
       role: true,
@@ -51,6 +63,32 @@ export const checkGeneralSettingsManagePersmissions = async (slug: string, userI
   if (!member) return false
 
   return member.role === ProjectMemberRole.ADMIN || member.role === ProjectMemberRole.FOUNDER
+}
+
+export const checkCreateFeedbackPermissions = async (slug: string, userId: number) => {
+  const member = await db.projectMember.findFirst({
+    where: {
+      AND: [
+        {
+          project: {
+            slug,
+          },
+        },
+        {
+          userId,
+        },
+      ],
+    },
+    select: {
+      role: true,
+    },
+  })
+
+  console.log("WTF", member, slug)
+
+  if (!member) return false
+
+  return true
 }
 
 export interface IAuthorizePipe {

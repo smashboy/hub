@@ -63,9 +63,11 @@ export type EditorStore = {
   setIsFocused: (newValue: boolean) => void
   setContent: (newContent: Descendant[]) => void
   setDisableSubmit: (newValue: boolean) => void
+  onSubmit?: (content: Descendant[]) => void
 }
 
-export type EditorProps = Partial<Pick<EditorStore, "disableSubmit">> & {
+export type EditorProps = Partial<Pick<EditorStore, "disableSubmit" | "onSubmit">> & {
+  initialContent?: Descendant[]
   submitText?: string
 }
 
