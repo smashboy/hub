@@ -31,11 +31,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
 
   const [followMutation, { isLoading: isLoadingFollow }] = useMutation(followProject)
 
-  const user = useCurrentUser({
-    options: {
-      suspense: false,
-    },
-  })
+  const user = useCurrentUser(false)
 
   const websiteHost = useMemo(() => (websiteUrl ? new URL(websiteUrl).host : null), [websiteUrl])
 

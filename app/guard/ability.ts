@@ -22,6 +22,9 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
     cannot("manage", "all")
 
     can("read", "user")
+    can("read", "feedback")
+    can("read", "project")
+    can("read", "feedback.settings")
 
     if (authUserId) {
       can("manage", "user")
@@ -31,9 +34,9 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
 
       // Feedback
       can("create", "feedback")
-      can("read", "feedback")
+
       can(
-        "manage",
+        "update",
         "feedback.settings",
         async (slug: string) => await checkFeedbackSettingsManagePermissions(slug, authUserId)
       )

@@ -23,7 +23,9 @@ const FeedbackList: React.FC<{ slug: string }> = ({ slug }) => {
   )
 
   const feedback = feedbackPages
-    .map(({ feedback: feedbackList }) => feedbackList.map((feedback) => feedback))
+    .map(({ feedback: feedbackList }) =>
+      feedbackList.map(({ content, ...otherProps }) => ({ ...otherProps, ...content }))
+    )
     .flat()
 
   const Components: Components = useMemo(
@@ -60,7 +62,7 @@ const FeedbackList: React.FC<{ slug: string }> = ({ slug }) => {
         endReached={handleFetchNext}
         style={{ height: "100%" }}
         itemContent={(index, feedback) => (
-          <FeedbackListItem key={feedback.id} feedback={feedback} />
+          <FeedbackListItem key={feedback.id} slug={slug} feedback={feedback} />
         )}
       />
     </Box>

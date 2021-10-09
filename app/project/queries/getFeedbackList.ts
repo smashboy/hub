@@ -9,9 +9,7 @@ export interface GetFeedbackListInput extends Pick<Prisma.ProjectFindManyArgs, "
 export default resolver.pipe(
   async ({ skip = 0, take = 10, searchQuery, slug }: GetFeedbackListInput) => {
     const where: Prisma.ProjectFeedbackWhereInput = {
-      project: {
-        slug,
-      },
+      projectSlug: slug,
     }
 
     const {
@@ -31,9 +29,13 @@ export default resolver.pipe(
           ...paginateArgs,
           where,
           select: {
-            id: true,
-            title: true,
-            category: true,
+            content: {
+              select: {
+                id: true,
+                title: true,
+                category: true,
+              },
+            },
             createdAt: true,
             author: {
               select: {

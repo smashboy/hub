@@ -9,7 +9,10 @@ export const EditorProvider: React.FC<EditorProps> = ({
   disableSubmit: disableSubmitProp,
   initialContent,
   submitText,
+  editVariant,
+  readOnly,
   onSubmit,
+  onCancel,
 }) => {
   const [content, setContent] = useState<Descendant[]>(
     initialContent || [
@@ -24,6 +27,8 @@ export const EditorProvider: React.FC<EditorProps> = ({
   const [disableSubmit, setDisableSubmit] = useState(disableSubmitProp || false)
 
   submitText = submitText || "Submit"
+  readOnly = Boolean(readOnly)
+  editVariant = Boolean(editVariant)
 
   useEffect(() => {
     if (disableSubmitProp !== undefined) setDisableSubmit(disableSubmitProp)
@@ -41,10 +46,13 @@ export const EditorProvider: React.FC<EditorProps> = ({
         isFocused,
         disableSubmit,
         submitText,
+        readOnly,
+        editVariant,
         setIsFocused: handleSetIsFocused,
         setDisableSubmit: handleSetDisableSubmit,
         setContent: handleSetContent,
         onSubmit,
+        onCancel,
       }}
     >
       {children}

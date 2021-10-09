@@ -59,7 +59,7 @@ model Token {
 }
 
 model Project {
-  id          Int                @id @default(autoincrement())
+  id          String             @id @default(cuid())
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
   name        String
@@ -85,9 +85,9 @@ model ProjectMember {
   user      User              @relation(fields: [userId], references: [id])
   role      ProjectMemberRole @default(FOLLOWER)
   project   Project           @relation(fields: [projectId], references: [id])
-  projectId Int
+  projectId String
   userId    Int
-  assigned  ProjectFeedback[]
+  test      ProjectFeedback[]
 }
 
 model ProjectLanding {
@@ -96,7 +96,7 @@ model ProjectLanding {
   updatedAt DateTime @updatedAt
   content   String
   project   Project  @relation(fields: [projectId], references: [id])
-  projectId Int      @unique
+  projectId String   @unique
 }
 
 model ProjectChangelog {
@@ -107,7 +107,7 @@ model ProjectChangelog {
   description String?
   content     String
   project     Project  @relation(fields: [projectId], references: [id])
-  projectId   Int
+  projectId   String
 }
 
 model ProjectRoadmap {
@@ -118,36 +118,33 @@ model ProjectRoadmap {
   title       String
   description String?
   project     Project           @relation(fields: [projectId], references: [id])
-  projectId   Int
-  feedback    ProjectFeedback[]
+  projectId   String
+  test        ProjectFeedback[]
 }
 
 model ProjectFeedback {
-  id           Int                    @id @default(autoincrement())
-  createdAt    DateTime               @default(now())
-  updatedAt    DateTime               @updatedAt
+  id           Int                     @id @default(autoincrement())
   participants ProjectMember[]
   roadmaps     ProjectRoadmap[]
   labels       ProjectFeedbackLabel[]
-  project      Project                @relation(fields: [projectSlug], references: [slug])
-  projectSlug  String
-  author       User                   @relation(fields: [authorId], references: [id])
+  project      Project                 @relation(fields: [projectId], references: [id])
+  projectId    String
+  author       User                    @relation(fields: [authorId], references: [id])
   authorId     Int
-  content      ProjectFeedbackContent @relation(fields: [contentId, projectSlug], references: [id, projectSlug])
-  contentId    Int
+  content      ProjectFeedbackContent?
 }
 
 model ProjectFeedbackContent {
-  id              Int
+  id              Int              @default(autoincrement())
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   title           String
   category        FeedbackCategory
   content         String
-  projectSlug     String
-  projectFeedback ProjectFeedback?
+  projectId       String
+  projectFeedback ProjectFeedback  @relation(fields: [projectId], references: [projectId])
 
-  @@id([id, projectSlug])
+  @@id([id, projectId])
 }
 
 model ProjectSettings {
@@ -156,7 +153,7 @@ model ProjectSettings {
   updatedAt DateTime               @updatedAt
   project   Project                @relation(fields: [projectId], references: [id])
   labels    ProjectFeedbackLabel[]
-  projectId Int                    @unique
+  projectId String                 @unique
 }
 
 model ProjectFeedbackLabel {
@@ -168,7 +165,7 @@ model ProjectFeedbackLabel {
   color       String
   settings    ProjectSettings   @relation(fields: [settingsId], references: [id])
   settingsId  Int
-  feedback    ProjectFeedback[]
+  test        ProjectFeedback[]
 }
 
 enum FeedbackCategory {

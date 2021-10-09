@@ -2,10 +2,11 @@ import db, { ProjectMemberRole } from "db"
 import { resolver, NotFoundError } from "blitz"
 import { GetCreateFeedbackInfo } from "../validations"
 import { authorizePipe } from "app/guard/helpers"
+import Guard from "app/guard/ability"
 
 export default resolver.pipe(
   resolver.zod(GetCreateFeedbackInfo),
-  authorizePipe("manage", "feedback.settings", ({ slug }) => slug),
+  Guard.authorizePipe("read", "feedback.settings"),
   async ({ slug }) => {
     const project = await db.project.findFirst({
       where: {

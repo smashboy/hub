@@ -1,7 +1,7 @@
-import db, { ProjectMemberRole } from "db"
+import db, { FeedbackCategory, ProjectMemberRole } from "db"
 import { SessionContext } from "blitz"
 
-export type ProjectPageProps = {
+export interface ProjectPageProps {
   project: {
     name: string
     slug: string
@@ -14,9 +14,94 @@ export type ProjectPageProps = {
   }
 }
 
+export interface FeedbackPageProps extends ProjectPageProps {
+  feedback: {
+    id: number
+    createdAt: Date
+    title: string
+    category: FeedbackCategory
+    content: string
+    author: {
+      id: number
+      username: string
+      avatarUrl: string | null
+    }
+    labels: Array<{
+      id: string
+      name: string
+      color: string
+    }>
+    participants: Array<{
+      user: {
+        id: number
+        username: string
+        avatarUrl: string | null
+      }
+    }>
+  }
+}
+
 // const session = await getSession(req, res)
 // const userId = session?.userId || undefined
 // const slug = (params?.slug as string) || null
+
+export const getFeedback = async (
+  slug: string,
+  feedbackId: number | null
+): Promise<Omit<FeedbackPageProps, "project"> | null> => {
+  if (!feedbackId) return null
+
+  const feedback = await db.projectFeedback.findFirst({
+    where: {
+      content: {
+        projectSlug: slug,
+        id: feedbackId,
+      },
+    },
+    select: {
+      content: {
+        select: {
+          id: true,
+          createdAt: true,
+          title: true,
+          category: true,
+          content: true,
+        },
+      },
+      author: {
+        select: {
+          id: true,
+          username: true,
+          avatarUrl: true,
+        },
+      },
+      labels: {
+        select: {
+          id: true,
+          name: true,
+          color: true,
+        },
+      },
+      participants: {
+        select: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+              avatarUrl: true,
+            },
+          },
+        },
+      },
+    },
+  })
+
+  if (!feedback) return null
+
+  const { content, ...otherProps } = feedback
+
+  return { feedback: { ...otherProps, ...content } }
+}
 
 export const getProjectInfo = async (
   slug: string | null,

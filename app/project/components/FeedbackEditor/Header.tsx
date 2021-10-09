@@ -1,6 +1,8 @@
 import { FeedbackCategory } from "db"
+import { Suspense } from "react"
 import { Grid, TextField, MenuItem, Fade } from "@mui/material"
 import { CategoryType, useFeedbackEditor } from "app/project/store/FeedbackEditorContext"
+import ViewHeader from "./ViewHeader"
 
 type FeedbackSelectOption = { label: string; value: CategoryType }
 
@@ -24,7 +26,9 @@ const feedbackOptions: FeedbackSelectOption[] = [
 ]
 
 const FeedbackEditorHeader = () => {
-  const { title, category, setTitle, setCategory } = useFeedbackEditor()
+  const { title, category, setTitle, setCategory, readOnly } = useFeedbackEditor()
+
+  if (readOnly) return <ViewHeader />
 
   const handleTitle = (event: React.ChangeEvent<HTMLInputElement>) =>
     setTitle(event.currentTarget.value)
@@ -38,7 +42,7 @@ const FeedbackEditorHeader = () => {
         <Grid item xs={12}>
           <TextField label="Title" size="small" value={title} onChange={handleTitle} fullWidth />
         </Grid>
-        <Grid item xs={12}>
+        <Grid container item xs={12}>
           <TextField
             label="Category"
             size="small"

@@ -60,15 +60,20 @@ export type EditorStore = {
   isFocused: boolean
   disableSubmit: boolean
   submitText: string
+  readOnly: boolean
+  editVariant: boolean
   setIsFocused: (newValue: boolean) => void
   setContent: (newContent: Descendant[]) => void
   setDisableSubmit: (newValue: boolean) => void
   onSubmit?: (content: Descendant[]) => void
+  onCancel?: () => void
 }
 
-export type EditorProps = Partial<Pick<EditorStore, "disableSubmit" | "onSubmit">> & {
+export type EditorProps = Partial<Pick<EditorStore, "disableSubmit" | "onSubmit" | "onCancel">> & {
   initialContent?: Descendant[]
   submitText?: string
+  readOnly?: boolean
+  editVariant?: boolean
 }
 
 declare module "slate" {

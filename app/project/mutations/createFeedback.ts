@@ -11,11 +11,25 @@ export default resolver.pipe(
 
     title = title.trim()
 
-    const feedback = await db.projectFeedback.create({
+    const feedbackCount = await db.projectFeedback.count({
+      where: {
+        projectSlug,
+      },
+    })
+
+    const {
+      content: { id },
+    } = await db.projectFeedback.create({
       data: {
-        title,
-        category,
-        content,
+        content: {
+          create: {
+            id: feedbackCount + 1,
+            title,
+            category,
+            content,
+            projectSlug,
+          },
+        },
         author: {
           connect: {
             id: authUserId,
@@ -37,10 +51,14 @@ export default resolver.pipe(
         },
       },
       select: {
-        id: true,
+        content: {
+          select: {
+            id: true,
+          },
+        },
       },
     })
 
-    return feedback
+    return id
   }
 )

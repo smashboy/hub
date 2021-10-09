@@ -27,3 +27,11 @@ export const isUrl = (string) => {
 
   return false
 }
+
+export type ReturnAsync<T> = T extends Promise<infer U>
+  ? U
+  : T extends (...args: any) => Promise<infer U>
+  ? U
+  : T extends (...args: any) => infer U
+  ? U
+  : T

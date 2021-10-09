@@ -33,7 +33,7 @@ const generateNewLabelValues = () => ({
   description: "",
 })
 
-const FeedbackSidebar = () => {
+const FeedbackSidebar: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
   const { slug, setMemberIds, setLabels } = useFeedbackEditor()
 
   const [project, { refetch }] = useQuery(
@@ -60,10 +60,7 @@ const FeedbackSidebar = () => {
   return (
     <>
       <Fade in timeout={500}>
-        <Paper
-          variant="outlined"
-          sx={{ padding: 1, width: "100%", height: "calc(100% - 16px)", bgcolor: "transparent" }}
-        >
+        <Paper variant="outlined" sx={{ padding: 1, width: "100%", bgcolor: "transparent" }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Autocomplete
@@ -72,6 +69,7 @@ const FeedbackSidebar = () => {
                 fullWidth
                 freeSolo
                 multiple
+                disabled={readOnly}
                 onChange={(event, value) => {
                   // @ts-ignore
                   setMemberIds(value.map(({ user: { id } }) => id))
@@ -112,6 +110,7 @@ const FeedbackSidebar = () => {
                 freeSolo
                 disablePortal
                 multiple
+                disabled={readOnly}
                 onChange={(event, value) => {
                   // @ts-ignore
                   setLabels(value.map(({ id }) => id))
@@ -152,16 +151,18 @@ const FeedbackSidebar = () => {
                 renderInput={(params) => <TextField {...params} label="Labels" />}
               />
             </Grid>
-            <Grid item xs={12}>
-              <Button
-                onClick={handleOpenCreateLabelDialog}
-                size="small"
-                endIcon={<AddIcon />}
-                fullWidth
-              >
-                New Label
-              </Button>
-            </Grid>
+            {!readOnly && (
+              <Grid item xs={12}>
+                <Button
+                  onClick={handleOpenCreateLabelDialog}
+                  size="small"
+                  endIcon={<AddIcon />}
+                  fullWidth
+                >
+                  New Label
+                </Button>
+              </Grid>
+            )}
             <Grid item xs={12}>
               <Divider />
             </Grid>
@@ -173,6 +174,7 @@ const FeedbackSidebar = () => {
                 freeSolo
                 disablePortal
                 multiple
+                disabled={readOnly}
                 renderOption={(props, { title, id }, { selected }) =>
                   selected ? null : (
                     <MenuItem {...props} key={id} divider>

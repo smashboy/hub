@@ -62,7 +62,9 @@ const blockButtons: BlockButtonProps[] = [
 const optionsCount = [...markButtons, ...blockButtons].length + 3
 
 const Toolbar = () => {
-  const { isFocused } = useEditor()
+  const { isFocused, readOnly } = useEditor()
+
+  if (readOnly) return null
 
   return (
     <>

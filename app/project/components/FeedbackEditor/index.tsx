@@ -2,27 +2,36 @@ import { Suspense } from "react"
 import { useQuery } from "blitz"
 import { Container, Grid, TextField, MenuItem, Hidden, Fade } from "@mui/material"
 import getAbility from "app/guard/queries/getAbility"
-import { FeedbackEditorProvider } from "app/project/store/FeedbackEditorContext"
+import {
+  FeedbackEditorProps,
+  FeedbackEditorProvider,
+} from "app/project/store/FeedbackEditorContext"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import Header from "./Header"
 import Editor from "./Editor"
 import Sidebar from "./Sidebar"
 
-const FeedbackEditor: React.FC<{ slug: string }> = ({ slug }) => {
+const FeedbackEditor: React.FC<FeedbackEditorProps> = ({ slug, initialValues }) => {
   const isSM = useIsSmallDevice()
 
-  const [res] = useQuery(getAbility, [["manage", "feedback.settings", slug]], {
+  const [res] = useQuery(getAbility, [["update", "feedback.settings", slug]], {
     suspense: false,
     refetchOnWindowFocus: false,
   })
 
-  const canManageSettings = res?.[0]?.can || false
+  const canManageSettings = res?.[0]?.can || Boolean(initialValues) || false
 
   return (
-    <FeedbackEditorProvider slug={slug}>
+    <FeedbackEditorProvider slug={slug} initialValues={initialValues}>
       <Container maxWidth="lg" disableGutters sx={{ marginTop: 3 }}>
-        <Grid container spacing={2}>
-          <Grid container spacing={2} item xs={canManageSettings && !isSM ? 9 : 12}>
+        <Grid container spacing={2} sx={{ height: "fit-content" }}>
+          <Grid
+            container
+            spacing={2}
+            item
+            xs={canManageSettings && !isSM ? 9 : 12}
+            sx={{ height: "fit-content" }}
+          >
             <Header />
             <Editor />
           </Grid>
@@ -30,7 +39,7 @@ const FeedbackEditor: React.FC<{ slug: string }> = ({ slug }) => {
             <Hidden smDown>
               <Suspense fallback={<div />}>
                 <Grid item xs={3}>
-                  <Sidebar />
+                  <Sidebar readOnly={Boolean(initialValues)} />
                 </Grid>
               </Suspense>
             </Hidden>
