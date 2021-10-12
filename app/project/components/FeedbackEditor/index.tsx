@@ -19,7 +19,9 @@ const FeedbackEditor: React.FC<FeedbackEditorProps> = ({ slug, initialValues }) 
     refetchOnWindowFocus: false,
   })
 
-  const canManageSettings = res?.[0]?.can || Boolean(initialValues) || false
+  const canManageSettings = res?.[0]?.can || false
+
+  const showSettings = canManageSettings || Boolean(initialValues)
 
   return (
     <FeedbackEditorProvider slug={slug} initialValues={initialValues}>
@@ -29,17 +31,17 @@ const FeedbackEditor: React.FC<FeedbackEditorProps> = ({ slug, initialValues }) 
             container
             spacing={2}
             item
-            xs={canManageSettings && !isSM ? 9 : 12}
+            xs={showSettings && !isSM ? 9 : 12}
             sx={{ height: "fit-content" }}
           >
             <Header />
             <Editor />
           </Grid>
-          {canManageSettings && (
+          {showSettings && (
             <Hidden smDown>
               <Suspense fallback={<div />}>
                 <Grid item xs={3}>
-                  <Sidebar readOnly={Boolean(initialValues)} />
+                  <Sidebar readOnly={Boolean(initialValues) && !canManageSettings} />
                 </Grid>
               </Suspense>
             </Hidden>
