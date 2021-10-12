@@ -12,6 +12,10 @@ export default resolver.pipe(
       projectSlug: slug,
     }
 
+    const orderBy: Prisma.ProjectFeedbackOrderByWithRelationInput = {
+      createdAt: "desc",
+    }
+
     const {
       items: feedback,
       hasMore,
@@ -23,11 +27,13 @@ export default resolver.pipe(
       count: () =>
         db.projectFeedback.count({
           where,
+          orderBy,
         }),
       query: (paginateArgs) =>
         db.projectFeedback.findMany({
           ...paginateArgs,
           where,
+          orderBy,
           select: {
             content: {
               select: {
