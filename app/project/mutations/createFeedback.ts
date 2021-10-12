@@ -11,11 +11,25 @@ export default resolver.pipe(
 
     title = title.trim()
 
-    const feedbackCount = await db.projectFeedback.count({
+    const feedbackCount = await db.projectFeedback.findFirst({
       where: {
         projectSlug,
       },
+      orderBy: {
+        content: {
+          id: "desc",
+        },
+      },
+      select: {
+        content: {
+          select: {
+            id: true,
+          },
+        },
+      },
     })
+
+    const newId = feedbackCount?.content.id + 1 || 1
 
     const {
       content: { id },
@@ -23,7 +37,7 @@ export default resolver.pipe(
       data: {
         content: {
           create: {
-            id: feedbackCount + 1,
+            id: newId,
             title,
             category,
             content,
