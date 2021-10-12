@@ -29,7 +29,7 @@ export default resolver.pipe(
       },
     })
 
-    const newId = feedbackCount?.content.id + 1 || 1
+    const newId = (feedbackCount?.content.id || 0) + 1
 
     const {
       content: { id },
