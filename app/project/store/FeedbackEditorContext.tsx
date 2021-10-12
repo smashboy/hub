@@ -58,7 +58,9 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
   const [title, setTitle] = useState(feedback?.title || "")
   const [category, setCategory] = useState<CategoryType>(feedback?.category || "none")
   const [memberIds, setMemberIds] = useState<number[]>([])
-  const [labelIds, setLabelIds] = useState<string[]>([])
+  const [labelIds, setLabelIds] = useState<string[]>(
+    initialValues?.feedback.labels.map(({ id }) => id) || []
+  )
   const [roadmapIds, setRoadmapIds] = useState<number[]>([])
 
   const [readOnly, setReadOnly] = useState(Boolean(initialValues))

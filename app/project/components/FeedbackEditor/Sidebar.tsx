@@ -34,7 +34,7 @@ const generateNewLabelValues = () => ({
 })
 
 const FeedbackSidebar: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
-  const { slug, setMemberIds, setLabels } = useFeedbackEditor()
+  const { slug, setMemberIds, setLabels, labelIds } = useFeedbackEditor()
 
   const [project, { refetch }] = useQuery(
     getFeedbackOptions,
@@ -107,6 +107,7 @@ const FeedbackSidebar: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                 size="small"
                 fullWidth
                 options={projectLabels}
+                value={projectLabels.filter((label) => labelIds.includes(label.id))}
                 freeSolo
                 disablePortal
                 multiple
