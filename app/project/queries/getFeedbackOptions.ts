@@ -26,9 +26,9 @@ export default resolver.pipe(
             },
           },
           select: {
+            id: true,
             user: {
               select: {
-                id: true,
                 username: true,
                 avatarUrl: true,
               },

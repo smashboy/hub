@@ -48,3 +48,9 @@ export const CreateFeedback = z.object({
   roadmaps: z.array(z.number()),
   labels: z.array(z.string()),
 })
+
+export const UpdateFeedback = CreateFeedback.omit({ projectSlug: true }).merge(
+  z.object({
+    feedbackId: z.number(),
+  })
+)

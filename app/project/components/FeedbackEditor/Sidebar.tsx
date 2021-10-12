@@ -34,7 +34,7 @@ const generateNewLabelValues = () => ({
 })
 
 const FeedbackSidebar: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
-  const { slug, setMemberIds, setLabels, labelIds } = useFeedbackEditor()
+  const { slug, setMemberIds, setLabels, labelIds, memberIds } = useFeedbackEditor()
 
   const [project, { refetch }] = useQuery(
     getFeedbackOptions,
@@ -66,16 +66,17 @@ const FeedbackSidebar: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
               <Autocomplete
                 disablePortal
                 options={project.members}
+                value={project.members.filter((member) => memberIds.includes(member.id))}
                 fullWidth
                 freeSolo
                 multiple
                 disabled={readOnly}
                 onChange={(event, value) => {
                   // @ts-ignore
-                  setMemberIds(value.map(({ user: { id } }) => id))
+                  setMemberIds(value.map(({ id }) => id))
                 }}
                 size="small"
-                renderOption={(props, { user: { username, id } }, { selected }) =>
+                renderOption={(props, { id, user: { username } }, { selected }) =>
                   selected ? null : (
                     <MenuItem {...props} key={id} divider>
                       <ListItemAvatar>
@@ -86,7 +87,7 @@ const FeedbackSidebar: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                   )
                 }
                 renderTags={(members, getTagProps) =>
-                  members.map(({ user: { username, id } }, index) => (
+                  members.map(({ id, user: { username } }, index) => (
                     <Chip
                       {...getTagProps({ index })}
                       avatar={<Avatar alt={username} src="broken" />}

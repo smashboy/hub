@@ -1,6 +1,6 @@
 import db, { ProjectMemberRole } from "db"
 import { Ctx, AuthorizationError } from "blitz"
-import { AbilityType, ResourceType, GuardAuthorizationError } from "@blitz-guard/core"
+import { AbilityType, ResourceType } from "@blitz-guard/core"
 import Guard from "./ability"
 import { ExtendedAbilityTypes, ExtendedResourceTypes } from "./ability"
 

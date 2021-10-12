@@ -5,6 +5,7 @@ import useCustomMutation from "app/core/hooks/useCustomMutation"
 import { Descendant } from "slate"
 import createFeedback from "../mutations/createFeedback"
 import { FeedbackPageProps } from "../helpers"
+import updateFeedback from "../mutations/updateFeedback"
 
 export type CategoryType = FeedbackCategory | "none"
 
@@ -53,11 +54,17 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
     successNotification: "Thank you for your feedback!",
   })
 
+  const [updateFeedbackMutation] = useCustomMutation(updateFeedback, {
+    successNotification: "Feedback has been updated successfully!",
+  })
+
   const feedback = initialValues?.feedback
 
   const [title, setTitle] = useState(feedback?.title || "")
   const [category, setCategory] = useState<CategoryType>(feedback?.category || "none")
-  const [memberIds, setMemberIds] = useState<number[]>([])
+  const [memberIds, setMemberIds] = useState<number[]>(
+    initialValues?.feedback.participants.map(({ id }) => id) || []
+  )
   const [labelIds, setLabelIds] = useState<string[]>(
     initialValues?.feedback.labels.map(({ id }) => id) || []
   )
@@ -78,6 +85,24 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
   const handleSetReadOnly = (newValue: boolean) => setReadOnly(newValue)
 
   const handleSubmit = async (content: Descendant[]) => {
+    console.log(labelIds)
+
+    if (initialValues) {
+      await updateFeedbackMutation({
+        feedbackId: initialValues.feedback.id,
+        title,
+        category: category as FeedbackCategory,
+        content: JSON.stringify({ content }),
+        participants: memberIds,
+        labels: labelIds,
+        roadmaps: roadmapIds,
+      })
+
+      setReadOnly(true)
+
+      return
+    }
+
     const id = await createFeedbackMutation({
       projectSlug: slug,
       title,

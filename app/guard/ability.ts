@@ -34,6 +34,7 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
 
       // Feedback
       can("create", "feedback")
+      can("update", "feedback")
 
       can(
         "update",

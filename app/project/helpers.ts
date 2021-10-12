@@ -32,8 +32,8 @@ export interface FeedbackPageProps extends ProjectPageProps {
       color: string
     }>
     participants: Array<{
+      id: number
       user: {
-        id: number
         username: string
         avatarUrl: string | null
       }
@@ -59,9 +59,9 @@ export const getFeedback = async (
       },
     },
     select: {
+      id: true,
       content: {
         select: {
-          id: true,
           createdAt: true,
           title: true,
           category: true,
@@ -84,9 +84,9 @@ export const getFeedback = async (
       },
       participants: {
         select: {
+          id: true,
           user: {
             select: {
-              id: true,
               username: true,
               avatarUrl: true,
             },
