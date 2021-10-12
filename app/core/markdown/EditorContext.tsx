@@ -11,6 +11,7 @@ export const EditorProvider: React.FC<EditorProps> = ({
   submitText,
   editVariant,
   readOnly,
+  height,
   onSubmit,
   onCancel,
 }) => {
@@ -22,6 +23,8 @@ export const EditorProvider: React.FC<EditorProps> = ({
       },
     ]
   )
+
+  height = height || 350
 
   const [isFocused, setisFocused] = useState(false)
   const [disableSubmit, setDisableSubmit] = useState(disableSubmitProp || false)
@@ -35,6 +38,16 @@ export const EditorProvider: React.FC<EditorProps> = ({
   }, [disableSubmitProp])
 
   const handleSetContent = (newContent: Descendant[]) => setContent(newContent)
+  const handleResetContent = () => {
+    setContent(
+      initialContent || [
+        {
+          type: "paragraph",
+          children: [{ text: "" }],
+        },
+      ]
+    )
+  }
 
   const handleSetIsFocused = (newValue: boolean) => setisFocused(newValue)
   const handleSetDisableSubmit = (newValue: boolean) => setDisableSubmit(newValue)
@@ -48,11 +61,13 @@ export const EditorProvider: React.FC<EditorProps> = ({
         submitText,
         readOnly,
         editVariant,
+        height,
         setIsFocused: handleSetIsFocused,
         setDisableSubmit: handleSetDisableSubmit,
         setContent: handleSetContent,
         onSubmit,
         onCancel,
+        resetContent: handleResetContent,
       }}
     >
       {children}

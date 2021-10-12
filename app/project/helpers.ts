@@ -1,4 +1,4 @@
-import db, { FeedbackCategory, ProjectMemberRole } from "db"
+import db, { FeedbackCategory, ProjectMemberRole, FeedbackStatus } from "db"
 import { SessionContext } from "blitz"
 
 export interface ProjectPageProps {
@@ -20,6 +20,7 @@ export interface FeedbackPageProps extends ProjectPageProps {
     createdAt: Date
     title: string
     category: FeedbackCategory
+    status: FeedbackStatus
     content: string
     author: {
       id: number
@@ -65,6 +66,7 @@ export const getFeedback = async (
           createdAt: true,
           title: true,
           category: true,
+          status: true,
           content: true,
         },
       },

@@ -143,6 +143,7 @@ model ProjectFeedbackContent {
   updatedAt       DateTime         @updatedAt
   title           String
   category        FeedbackCategory
+  status          FeedbackStatus   @default(ON_REVIEW)
   content         String
   projectSlug     String
   projectFeedback ProjectFeedback?
@@ -185,6 +186,15 @@ enum UserRole {
   ADMIN
   MODERATOR
   USER
+}
+
+enum FeedbackStatus {
+  ON_REVIEW
+  PLANNED
+  IN_PROGRESS
+  BLOCKED
+  CANCELED
+  COMPLETED
 }
 
 enum ProjectMemberRole {

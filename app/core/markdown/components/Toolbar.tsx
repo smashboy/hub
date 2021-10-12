@@ -6,7 +6,6 @@ import StrikeIcon from "@mui/icons-material/StrikethroughS"
 import CodeIcon from "@mui/icons-material/Code"
 import BulListIcon from "@mui/icons-material/FormatListBulleted"
 import NumListIcon from "@mui/icons-material/FormatListNumbered"
-import LinkIcon from "@mui/icons-material/Link"
 import ImageIcon from "@mui/icons-material/Image"
 import BlockIcon from "@mui/icons-material/FormatQuote"
 import { MarkButtonProps, BlockButtonProps } from "../types"
@@ -78,7 +77,7 @@ const Toolbar = () => {
         </Grid> */}
 
           <Grid container item xs={12} alignItems="center">
-            <Paper sx={{ width: "100%" }}>
+            <Paper variant="outlined" sx={{ width: "100%" }}>
               <ButtonGroup>
                 <HeadingSelector />
                 {markButtons.map(({ icon, format }) => (

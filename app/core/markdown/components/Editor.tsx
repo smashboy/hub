@@ -1,8 +1,7 @@
 import { useCallback } from "react"
 import { dynamic } from "blitz"
-import { Grid, Box, useTheme, Hidden, Button } from "@mui/material"
+import { Grid, Hidden, Button, Paper } from "@mui/material"
 import { LoadingButton } from "@mui/lab"
-import { alpha } from "@mui/material/styles"
 import type { Editable as EditableType } from "slate-react"
 import Element from "./Element"
 import Leaf from "./Leaf"
@@ -13,8 +12,6 @@ const Editable = dynamic(() => import("slate-react").then((mod) => mod.Editable)
 }) as unknown as typeof EditableType
 
 const Editor = () => {
-  const theme = useTheme()
-
   const {
     setIsFocused,
     submitText,
@@ -23,7 +20,9 @@ const Editor = () => {
     content,
     readOnly,
     onCancel,
+    height,
     editVariant,
+    resetContent,
   } = useEditor()
 
   const renderElement = useCallback((props) => <Element {...props} />, [])
@@ -31,20 +30,26 @@ const Editor = () => {
 
   const handleSubmit = () => onSubmit?.(content)
 
-  const height = readOnly ? "auto" : 350
+  const handleCancel = () => {
+    resetContent()
+    onCancel?.()
+  }
+
+  const maxHeight = readOnly ? "auto" : height
 
   return (
     <Grid container item xs={12} spacing={2}>
       <Grid item xs={12}>
-        <Box
+        <Paper
+          variant="outlined"
           sx={{
-            height,
-            maxHeight: height,
-            borderRadius: 1,
-            borderWidth: 1,
-            borderStyle: "solid",
-            borderColor: theme.palette.action.selected,
-            bgcolor: alpha(theme.palette.background.paper, 0.15),
+            height: maxHeight,
+            maxHeight,
+            bgcolor: readOnly ? "transparent" : undefined,
+            borderWidth: readOnly ? 0 : undefined,
+            // borderStyle: "solid",
+            // borderColor: theme.palette.action.selected,
+            // bgcolor: alpha(theme.palette.background.paper, 0.15),
             padding: 1,
           }}
         >
@@ -57,14 +62,14 @@ const Editor = () => {
             placeholder="Leave a comment..."
             renderLeaf={renderLeaf}
           />
-        </Box>
+        </Paper>
       </Grid>
       {!readOnly && (
         <Hidden smDown>
           {editVariant ? (
             <Grid container item xs={12} spacing={1} justifyContent="flex-end">
               <Grid item xs={2}>
-                <Button onClick={() => onCancel?.()} variant="contained" color="inherit" fullWidth>
+                <Button onClick={handleCancel} variant="contained" color="inherit" fullWidth>
                   Cancel
                 </Button>
               </Grid>

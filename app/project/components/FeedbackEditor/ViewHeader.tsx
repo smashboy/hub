@@ -22,6 +22,9 @@ const FeedbackViewHeader = () => {
               <Chip label={category} size="small" />
             </Grid>
             <Grid item xs="auto">
+              <Chip label={initialValues!.feedback.status.replace("_", " ")} size="small" />
+            </Grid>
+            <Grid item xs="auto">
               <Typography variant="subtitle2" color="text.secondary">{`#${
                 initialValues!.feedback.id
               } opened ${formatRelative(initialValues!.feedback.createdAt, new Date())} by ${

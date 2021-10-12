@@ -32,6 +32,7 @@ export type FeedbackEditorStore = {
   setLabels: (labels: string[]) => void
   setReadOnly: (newValue: boolean) => void
   submit: (content: Descendant[]) => void
+  onReset: () => void
 }
 
 const FeedbackEditorContext = createContext<FeedbackEditorStore | null>(null)
@@ -85,8 +86,6 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
   const handleSetReadOnly = (newValue: boolean) => setReadOnly(newValue)
 
   const handleSubmit = async (content: Descendant[]) => {
-    console.log(labelIds)
-
     if (initialValues) {
       await updateFeedbackMutation({
         feedbackId: initialValues.feedback.id,
@@ -115,6 +114,12 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
     router.push(Routes.SelectedFeedbackPage({ slug, id }))
   }
 
+  const handleReset = () => {
+    setReadOnly(true)
+    setTitle(feedback!.title)
+    setCategory(feedback!.category)
+  }
+
   return (
     <FeedbackEditorContext.Provider
       value={{
@@ -134,6 +139,7 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
         setLabels: handleSetLabelIds,
         submit: handleSubmit,
         setReadOnly: handleSetReadOnly,
+        onReset: handleReset,
       }}
     >
       {children}

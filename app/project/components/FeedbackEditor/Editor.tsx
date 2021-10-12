@@ -3,7 +3,7 @@ import MarkdownEditor from "app/core/markdown/Editor"
 import { useFeedbackEditor } from "app/project/store/FeedbackEditorContext"
 
 const FeedbackEditor = () => {
-  const { disableSubmit, submit, initialContent, readOnly, initialValues, setReadOnly } =
+  const { disableSubmit, submit, initialContent, readOnly, initialValues, onReset } =
     useFeedbackEditor()
 
   return (
@@ -16,7 +16,7 @@ const FeedbackEditor = () => {
           onSubmit={submit}
           disableSubmit={disableSubmit}
           editVariant={Boolean(initialValues?.feedback)}
-          onCancel={() => setReadOnly(true)}
+          onCancel={onReset}
         />
       </Grid>
     </Fade>
