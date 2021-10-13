@@ -1,17 +1,49 @@
+import { useState, useEffect } from "react"
+import { useMutation } from "blitz"
 import { Grid, Fade, Typography, Chip, Button, Divider } from "@mui/material"
+import UpvoteIcon from "@mui/icons-material/ArrowDropUp"
 import { formatRelative } from "date-fns"
 import { useFeedbackEditor } from "app/project/store/FeedbackEditorContext"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import upvoteFeedback from "app/project/mutations/upvoteFeedback"
+import { LoadingButton } from "@mui/lab"
 
 const FeedbackViewHeader = () => {
   const user = useCurrentUser(false)
 
   const { title, category, initialValues, setReadOnly } = useFeedbackEditor()
+  const [upvotedByUser, setUpvotedByUser] = useState(false)
+  const [upvotedCounter, setUpvotedCounter] = useState(initialValues!.feedback.upvotedBy.length)
+
+  const [upvoteFeedbackMutation, { isLoading }] = useMutation(upvoteFeedback)
+
+  useEffect(() => {
+    if (user) {
+      if (initialValues!.feedback.upvotedBy.includes(user.id)) setUpvotedByUser(true)
+    }
+  }, [user])
+
+  const showEditButton = user?.id === initialValues!.feedback.author.id
+
+  const handleUpvote = async () => {
+    await upvoteFeedbackMutation({
+      feedbackId: initialValues!.feedback.id,
+    })
+
+    if (upvotedByUser) {
+      setUpvotedByUser(false)
+      setUpvotedCounter((prevState) => prevState - 1)
+      return
+    }
+
+    setUpvotedByUser(true)
+    setUpvotedCounter((prevState) => prevState + 1)
+  }
 
   return (
     <Fade in timeout={500}>
-      <Grid container item xs={12} sx={{ height: "fit-content" }}>
-        <Grid container item xs={10} spacing={1}>
+      <Grid container item xs={12} columnSpacing={2} sx={{ height: "fit-content" }}>
+        <Grid container item xs={showEditButton ? 10 : 11} spacing={1}>
           <Grid item xs={12}>
             <Typography variant="h5" color="text.primary">
               {title}
@@ -33,9 +65,27 @@ const FeedbackViewHeader = () => {
             </Grid>
           </Grid>
         </Grid>
-        {user?.id === initialValues!.feedback.author.id && (
-          <Grid container item xs={2} alignItems="center">
-            <Button onClick={() => setReadOnly(false)} variant="contained" fullWidth>
+        {user && (
+          <Grid container item xs={1} justifyContent="center" alignItems="center">
+            <LoadingButton
+              onClick={handleUpvote}
+              variant="contained"
+              color="primary"
+              endIcon={<UpvoteIcon />}
+              loading={isLoading}
+            >
+              {upvotedCounter}
+            </LoadingButton>
+          </Grid>
+        )}
+        {showEditButton && (
+          <Grid container item xs={1} alignItems="center">
+            <Button
+              onClick={() => setReadOnly(false)}
+              variant="contained"
+              color="inherit"
+              fullWidth
+            >
               Edit
             </Button>
           </Grid>

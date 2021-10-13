@@ -10,6 +10,7 @@ import {
   ListItemSecondaryAction,
   IconButton,
   Menu,
+  Grid,
   MenuItem,
 } from "@mui/material"
 import MoreIcon from "@mui/icons-material/MoreVert"
@@ -87,19 +88,18 @@ const MessageItem: React.FC<MessageItemProps> = ({
         </ListItemAvatar>
         <ListItemText
           primary={
-            <Box display="flex" alignItems="center">
-              <Typography variant="subtitle1" color="text.primary" component="div">
-                {username}
-              </Typography>
-              <Typography
-                variant="subtitle2"
-                color="text.secondary"
-                component="div"
-                sx={{ paddingLeft: 1 }}
-              >
-                {`commented ${formatRelative(createdAt, new Date())}`}
-              </Typography>
-            </Box>
+            <Grid container columnSpacing={1} alignItems="center">
+              <Grid item xs="auto">
+                <Typography variant="subtitle1" color="text.primary" component="div">
+                  {username}
+                </Typography>
+              </Grid>
+              <Grid item xs="auto">
+                <Typography variant="subtitle2" color="text.secondary" component="div">
+                  {`commented ${formatRelative(createdAt, new Date())}`}
+                </Typography>
+              </Grid>
+            </Grid>
           }
           secondary={
             <Box marginTop={readOnly ? 0 : 2}>

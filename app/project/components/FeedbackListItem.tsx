@@ -1,15 +1,15 @@
 import { FeedbackCategory } from "db"
 import { Link, Routes } from "blitz"
+import UpvoteIcon from "@mui/icons-material/ArrowDropUp"
 import {
   ListItem,
-  ListItemAvatar,
   ListItemText,
-  Avatar,
   Fade,
   Grid,
-  Typography,
   Chip,
   Box,
+  ListItemIcon,
+  Typography,
 } from "@mui/material"
 import { formatRelative } from "date-fns"
 
@@ -23,6 +23,9 @@ type FeedbackListItemProps = {
     author: {
       username: string
     }
+    _count: {
+      upvotedBy: number
+    } | null
     labels: {
       id: string
       name: string
@@ -38,6 +41,7 @@ const FeedbackListItem: React.FC<FeedbackListItemProps> = ({
     id,
     createdAt,
     labels,
+    _count,
     author: { username },
   },
 }) => {
@@ -45,7 +49,13 @@ const FeedbackListItem: React.FC<FeedbackListItemProps> = ({
     <Fade in timeout={500}>
       <Box>
         <Link href={Routes.SelectedFeedbackPage({ slug, id })} passHref>
-          <ListItem alignItems="flex-start" component="a" button divider>
+          <ListItem component="a" button divider>
+            <ListItemIcon sx={{ alignItems: "center", justifyContent: "center" }}>
+              <Typography variant="subtitle1" component="div">
+                {_count?.upvotedBy || 0}
+              </Typography>
+              <UpvoteIcon />
+            </ListItemIcon>
             <ListItemText
               primary={title}
               secondary={

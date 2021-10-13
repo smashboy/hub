@@ -1,7 +1,6 @@
 import db from "db"
 import { resolver } from "blitz"
 import Guard from "app/guard/ability"
-import * as z from "zod"
 import { FollowProject } from "../validations"
 
 export default resolver.pipe(

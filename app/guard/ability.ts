@@ -15,7 +15,7 @@ export type ExtendedResourceTypes =
   | "project.settings.danger"
   | "projects"
 
-export type ExtendedAbilityTypes = "follow"
+export type ExtendedAbilityTypes = "follow" | "upvote"
 
 const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
   async (ctx, { can, cannot }) => {
@@ -36,8 +36,8 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
       can("follow", "project")
 
       // Feedback
-      can("create", "feedback")
-      can("update", "feedback")
+      can("manage", "feedback")
+      can("upvote", "feedback")
       can("manage", "feedback.messages")
       can(
         "manage",

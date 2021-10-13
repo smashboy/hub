@@ -72,3 +72,7 @@ export const GetFeedbackMessages = z.object({
   feedbackId: z.number(),
   isPublic: z.boolean(),
 })
+
+export const UpvoteFeedback = z.object({
+  feedbackId: z.number(),
+})

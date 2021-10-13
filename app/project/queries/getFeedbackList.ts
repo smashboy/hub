@@ -35,6 +35,11 @@ export default resolver.pipe(
           where,
           orderBy,
           select: {
+            _count: {
+              select: {
+                upvotedBy: true,
+              },
+            },
             content: {
               select: {
                 id: true,

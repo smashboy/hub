@@ -23,6 +23,7 @@ export interface FeedbackPageProps extends ProjectPageProps {
     category: FeedbackCategory
     status: FeedbackStatus
     content: string
+    upvotedBy: number[]
     author: {
       id: number
       username: string
@@ -72,6 +73,11 @@ export const getFeedback = async (
           content: true,
         },
       },
+      upvotedBy: {
+        select: {
+          id: true,
+        },
+      },
       author: {
         select: {
           id: true,
@@ -104,10 +110,13 @@ export const getFeedback = async (
 
   const {
     content: { id: contentId, ...content },
+    upvotedBy,
     ...otherProps
   } = feedback
 
-  return { feedback: { ...otherProps, ...content, contentId } }
+  return {
+    feedback: { ...otherProps, ...content, contentId, upvotedBy: upvotedBy.map(({ id }) => id) },
+  }
 }
 
 export const getProjectInfo = async (

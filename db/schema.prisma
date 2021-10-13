@@ -27,7 +27,8 @@ model User {
   tokens          Token[]
   sessions        Session[]
   projectMember   ProjectMember[]
-  feedback        ProjectFeedback[]
+  feedback        ProjectFeedback[]        @relation("ProjectFeedbackAuthor")
+  upvoted         ProjectFeedback[]
   messages        ProjectFeedbackMessage[]
 }
 
@@ -132,10 +133,11 @@ model ProjectFeedback {
   labels       ProjectFeedbackLabel[]
   project      Project                  @relation(fields: [projectSlug], references: [slug])
   projectSlug  String
-  author       User                     @relation(fields: [authorId], references: [id])
+  author       User                     @relation("ProjectFeedbackAuthor", fields: [authorId], references: [id])
   authorId     Int
   content      ProjectFeedbackContent   @relation(fields: [contentId, projectSlug], references: [id, projectSlug])
   contentId    Int
+  upvotedBy    User[]
   messages     ProjectFeedbackMessage[]
 }
 
