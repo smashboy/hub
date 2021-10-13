@@ -101,6 +101,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
               <MarkdownEditor
                 editVariant
                 readOnly={readOnly}
+                height={100}
                 disablePadding
                 onSubmit={handleUpdateMessage}
                 onCancel={handleCloseEdit}

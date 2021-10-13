@@ -55,7 +55,7 @@ const Editor = () => {
           }}
         >
           <Editable
-            style={{ height: "100%", maxHeight: 350, overflowY: "auto" }}
+            style={{ height: "100%", maxHeight, overflowY: "auto" }}
             renderElement={renderElement}
             readOnly={readOnly}
             onFocus={() => setIsFocused(true)}
