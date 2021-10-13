@@ -1,31 +1,54 @@
-import { BlitzPage, GetServerSideProps, getSession } from "blitz"
-import { Grid, Divider } from "@mui/material"
+import { useState } from "react"
+import { BlitzPage, GetServerSideProps, getSession, useQuery } from "blitz"
+import { Grid, Divider, Tabs, Tab } from "@mui/material"
 import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
 import FeedbackEditor from "app/project/components/FeedbackEditor"
 import { getProjectInfo, getFeedback, FeedbackPageProps } from "app/project/helpers"
-import FeedbackMessageEditor from "app/project/components/FeedbackMessageEditor"
-import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import getAbility from "app/guard/queries/getAbility"
+import { Suspense } from "react"
+import FeedbackMessagesList from "app/project/components/FeedbackMessagesList"
+
 const SelectedFeedbackPage: BlitzPage<FeedbackPageProps> = ({
   project: { slug },
   feedback,
 }: FeedbackPageProps) => {
-  const user = useCurrentUser(false)
+  const [res] = useQuery(getAbility, [["read", "feedback.messages.private", slug]], {
+    suspense: false,
+    refetchOnWindowFocus: false,
+  })
+
+  const [selectedMessagesCategory, setSelectedMessagesCategory] = useState(1)
+
+  const canReadPrivateMessages = res?.[0]?.can || false
+
+  const handleSelectMessagesCategory = (event: React.SyntheticEvent, newValue: number) => {
+    setSelectedMessagesCategory(newValue)
+  }
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <FeedbackEditor slug={slug} initialValues={{ feedback }} />
       </Grid>
-      {user && (
-        <Grid container item xs={12} md={9} spacing={2}>
-          <Grid item xs={12}>
-            <Divider />
-          </Grid>
-          <Grid item xs={12}>
-            <FeedbackMessageEditor />
-          </Grid>
+      <Grid container item xs={12} md={9} spacing={2}>
+        <Grid item xs={12}>
+          <Divider />
         </Grid>
-      )}
+        {canReadPrivateMessages && (
+          <Grid item xs={12}>
+            <Tabs value={selectedMessagesCategory} onChange={handleSelectMessagesCategory}>
+              <Tab value={1} label="Public" />
+              <Tab value={0} label="Private" />
+            </Tabs>
+          </Grid>
+        )}
+        <Suspense fallback={null}>
+          <FeedbackMessagesList
+            feedbackId={feedback.id}
+            isPublic={Boolean(selectedMessagesCategory)}
+          />
+        </Suspense>
+      </Grid>
     </Grid>
   )
 }

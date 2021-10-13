@@ -8,6 +8,8 @@ export type ExtendedResourceTypes =
   | "user"
   | "feedback"
   | "feedback.settings"
+  | "feedback.messages"
+  | "feedback.messages.private"
   | "project"
   | "project.settings.general"
   | "project.settings.danger"
@@ -25,6 +27,7 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
     can("read", "feedback")
     can("read", "project")
     can("read", "feedback.settings")
+    can("read", "feedback.messages")
 
     if (authUserId) {
       can("manage", "user")
@@ -35,6 +38,12 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
       // Feedback
       can("create", "feedback")
       can("update", "feedback")
+      can("manage", "feedback.messages")
+      can(
+        "manage",
+        "feedback.messages.private",
+        async (slug: string) => await checkFeedbackSettingsManagePermissions(slug, authUserId)
+      )
 
       can(
         "update",

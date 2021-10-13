@@ -43,7 +43,7 @@ const FeedbackList: React.FC<{ slug: string }> = ({ slug }) => {
           </Box>
         ) : null,
     }),
-    []
+    [isFetchingNextPage]
   )
 
   const handleFetchNext = () => {

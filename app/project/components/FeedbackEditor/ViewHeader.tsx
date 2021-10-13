@@ -26,7 +26,7 @@ const FeedbackViewHeader = () => {
             </Grid>
             <Grid item xs="auto">
               <Typography variant="subtitle2" color="text.secondary">{`#${
-                initialValues!.feedback.id
+                initialValues!.feedback.contentId
               } opened ${formatRelative(initialValues!.feedback.createdAt, new Date())} by ${
                 initialValues!.feedback.author.username
               }`}</Typography>

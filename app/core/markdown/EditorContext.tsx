@@ -11,6 +11,7 @@ export const EditorProvider: React.FC<EditorProps> = ({
   submitText,
   editVariant,
   readOnly,
+  disablePadding,
   height,
   onSubmit,
   onCancel,
@@ -25,6 +26,7 @@ export const EditorProvider: React.FC<EditorProps> = ({
   )
 
   height = height || 350
+  disablePadding = disablePadding || false
 
   const [isFocused, setisFocused] = useState(false)
   const [disableSubmit, setDisableSubmit] = useState(disableSubmitProp || false)
@@ -36,6 +38,10 @@ export const EditorProvider: React.FC<EditorProps> = ({
   useEffect(() => {
     if (disableSubmitProp !== undefined) setDisableSubmit(disableSubmitProp)
   }, [disableSubmitProp])
+
+  useEffect(() => {
+    if (initialContent) setContent(initialContent)
+  }, [initialContent])
 
   const handleSetContent = (newContent: Descendant[]) => setContent(newContent)
   const handleResetContent = () => {
@@ -62,6 +68,7 @@ export const EditorProvider: React.FC<EditorProps> = ({
         readOnly,
         editVariant,
         height,
+        disablePadding,
         setIsFocused: handleSetIsFocused,
         setDisableSubmit: handleSetDisableSubmit,
         setContent: handleSetContent,

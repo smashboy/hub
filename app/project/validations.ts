@@ -54,3 +54,19 @@ export const UpdateFeedback = CreateFeedback.omit({ projectSlug: true }).merge(
     feedbackId: z.number(),
   })
 )
+
+export const CreateFeedbackMessage = z.object({
+  feedbackId: z.number(),
+  content: z.string(),
+  isPublic: z.boolean(),
+})
+
+export const UpdateFeedbackMessage = z.object({
+  messageId: z.number(),
+  content: z.string(),
+})
+
+export const GetFeedbackMessages = z.object({
+  feedbackId: z.number(),
+  isPublic: z.boolean(),
+})

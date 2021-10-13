@@ -18,6 +18,7 @@ const Editor = () => {
     disableSubmit,
     onSubmit,
     content,
+    disablePadding,
     readOnly,
     onCancel,
     height,
@@ -50,7 +51,7 @@ const Editor = () => {
             // borderStyle: "solid",
             // borderColor: theme.palette.action.selected,
             // bgcolor: alpha(theme.palette.background.paper, 0.15),
-            padding: 1,
+            padding: disablePadding && readOnly ? 0 : 1,
           }}
         >
           <Editable

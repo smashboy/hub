@@ -17,6 +17,7 @@ export interface ProjectPageProps {
 export interface FeedbackPageProps extends ProjectPageProps {
   feedback: {
     id: number
+    contentId: number
     createdAt: Date
     title: string
     category: FeedbackCategory
@@ -63,6 +64,7 @@ export const getFeedback = async (
       id: true,
       content: {
         select: {
+          id: true,
           createdAt: true,
           title: true,
           category: true,
@@ -100,9 +102,12 @@ export const getFeedback = async (
 
   if (!feedback) return null
 
-  const { content, ...otherProps } = feedback
+  const {
+    content: { id: contentId, ...content },
+    ...otherProps
+  } = feedback
 
-  return { feedback: { ...otherProps, ...content } }
+  return { feedback: { ...otherProps, ...content, contentId } }
 }
 
 export const getProjectInfo = async (

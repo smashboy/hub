@@ -8,6 +8,9 @@ CREATE TYPE "TokenType" AS ENUM ('RESET_PASSWORD');
 CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'MODERATOR', 'USER');
 
 -- CreateEnum
+CREATE TYPE "FeedbackStatus" AS ENUM ('ON_REVIEW', 'PLANNED', 'IN_PROGRESS', 'BLOCKED', 'CANCELED', 'COMPLETED');
+
+-- CreateEnum
 CREATE TYPE "ProjectMemberRole" AS ENUM ('FOUNDER', 'ADMIN', 'MODERATOR', 'MEMBER', 'FOLLOWER');
 
 -- CreateTable
@@ -135,12 +138,26 @@ CREATE TABLE "ProjectFeedback" (
 );
 
 -- CreateTable
+CREATE TABLE "ProjectFeedbackMessage" (
+    "id" SERIAL NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "isPublic" BOOLEAN NOT NULL DEFAULT true,
+    "content" TEXT NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "feedbackId" INTEGER NOT NULL,
+
+    CONSTRAINT "ProjectFeedbackMessage_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "ProjectFeedbackContent" (
     "id" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "title" TEXT NOT NULL,
     "category" "FeedbackCategory" NOT NULL,
+    "status" "FeedbackStatus" NOT NULL DEFAULT E'ON_REVIEW',
     "content" TEXT NOT NULL,
     "projectSlug" TEXT NOT NULL,
 
@@ -262,6 +279,12 @@ ALTER TABLE "ProjectFeedback" ADD CONSTRAINT "ProjectFeedback_authorId_fkey" FOR
 
 -- AddForeignKey
 ALTER TABLE "ProjectFeedback" ADD CONSTRAINT "ProjectFeedback_contentId_projectSlug_fkey" FOREIGN KEY ("contentId", "projectSlug") REFERENCES "ProjectFeedbackContent"("id", "projectSlug") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProjectFeedbackMessage" ADD CONSTRAINT "ProjectFeedbackMessage_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProjectFeedbackMessage" ADD CONSTRAINT "ProjectFeedbackMessage_feedbackId_fkey" FOREIGN KEY ("feedbackId") REFERENCES "ProjectFeedback"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ProjectSettings" ADD CONSTRAINT "ProjectSettings_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

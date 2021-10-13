@@ -43,7 +43,7 @@ const ProjectsList: React.FC<{ searchQuery: string }> = ({ searchQuery }) => {
           </Box>
         ) : null,
     }),
-    []
+    [isFetchingNextPage]
   )
 
   const handleFetchNext = () => {

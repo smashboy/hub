@@ -63,6 +63,7 @@ export type EditorStore = {
   readOnly: boolean
   editVariant: boolean
   height: number
+  disablePadding: boolean
   setIsFocused: (newValue: boolean) => void
   setContent: (newContent: Descendant[]) => void
   setDisableSubmit: (newValue: boolean) => void
@@ -72,7 +73,7 @@ export type EditorStore = {
 }
 
 export type EditorProps = Partial<
-  Pick<EditorStore, "disableSubmit" | "onSubmit" | "onCancel" | "height">
+  Pick<EditorStore, "disableSubmit" | "onSubmit" | "onCancel" | "height" | "disablePadding">
 > & {
   initialContent?: Descendant[]
   submitText?: string
