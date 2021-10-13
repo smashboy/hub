@@ -15,8 +15,6 @@ import {
 import MoreIcon from "@mui/icons-material/MoreVert"
 import MarkdownEditor from "../markdown/Editor"
 import { useCurrentUser } from "../hooks/useCurrentUser"
-import useCustomMutation from "../hooks/useCustomMutation"
-import updateFeedbackMessage from "app/project/mutations/updateFeedbackMessage"
 import { Descendant } from "slate"
 
 type MessageItemProps = {
@@ -31,6 +29,7 @@ type MessageItemProps = {
     }
   }
   onMessageUpdate?: (id: number, content: string) => Promise<void>
+  onMessageDelete?: (id: number) => Promise<void>
 }
 
 const MessageItem: React.FC<MessageItemProps> = ({
@@ -41,6 +40,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
     createdAt,
   },
   onMessageUpdate,
+  onMessageDelete,
 }) => {
   const user = useCurrentUser(false)
 
@@ -68,6 +68,11 @@ const MessageItem: React.FC<MessageItemProps> = ({
   const handleUpdateMessage = async (newContent: Descendant[]) => {
     await onMessageUpdate?.(id, JSON.stringify({ content: newContent }))
     handleCloseEdit()
+  }
+
+  const handleDeleteMessage = async () => {
+    await onMessageDelete?.(id)
+    handleCloseMenu()
   }
 
   return (
@@ -122,7 +127,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
       </ListItem>
       <Menu open={open} anchorEl={anchorEl} onClose={handleCloseMenu}>
         <MenuItem onClick={handleEditMessage}>Edit</MenuItem>
-        <MenuItem>Delete</MenuItem>
+        <MenuItem onClick={handleDeleteMessage}>Delete</MenuItem>
       </Menu>
     </>
   )

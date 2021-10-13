@@ -66,6 +66,8 @@ export const UpdateFeedbackMessage = z.object({
   content: z.string(),
 })
 
+export const DeleteFeedbcakMessage = UpdateFeedbackMessage.omit({ content: true })
+
 export const GetFeedbackMessages = z.object({
   feedbackId: z.number(),
   isPublic: z.boolean(),

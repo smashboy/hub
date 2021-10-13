@@ -6,6 +6,7 @@ import FeedbackMessageEditor from "./FeedbackMessageEditor"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import updateFeedbackMessage from "../mutations/updateFeedbackMessage"
+import deleteFeedbackMessage from "../mutations/deleteFeedbackMessage"
 
 export interface FeedbackMessagesListProps {
   feedbackId: number
@@ -24,6 +25,10 @@ const FeedbackMessagesList: React.FC<FeedbackMessagesListProps> = ({ feedbackId,
     successNotification: "Message has been updated successfully!",
   })
 
+  const [deleteFeedbackMessageMutation] = useCustomMutation(deleteFeedbackMessage, {
+    successNotification: "Message has been deleted successfully!",
+  })
+
   const [messages, { refetch }] = useQuery(getFeedbackMessages, {
     feedbackId,
     isPublic,
@@ -34,7 +39,13 @@ const FeedbackMessagesList: React.FC<FeedbackMessagesListProps> = ({ feedbackId,
       messageId: id,
       content,
     })
+    refetch()
+  }
 
+  const handleDeleteMessage = async (id: number) => {
+    await deleteFeedbackMessageMutation({
+      messageId: id,
+    })
     refetch()
   }
 
@@ -43,7 +54,12 @@ const FeedbackMessagesList: React.FC<FeedbackMessagesListProps> = ({ feedbackId,
       <Grid item xs={12}>
         <List component="div">
           {messages.map((message) => (
-            <MessageItem key={message.id} message={message} onMessageUpdate={handleUpdateMessage} />
+            <MessageItem
+              key={message.id}
+              message={message}
+              onMessageUpdate={handleUpdateMessage}
+              onMessageDelete={handleDeleteMessage}
+            />
           ))}
         </List>
       </Grid>
