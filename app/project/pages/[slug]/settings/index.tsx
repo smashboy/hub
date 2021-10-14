@@ -117,7 +117,7 @@ const SettingsPage: BlitzPage<ProjectPageProps> = ({
 SettingsPage.authenticate = authConfig
 
 SettingsPage.getLayout = (page, props: ProjectPageProps) => (
-  <ProjectSettingsLayout title={`${props.project.name} Settings`} {...props}>
+  <ProjectSettingsLayout title={`${props.project.name} Settings`} {...props} selectedTab="general">
     {page}
   </ProjectSettingsLayout>
 )

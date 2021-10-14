@@ -44,6 +44,20 @@ export interface FeedbackPageProps extends ProjectPageProps {
   }
 }
 
+export interface MembersSettingsPageProps extends ProjectPageProps {
+  memberSettings: {
+    members: Array<{
+      user: {
+        id: number
+        username: string
+        avatarUrl: string | null
+      }
+      id: number
+      role: ProjectMemberRole
+    }>
+  }
+}
+
 // const session = await getSession(req, res)
 // const userId = session?.userId || undefined
 // const slug = (params?.slug as string) || null
@@ -173,4 +187,32 @@ export const getProjectInfo = async (
   if (!allowedRoles.includes(member?.role)) return null
 
   return props
+}
+
+export const getProjectMembersSettings = async (
+  slug: string
+): Promise<Omit<MembersSettingsPageProps, "project">> => {
+  const members = await db.projectMember.findMany({
+    where: {
+      project: {
+        slug,
+      },
+      NOT: {
+        role: ProjectMemberRole.FOLLOWER,
+      },
+    },
+    select: {
+      id: true,
+      role: true,
+      user: {
+        select: {
+          id: true,
+          username: true,
+          avatarUrl: true,
+        },
+      },
+    },
+  })
+
+  return { memberSettings: { members } }
 }

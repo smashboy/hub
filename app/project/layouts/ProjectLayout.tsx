@@ -146,7 +146,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                 value="landing"
                 label="Home"
                 component="a"
-                onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+                onClick={(event) => {
                   event.preventDefault()
                   router.push(Routes.ProjectLandingPage({ slug }))
                 }}
@@ -156,7 +156,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                 value="feedback"
                 label="Feedback"
                 component="a"
-                onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+                onClick={(event) => {
                   event.preventDefault()
                   router.push(Routes.FeedbackPage({ slug }))
                 }}

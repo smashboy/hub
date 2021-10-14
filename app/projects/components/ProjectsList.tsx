@@ -5,7 +5,6 @@ import { List, Box } from "@mui/material"
 import VirtualListItem from "app/core/components/VirtualListItem"
 import getProjects, { GetProjectsInput } from "../queries/getProjects"
 import ProjectListItem from "./ProjectListItem"
-import { animationTimeout } from "app/core/utils/blitz"
 import { useDebounce } from "use-debounce"
 import LoadingAnimation from "app/core/components/LoadingAnimation"
 
