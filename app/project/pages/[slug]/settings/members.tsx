@@ -4,7 +4,6 @@ import { BlitzPage, getSession, GetServerSideProps } from "blitz"
 import { useDebounce } from "use-debounce"
 import { Grid, Button, Fade, TextField } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
-import EditIcon from "@mui/icons-material/Edit"
 import ArrowIcon from "@mui/icons-material/ArrowDropDown"
 import {
   DataGrid,
@@ -12,6 +11,8 @@ import {
   GridColDef,
   GridFilterModel,
   GridActionsCellItem,
+  GridLinkOperator,
+  GridCellEditCommitParams,
 } from "@mui/x-data-grid"
 import {
   getProjectInfo,
@@ -21,10 +22,26 @@ import {
 import { authConfig } from "app/core/configs/authConfig"
 import ProjectSettingsLayout from "app/project/layouts/ProjectSettingsLayout"
 import PaperBox from "app/core/components/PaperBox"
+import useCustomMutation from "app/core/hooks/useCustomMutation"
+import updateMemberRole from "app/project/mutations/updateMemberRole"
 
 const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
-  memberSettings: { members, authMemberRole },
+  memberSettings: { members },
+  project: { slug },
 }: MembersSettingsPageProps) => {
+  const [updateMemberRoleMutation] = useCustomMutation(updateMemberRole, {
+    successNotification: "Member status has been updated successfully!",
+  })
+
+  const [rows, setRows] = useState<GridRowsProp>(
+    members.map(({ id, user: { username, email }, role }) => ({
+      id,
+      username,
+      email,
+      role,
+    }))
+  )
+
   const [searchQuery, setSearchQuery] = useState("")
   const [debouncedSearchQuery] = useDebounce(searchQuery, 1000)
 
@@ -32,11 +49,19 @@ const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
     () => ({
       items: [
         {
+          id: 1,
           columnField: "username",
           operatorValue: "contains",
           value: debouncedSearchQuery,
         },
+        {
+          id: 2,
+          columnField: "email",
+          operatorValue: "contains",
+          value: debouncedSearchQuery,
+        },
       ],
+      linkOperator: GridLinkOperator.Or,
     }),
     [debouncedSearchQuery]
   )
@@ -46,7 +71,7 @@ const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
       {
         field: "id",
         headerName: "Id",
-        hide: true,
+        // hide: true,
       },
       {
         field: "username",
@@ -54,35 +79,50 @@ const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
         flex: 1,
       },
       {
+        field: "email",
+        headerName: "Email",
+        flex: 1,
+      },
+      {
         field: "role",
         headerName: "Role",
         type: "singleSelect",
+        editable: true,
         flex: 1,
-        valueOptions: Object.values(ProjectMemberRole),
+        valueOptions: [
+          ProjectMemberRole.MEMBER,
+          ProjectMemberRole.MODERATOR,
+          ProjectMemberRole.ADMIN,
+        ],
       },
       {
         field: "actions",
         type: "actions",
         getActions: ({ id, row: { role } }) =>
-          authMemberRole !== ProjectMemberRole.FOUNDER && role === ProjectMemberRole.FOUNDER
+          role === ProjectMemberRole.FOUNDER
             ? []
-            : [
-                <GridActionsCellItem key={id} icon={<EditIcon color="primary" />} label="Edit" />,
-                <GridActionsCellItem key={id} icon={<DeleteIcon color="error" />} label="Delete" />,
-              ],
+            : [<GridActionsCellItem key={id} icon={<DeleteIcon color="error" />} label="Delete" />],
       },
     ],
     []
   )
 
-  const rows: GridRowsProp = members.map(({ id, user: { username }, role }) => ({
-    id,
-    username,
-    role,
-  }))
-
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) =>
     setSearchQuery(event.currentTarget.value)
+
+  const handleUpdateMemberRole = async (params: GridCellEditCommitParams) => {
+    await updateMemberRoleMutation({
+      projectSlug: slug,
+      memberId: params.id as number,
+      role: params.value as any,
+    })
+
+    const updatedRows = rows.map((row) =>
+      row.id === params.id ? { ...row, role: params.value } : row
+    )
+
+    setRows(updatedRows)
+  }
 
   return (
     <Grid container spacing={2}>
@@ -121,10 +161,12 @@ const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
                   columns={columns}
                   rows={rows}
                   filterModel={filterModel}
+                  isCellEditable={({ row: { role } }) => role !== ProjectMemberRole.FOUNDER}
                   autoPageSize
                   // checkboxSelection
                   disableColumnMenu
                   disableSelectionOnClick
+                  onCellEditCommit={handleUpdateMemberRole}
                 />
               </Grid>
             </Grid>
@@ -161,7 +203,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
       notFound: true,
     }
 
-  const settingsProps = await getProjectMembersSettings(slug!, session)
+  const settingsProps = await getProjectMembersSettings(slug!)
 
   return {
     props: { ...projectProps, ...settingsProps },

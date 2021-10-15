@@ -46,11 +46,11 @@ export interface FeedbackPageProps extends ProjectPageProps {
 
 export interface MembersSettingsPageProps extends ProjectPageProps {
   memberSettings: {
-    authMemberRole: ProjectMemberRole
     members: Array<{
       user: {
         id: number
         username: string
+        email: string
         avatarUrl: string | null
       }
       id: number
@@ -185,23 +185,8 @@ export const getProjectInfo = async (
 }
 
 export const getProjectMembersSettings = async (
-  slug: string,
-  session: SessionContext
+  slug: string
 ): Promise<Omit<MembersSettingsPageProps, "project">> => {
-  const authUserId = session.userId!
-
-  const authMember = await db.projectMember.findFirst({
-    where: {
-      userId: authUserId,
-      project: {
-        slug,
-      },
-    },
-    select: {
-      role: true,
-    },
-  })
-
   const members = await db.projectMember.findMany({
     where: {
       project: {
@@ -219,10 +204,11 @@ export const getProjectMembersSettings = async (
           id: true,
           username: true,
           avatarUrl: true,
+          email: true,
         },
       },
     },
   })
 
-  return { memberSettings: { members, authMemberRole: authMember!.role } }
+  return { memberSettings: { members } }
 }

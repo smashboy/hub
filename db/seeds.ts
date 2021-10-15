@@ -165,7 +165,7 @@ const createDumpUsers = async (hashedPassword: string, amount: number) => {
   const queries = new Array(amount).fill(null).map(() =>
     db.user.create({
       data: {
-        email: faker.internet.email(),
+        email: faker.internet.email().toLowerCase(),
         hashedPassword,
         username: faker.internet.userName(),
         avatarUrl: faker.internet.avatar(),

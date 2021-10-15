@@ -1,4 +1,4 @@
-import { FeedbackCategory } from "db"
+import { FeedbackCategory, ProjectMemberRole } from "db"
 import * as z from "zod"
 
 export const projectName = z
@@ -76,3 +76,14 @@ export const GetFeedbackMessages = z.object({
 export const UpvoteFeedback = z.object({
   feedbackId: z.number(),
 })
+
+export const DeleteProjectMember = z.object({
+  memberId: z.number(),
+  projectSlug: z.string(),
+})
+
+export const UpdateProjectMember = DeleteProjectMember.merge(
+  z.object({
+    role: z.enum([ProjectMemberRole.ADMIN, ProjectMemberRole.MODERATOR, ProjectMemberRole.MEMBER]),
+  })
+)
