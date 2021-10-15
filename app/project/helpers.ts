@@ -10,7 +10,7 @@ export interface ProjectPageProps {
     description: string | null
     websiteUrl: string | null
     logoUrl: string | null
-    isFollowing: boolean | null
+    role: ProjectMemberRole | null
   }
 }
 
@@ -46,6 +46,7 @@ export interface FeedbackPageProps extends ProjectPageProps {
 
 export interface MembersSettingsPageProps extends ProjectPageProps {
   memberSettings: {
+    authMemberRole: ProjectMemberRole
     members: Array<{
       user: {
         id: number
@@ -170,16 +171,10 @@ export const getProjectInfo = async (
 
   const member = members[0]
 
-  const isFollowing = !members[0]
-    ? false
-    : members[0].role !== ProjectMemberRole.FOLLOWER
-    ? null
-    : true
-
-  if (isPrivate && (!member || isFollowing)) return null
+  if (isPrivate && (!member || member.role === ProjectMemberRole.FOLLOWER)) return null
 
   const props: ProjectPageProps = {
-    project: { ...otherProjectProps, slug, isFollowing, isPrivate },
+    project: { ...otherProjectProps, slug, role: member?.role || null, isPrivate },
   }
 
   if (!allowedRoles) return props
@@ -190,8 +185,23 @@ export const getProjectInfo = async (
 }
 
 export const getProjectMembersSettings = async (
-  slug: string
+  slug: string,
+  session: SessionContext
 ): Promise<Omit<MembersSettingsPageProps, "project">> => {
+  const authUserId = session.userId!
+
+  const authMember = await db.projectMember.findFirst({
+    where: {
+      userId: authUserId,
+      project: {
+        slug,
+      },
+    },
+    select: {
+      role: true,
+    },
+  })
+
   const members = await db.projectMember.findMany({
     where: {
       project: {
@@ -214,5 +224,5 @@ export const getProjectMembersSettings = async (
     },
   })
 
-  return { memberSettings: { members } }
+  return { memberSettings: { members, authMemberRole: authMember!.role } }
 }

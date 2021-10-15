@@ -23,7 +23,7 @@ import ProjectSettingsLayout from "app/project/layouts/ProjectSettingsLayout"
 import PaperBox from "app/core/components/PaperBox"
 
 const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
-  memberSettings: { members },
+  memberSettings: { members, authMemberRole },
 }: MembersSettingsPageProps) => {
   const [searchQuery, setSearchQuery] = useState("")
   const [debouncedSearchQuery] = useDebounce(searchQuery, 1000)
@@ -63,14 +63,13 @@ const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
       {
         field: "actions",
         type: "actions",
-        getActions: (params) => [
-          <GridActionsCellItem key={params.id} icon={<EditIcon color="primary" />} label="Edit" />,
-          <GridActionsCellItem
-            key={params.id}
-            icon={<DeleteIcon color="error" />}
-            label="Delete"
-          />,
-        ],
+        getActions: ({ id, row: { role } }) =>
+          authMemberRole !== ProjectMemberRole.FOUNDER && role === ProjectMemberRole.FOUNDER
+            ? []
+            : [
+                <GridActionsCellItem key={id} icon={<EditIcon color="primary" />} label="Edit" />,
+                <GridActionsCellItem key={id} icon={<DeleteIcon color="error" />} label="Delete" />,
+              ],
       },
     ],
     []
@@ -162,7 +161,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
       notFound: true,
     }
 
-  const settingsProps = await getProjectMembersSettings(slug!)
+  const settingsProps = await getProjectMembersSettings(slug!, session)
 
   return {
     props: { ...projectProps, ...settingsProps },

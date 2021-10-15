@@ -12,6 +12,7 @@ import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import followProject from "../mutations/followProject"
 import { LoadingButton } from "@mui/lab"
+import { ProjectMemberRole } from "db"
 
 type ProjectLayoutProps = {
   selectedTab: "landing" | "changelog" | "roadmap" | "jobs" | "feedback"
@@ -21,13 +22,13 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
   title,
   children,
   selectedTab,
-  project: { name, description, logoUrl, websiteUrl, color, slug, isFollowing },
+  project: { name, description, logoUrl, websiteUrl, color, slug, role },
 }) => {
   const router = useRouter()
 
   const isSM = useIsSmallDevice()
 
-  const [following, setIsFollowing] = useState(isFollowing)
+  const [following, setIsFollowing] = useState(role === ProjectMemberRole.FOLLOWER || false)
 
   const [followMutation, { isLoading: isLoadingFollow }] = useMutation(followProject)
 
@@ -81,7 +82,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                       </ButtonRouteLink>
                     </Grid>
                   )}
-                  {user && following !== null && (
+                  {user && (!role || role === ProjectMemberRole.FOLLOWER) && (
                     <Grid item xs={12} md={2}>
                       <LoadingButton
                         variant="contained"
@@ -113,22 +114,23 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                       </ButtonWebLink>
                     </Grid>
                   )}
-                  {user && isFollowing === null && (
-                    <Grid item xs={12} md={2}>
-                      <ButtonRouteLink
-                        href={Routes.SettingsPage({
-                          slug,
-                        })}
-                        variant="contained"
-                        size="small"
-                        color="inherit"
-                        endIcon={<SettingsIcon />}
-                        fullWidth
-                      >
-                        Settings
-                      </ButtonRouteLink>
-                    </Grid>
-                  )}
+                  {user &&
+                    (role === ProjectMemberRole.FOUNDER || role === ProjectMemberRole.ADMIN) && (
+                      <Grid item xs={12} md={2}>
+                        <ButtonRouteLink
+                          href={Routes.SettingsPage({
+                            slug,
+                          })}
+                          variant="contained"
+                          size="small"
+                          color="inherit"
+                          endIcon={<SettingsIcon />}
+                          fullWidth
+                        >
+                          Settings
+                        </ButtonRouteLink>
+                      </Grid>
+                    )}
                 </Grid>
               </Fade>
             </Grid>

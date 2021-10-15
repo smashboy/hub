@@ -59,7 +59,17 @@ const createMainUsers = async () => {
   return users
 }
 
-const createMainProject = async (founder: User) => {
+const createMainProject = async ({
+  founder,
+  customer,
+  admin,
+  moderator,
+}: {
+  founder: User
+  customer: User
+  admin: User
+  moderator: User
+}) => {
   const name = "Stream Roulette"
 
   const slug = slugify(name, {
@@ -79,18 +89,74 @@ const createMainProject = async (founder: User) => {
       settings: {
         create: {},
       },
-      members: {
-        create: {
-          role: ProjectMemberRole.FOUNDER,
-          user: {
-            connect: {
-              id: founder.id,
-            },
-          },
+    },
+  })
+
+  const founderQuery = db.projectMember.create({
+    data: {
+      role: ProjectMemberRole.FOUNDER,
+      user: {
+        connect: {
+          id: founder.id,
+        },
+      },
+      project: {
+        connect: {
+          id: project.id,
         },
       },
     },
   })
+
+  const customerQuery = db.projectMember.create({
+    data: {
+      role: ProjectMemberRole.FOLLOWER,
+      user: {
+        connect: {
+          id: customer.id,
+        },
+      },
+      project: {
+        connect: {
+          id: project.id,
+        },
+      },
+    },
+  })
+
+  const adminQuery = db.projectMember.create({
+    data: {
+      role: ProjectMemberRole.ADMIN,
+      user: {
+        connect: {
+          id: admin.id,
+        },
+      },
+      project: {
+        connect: {
+          id: project.id,
+        },
+      },
+    },
+  })
+
+  const moderatorQuery = db.projectMember.create({
+    data: {
+      role: ProjectMemberRole.MODERATOR,
+      user: {
+        connect: {
+          id: moderator.id,
+        },
+      },
+      project: {
+        connect: {
+          id: project.id,
+        },
+      },
+    },
+  })
+
+  await db.$transaction([founderQuery, customerQuery, adminQuery, moderatorQuery])
 
   return project
 }
@@ -148,8 +214,11 @@ const seed = async () => {
 
   const users = await createMainUsers()
   const founder = users[0]!
+  const customer = users[1]!
+  const admin = users[2]!
+  const moderator = users[3]!
 
-  const mainProject = await createMainProject(founder)
+  const mainProject = await createMainProject({ founder, moderator, admin, customer })
 
   await createProjectDumpMembers(mainProject, ProjectMemberRole.MEMBER, 45)
   await createProjectDumpMembers(mainProject, ProjectMemberRole.MODERATOR, 15)

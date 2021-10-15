@@ -90,6 +90,8 @@ model ProjectMember {
   projectId Int
   userId    Int
   assigned  ProjectFeedback[]
+
+  @@unique([projectId, userId])
 }
 
 model ProjectLanding {
