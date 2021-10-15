@@ -5,7 +5,7 @@ import { authorizePipe } from "app/guard/helpers"
 
 export default resolver.pipe(
   resolver.zod(UpdateProjectMember),
-  authorizePipe("update", "project.settings.members", ({ projectSlug }) => projectSlug),
+  authorizePipe("update", "project.members", ({ projectSlug }) => projectSlug),
   async ({ memberId, role }) => {
     await db.projectMember.update({
       where: {

@@ -13,7 +13,7 @@ export type ExtendedResourceTypes =
   | "project"
   | "project.settings.general"
   | "project.settings.danger"
-  | "project.settings.members"
+  | "project.members"
   | "projects"
 
 export type ExtendedAbilityTypes = "follow" | "upvote"
@@ -61,7 +61,7 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
       )
       can(
         "manage",
-        "project.settings.members",
+        "project.members",
         async (slug: string) => await checkGeneralSettingsManagePersmissions(slug, authUserId)
       )
       can(

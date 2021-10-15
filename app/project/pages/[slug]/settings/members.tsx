@@ -24,6 +24,7 @@ import ProjectSettingsLayout from "app/project/layouts/ProjectSettingsLayout"
 import PaperBox from "app/core/components/PaperBox"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import updateMemberRole from "app/project/mutations/updateMemberRole"
+import deleteProjectMember from "app/project/mutations/deleteProjectMember"
 
 const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
   memberSettings: { members },
@@ -31,6 +32,10 @@ const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
 }: MembersSettingsPageProps) => {
   const [updateMemberRoleMutation] = useCustomMutation(updateMemberRole, {
     successNotification: "Member status has been updated successfully!",
+  })
+
+  const [deleteProjectMemberMutation] = useCustomMutation(deleteProjectMember, {
+    successNotification: "Member has been deleted successfully!",
   })
 
   const [rows, setRows] = useState<GridRowsProp>(
@@ -101,10 +106,17 @@ const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
         getActions: ({ id, row: { role } }) =>
           role === ProjectMemberRole.FOUNDER
             ? []
-            : [<GridActionsCellItem key={id} icon={<DeleteIcon color="error" />} label="Delete" />],
+            : [
+                <GridActionsCellItem
+                  key={id}
+                  icon={<DeleteIcon color="error" />}
+                  onClick={() => handleDeleteMember(id)}
+                  label="Delete"
+                />,
+              ],
       },
     ],
-    []
+    [rows]
   )
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) =>
@@ -120,6 +132,17 @@ const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
     const updatedRows = rows.map((row) =>
       row.id === params.id ? { ...row, role: params.value } : row
     )
+
+    setRows(updatedRows)
+  }
+
+  const handleDeleteMember = async (memberId: number) => {
+    await deleteProjectMemberMutation({
+      projectSlug: slug,
+      memberId,
+    })
+
+    const updatedRows = rows.filter((row) => row.id !== memberId)
 
     setRows(updatedRows)
   }
@@ -155,7 +178,6 @@ const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
                   Add members
                 </Button>
               </Grid>
-
               <Grid item xs={12} sx={{ height: "100%" }}>
                 <DataGrid
                   columns={columns}
