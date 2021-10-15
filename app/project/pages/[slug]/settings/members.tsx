@@ -71,7 +71,7 @@ const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
       {
         field: "id",
         headerName: "Id",
-        // hide: true,
+        hide: true,
       },
       {
         field: "username",
