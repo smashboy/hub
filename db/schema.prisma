@@ -30,6 +30,7 @@ model User {
   feedback        ProjectFeedback[]        @relation("ProjectFeedbackAuthor")
   upvoted         ProjectFeedback[]
   messages        ProjectFeedbackMessage[]
+  projectInvites  ProjectInvite[]
 }
 
 model Session {
@@ -61,23 +62,23 @@ model Token {
 }
 
 model Project {
-  id          Int                @id @default(autoincrement())
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
-  name        String
-  color       String
-  isPrivate   Boolean
-  slug        String             @unique
-  description String?
-  websiteUrl  String?
-  logoUrl     String?
-  feedback    ProjectFeedback[]
-  members     ProjectMember[]
-  landing     ProjectLanding?
-  changelogs  ProjectChangelog[]
-  roadmaps    ProjectRoadmap[]
-  settings    ProjectSettings?
-
+  id             Int                @id @default(autoincrement())
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  name           String
+  color          String
+  isPrivate      Boolean
+  slug           String             @unique
+  description    String?
+  websiteUrl     String?
+  logoUrl        String?
+  feedback       ProjectFeedback[]
+  members        ProjectMember[]
+  landing        ProjectLanding?
+  changelogs     ProjectChangelog[]
+  roadmaps       ProjectRoadmap[]
+  settings       ProjectSettings?
+  projectInvites ProjectInvite[]
 }
 
 model ProjectMember {
@@ -92,6 +93,15 @@ model ProjectMember {
   assigned  ProjectFeedback[]
 
   @@unique([projectId, userId])
+}
+
+model ProjectInvite {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId Int
+  userId    Int
 }
 
 model ProjectLanding {

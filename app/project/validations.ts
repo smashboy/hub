@@ -87,3 +87,13 @@ export const UpdateProjectMember = DeleteProjectMember.merge(
     role: z.enum([ProjectMemberRole.ADMIN, ProjectMemberRole.MODERATOR, ProjectMemberRole.MEMBER]),
   })
 )
+
+export const SearchUsers = z.object({
+  projectSlug: z.string(),
+  query: z.string(),
+})
+
+export const CreateProjectInvites = z.object({
+  projectSlug: z.string(),
+  usersId: z.array(z.number()),
+})

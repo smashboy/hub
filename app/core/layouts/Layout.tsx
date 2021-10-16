@@ -22,6 +22,7 @@ import {
 import { alpha } from "@mui/material/styles"
 import { isSSR } from "../utils/blitz"
 import LogoutIcon from "@mui/icons-material/Logout"
+import InboxIcon from "@mui/icons-material/Inbox"
 import SettingsIcon from "@mui/icons-material/Settings"
 import AddIcon from "@mui/icons-material/Add"
 import { useCurrentUser } from "../hooks/useCurrentUser"
@@ -83,6 +84,12 @@ const AuthNavigation = () => {
           </Box>
         </Fade>
         <Menu anchorEl={menuEl} open={Boolean(menuEl)} onClose={handleCloseMenu}>
+          <MenuItem onClick={handleCloseMenu} component="a">
+            <ListItemIcon>
+              <InboxIcon color="primary" />
+            </ListItemIcon>
+            <ListItemText primary="Inbox" />
+          </MenuItem>
           <Link href={Routes.ProjectsPage()} passHref>
             <MenuItem onClick={handleCloseMenu} component="a">
               <ListItemText primary="Your projects" />

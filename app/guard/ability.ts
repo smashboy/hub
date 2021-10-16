@@ -13,6 +13,7 @@ export type ExtendedResourceTypes =
   | "project"
   | "project.settings.general"
   | "project.settings.danger"
+  | "project.settings.invite"
   | "project.members"
   | "projects"
 
@@ -52,6 +53,12 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
         async (slug: string) => await checkFeedbackSettingsManagePermissions(slug, authUserId)
       )
 
+      can(
+        "manage",
+        "project.members",
+        async (slug: string) => await checkGeneralSettingsManagePersmissions(slug, authUserId)
+      )
+
       // Project settings
       // TODO: make managers for each section
       can(
@@ -61,12 +68,13 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
       )
       can(
         "manage",
-        "project.members",
+        "project.settings.danger",
         async (slug: string) => await checkGeneralSettingsManagePersmissions(slug, authUserId)
       )
+
       can(
         "manage",
-        "project.settings.danger",
+        "project.settings.invite",
         async (slug: string) => await checkGeneralSettingsManagePersmissions(slug, authUserId)
       )
 
