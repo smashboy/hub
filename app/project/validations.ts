@@ -97,3 +97,7 @@ export const CreateProjectInvites = z.object({
   projectSlug: z.string(),
   usersId: z.array(z.number()),
 })
+
+export const DeleteProjectInvite = z.object({
+  inviteId: z.number(),
+})

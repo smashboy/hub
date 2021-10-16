@@ -24,7 +24,6 @@ type ManageMembersSettingsProps = {
   name: string
   members: {
     user: {
-      id: number
       username: string
       email: string
       avatarUrl: string | null
@@ -56,7 +55,7 @@ const ManageMembersSettings: React.FC<ManageMembersSettingsProps> = ({ members, 
     }))
   )
 
-  const filterModel: GridFilterModel | undefined = useMemo(
+  const filterModel: GridFilterModel = useMemo(
     () => ({
       items: [
         {

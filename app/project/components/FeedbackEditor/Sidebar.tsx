@@ -67,6 +67,7 @@ const FeedbackSidebar: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                 disablePortal
                 options={project.members}
                 value={project.members.filter((member) => memberIds.includes(member.id))}
+                getOptionLabel={({ user: { username } }) => username}
                 fullWidth
                 freeSolo
                 multiple

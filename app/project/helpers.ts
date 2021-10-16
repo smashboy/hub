@@ -48,13 +48,20 @@ export interface MembersSettingsPageProps extends ProjectPageProps {
   memberSettings: {
     members: Array<{
       user: {
-        id: number
         username: string
         email: string
         avatarUrl: string | null
       }
       id: number
       role: ProjectMemberRole
+    }>
+    invites: Array<{
+      id: number
+      user: {
+        username: string
+        email: string
+        avatarUrl: string | null
+      }
     }>
   }
 }
@@ -187,28 +194,50 @@ export const getProjectInfo = async (
 export const getProjectMembersSettings = async (
   slug: string
 ): Promise<Omit<MembersSettingsPageProps, "project">> => {
-  const members = await db.projectMember.findMany({
+  const project = await db.project.findFirst({
     where: {
-      project: {
-        slug,
-      },
-      NOT: {
-        role: ProjectMemberRole.FOLLOWER,
-      },
+      slug,
     },
     select: {
-      id: true,
-      role: true,
-      user: {
+      members: {
+        where: {
+          NOT: {
+            role: ProjectMemberRole.FOLLOWER,
+          },
+        },
         select: {
           id: true,
-          username: true,
-          avatarUrl: true,
-          email: true,
+          role: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+              avatarUrl: true,
+              email: true,
+            },
+          },
+        },
+      },
+      invites: {
+        select: {
+          id: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+              email: true,
+              avatarUrl: true,
+            },
+          },
         },
       },
     },
   })
 
-  return { memberSettings: { members } }
+  return {
+    memberSettings: {
+      members: project!.members,
+      invites: project!.invites,
+    },
+  }
 }

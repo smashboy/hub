@@ -5,7 +5,7 @@ import { authorizePipe } from "app/guard/helpers"
 
 export default resolver.pipe(
   resolver.zod(SearchUsers),
-  authorizePipe("read", "project.settings.invite", ({ projectSlug }) => projectSlug),
+  authorizePipe("read", "project.settings.invites", ({ projectSlug }) => projectSlug),
   async ({ query, projectSlug }, ctx) => {
     const authUserId = ctx.session.userId!
 
@@ -20,7 +20,23 @@ export default resolver.pipe(
       },
     })
 
+    const pendingInvites = await db.projectInvite.findMany({
+      where: {
+        project: {
+          slug: projectSlug,
+        },
+      },
+      select: {
+        user: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    })
+
     const membersIds = members.map(({ id }) => id)
+    const pendingInvitesUsersId = pendingInvites.map(({ user: { id } }) => id)
 
     let users = await db.user.findMany({
       where: {
@@ -54,7 +70,9 @@ export default resolver.pipe(
       },
     })
 
-    users = users.filter(({ id }) => !membersIds.includes(id))
+    users = users.filter(
+      ({ id }) => !membersIds.includes(id) && !pendingInvitesUsersId.includes(id)
+    )
 
     return users
   }

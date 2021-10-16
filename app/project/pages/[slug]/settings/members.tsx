@@ -1,6 +1,5 @@
 import { ProjectMemberRole } from "db"
 import { BlitzPage, getSession, GetServerSideProps } from "blitz"
-import { useDebounce } from "use-debounce"
 import { Grid, Fade } from "@mui/material"
 
 import {
@@ -11,9 +10,10 @@ import {
 import { authConfig } from "app/core/configs/authConfig"
 import ProjectSettingsLayout from "app/project/layouts/ProjectSettingsLayout"
 import ManageMembersSettings from "app/project/components/ManageMembersSettings"
+import ManageProjectInvites from "app/project/components/ManageProjectInvites"
 
 const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
-  memberSettings: { members },
+  memberSettings: { members, invites },
   project: { slug, name },
 }: MembersSettingsPageProps) => {
   return (
@@ -21,6 +21,11 @@ const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
       <Fade in timeout={500}>
         <Grid item xs={12}>
           <ManageMembersSettings members={members} slug={slug} name={name} />
+        </Grid>
+      </Fade>
+      <Fade in timeout={750}>
+        <Grid item xs={12}>
+          <ManageProjectInvites invites={invites} />
         </Grid>
       </Fade>
     </Grid>

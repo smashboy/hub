@@ -5,7 +5,7 @@ import { authorizePipe } from "app/guard/helpers"
 
 export default resolver.pipe(
   resolver.zod(CreateProjectInvites),
-  authorizePipe("create", "project.settings.invite", ({ projectSlug }) => projectSlug),
+  authorizePipe("create", "project.settings.invites", ({ projectSlug }) => projectSlug),
   async ({ projectSlug, usersId }) => {
     const queries = usersId.map((userId) =>
       db.projectInvite.create({

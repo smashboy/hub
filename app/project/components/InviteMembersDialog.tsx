@@ -36,9 +36,12 @@ type Users = Array<{
 }>
 
 const InviteMembersDialog: React.FC<InviteMembersDialog> = ({ open, onClose, name, slug }) => {
-  const [createProjectInvitesMutation] = useCustomMutation(createProjectInvites, {
-    successNotification: "Invitations sent successfully!",
-  })
+  const [createProjectInvitesMutation, { isLoading: isLoadingCreateInvites }] = useCustomMutation(
+    createProjectInvites,
+    {
+      successNotification: "Invitations sent successfully!",
+    }
+  )
 
   const [searchUsersMutation, { isLoading: isSearchLoading }] = useMutation(searchUsers)
 
@@ -56,8 +59,6 @@ const InviteMembersDialog: React.FC<InviteMembersDialog> = ({ open, onClose, nam
         query: debouncedSearchQuery,
       })
 
-      console.log(users)
-
       setUsers(users)
     }
 
@@ -73,10 +74,19 @@ const InviteMembersDialog: React.FC<InviteMembersDialog> = ({ open, onClose, nam
       projectSlug: slug,
       usersId: selectedUsers.map(({ id }) => id),
     })
+
+    handleCloseDialog()
+  }
+
+  const handleCloseDialog = () => {
+    onClose()
+    setSelectedUsers([])
+    setSearchQuery("")
+    setUsers([])
   }
 
   return (
-    <Dialog open={open} maxWidth="sm" onClose={onClose}>
+    <Dialog open={open} maxWidth="sm" onClose={handleCloseDialog}>
       <DialogTitle>
         Add new member to <b>{name}</b>
       </DialogTitle>
@@ -94,7 +104,7 @@ const InviteMembersDialog: React.FC<InviteMembersDialog> = ({ open, onClose, nam
                 {...params}
                 label="Search"
                 onChange={handleSearchUsers}
-                helperText="Search by username or email"
+                helperText="Search by username or email."
               />
             )}
             renderOption={(props, { id, username }, { selected }) =>
@@ -128,7 +138,11 @@ const InviteMembersDialog: React.FC<InviteMembersDialog> = ({ open, onClose, nam
         <Button color="inherit" onClick={onClose}>
           Cancel
         </Button>
-        <LoadingButton onClick={handleCreateProjectInvites} disabled={selectedUsers?.length === 0}>
+        <LoadingButton
+          onClick={handleCreateProjectInvites}
+          loading={isLoadingCreateInvites}
+          disabled={selectedUsers?.length === 0}
+        >
           Invite
         </LoadingButton>
       </DialogActions>

@@ -47,7 +47,7 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({
             <ListItemText
               primary={name}
               secondary={
-                <Grid container spacing={2}>
+                <Grid container rowSpacing={1}>
                   {description && (
                     <Grid item xs={12}>
                       <Typography variant="subtitle1">{description}</Typography>
