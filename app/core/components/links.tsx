@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import { Link as BlitzLink, RouteUrlObject } from "blitz"
-import { Link as MUILink, Button, ButtonProps, LinkProps } from "@mui/material"
+import { Link as MUILink, Button, ButtonProps, LinkProps, Tab, TabProps } from "@mui/material"
 import { alpha } from "@mui/material/styles"
 
 export const RouteLink: React.FC<
@@ -34,20 +34,26 @@ export const RouteLink: React.FC<
 }
 
 export const ButtonRouteLink: React.FC<
-  { href: string | RouteUrlObject } & Omit<ButtonProps, "href">
+  { href: string | RouteUrlObject } & Omit<ButtonProps, "href" | "component">
 > = ({ href, children, ...otherProps }) => (
   <BlitzLink href={href} passHref>
     <Button {...otherProps}>{children}</Button>
   </BlitzLink>
 )
 
-export const ButtonWebLink: React.FC<{ href: string } & Omit<ButtonProps, "href">> = ({
-  href,
-  children,
-  ...otherProps
-}) => (
-  // @ts-ignore
-  <Button {...otherProps} href={href} target="_blank" rel="noopener noreferrer" component="a">
-    {children}
-  </Button>
+export const ButtonWebLink: React.FC<{ href: string } & Omit<ButtonProps, "href" | "component">> =
+  ({ href, children, ...otherProps }) => (
+    // @ts-ignore
+    <Button {...otherProps} href={href} target="_blank" rel="noopener noreferrer" component="a">
+      {children}
+    </Button>
+  )
+
+export const TabRouteLink: React.FC<
+  { href: string | RouteUrlObject } & Omit<TabProps, "component">
+> = ({ href, ...otherProps }) => (
+  <BlitzLink href={href} passHref>
+    {/* @ts-ignore */}
+    <Tab {...otherProps} component="a" />
+  </BlitzLink>
 )

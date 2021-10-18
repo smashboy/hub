@@ -1,11 +1,11 @@
 import db from "db"
 import { resolver } from "blitz"
 import { DeleteProjectInvite } from "../validations"
-import Guard from "app/guard/ability"
+import { authorizePipe } from "app/guard/helpers"
 
 export default resolver.pipe(
   resolver.zod(DeleteProjectInvite),
-  Guard.authorizePipe("delete", "project.invites"),
+  authorizePipe("delete", "project.settings.invites", ({ projectSlug }) => projectSlug),
   async ({ inviteId }) => {
     await db.projectInvite.delete({
       where: {

@@ -8,7 +8,6 @@ import {
   GridFilterModel,
   GridActionsCellItem,
   GridLinkOperator,
-  GridCellEditCommitParams,
 } from "@mui/x-data-grid"
 import CancelIcon from "@mui/icons-material/Close"
 import PaperBox from "app/core/components/PaperBox"
@@ -16,6 +15,7 @@ import useCustomMutation from "app/core/hooks/useCustomMutation"
 import deleteProjectInvite from "../mutations/deleteProjectInvite"
 
 type ManageInvitesSettingsProps = {
+  slug: string
   invites: Array<{
     id: number
     user: {
@@ -26,7 +26,7 @@ type ManageInvitesSettingsProps = {
   }>
 }
 
-const ManageInvitesSettings: React.FC<ManageInvitesSettingsProps> = ({ invites }) => {
+const ManageInvitesSettings: React.FC<ManageInvitesSettingsProps> = ({ invites, slug }) => {
   const [deleteProjectInviteMutation] = useCustomMutation(deleteProjectInvite, {
     successNotification: "Invite has been canceled!",
   })
@@ -104,6 +104,7 @@ const ManageInvitesSettings: React.FC<ManageInvitesSettingsProps> = ({ invites }
   const handleDeleteProjectInvite = async (inviteId: number) => {
     await deleteProjectInviteMutation({
       inviteId,
+      projectSlug: slug,
     })
 
     const updatedRows = rows.filter((row) => row.id !== inviteId)

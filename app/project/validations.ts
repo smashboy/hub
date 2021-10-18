@@ -100,4 +100,9 @@ export const CreateProjectInvites = z.object({
 
 export const DeleteProjectInvite = z.object({
   inviteId: z.number(),
+  projectSlug: z.string(),
+})
+
+export const ManageProjectInvite = z.object({
+  inviteId: z.number(),
 })

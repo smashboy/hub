@@ -1,9 +1,10 @@
-import { Routes, useMutation, useRouter } from "blitz"
+import { Routes } from "blitz"
 import { Grid, Tabs, Tab, Paper, Fade } from "@mui/material"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import { LayoutProps } from "app/core/layouts/Layout"
 import { ProjectPageProps } from "../helpers"
 import ProjectMiniLayout from "./ProjectMiniLayout"
+import { TabRouteLink } from "app/core/components/links"
 
 type ProjectSettingsLayoutProps = {
   selectedTab: "general" | "features" | "members"
@@ -11,8 +12,6 @@ type ProjectSettingsLayoutProps = {
 
 const ProjectSettingsLayout: React.FC<LayoutProps & ProjectPageProps & ProjectSettingsLayoutProps> =
   ({ children, selectedTab, ...otherProps }) => {
-    const router = useRouter()
-
     const {
       project: { slug },
     } = otherProps
@@ -31,22 +30,16 @@ const ProjectSettingsLayout: React.FC<LayoutProps & ProjectPageProps & ProjectSe
                   scrollButtons="auto"
                   variant="scrollable"
                 >
-                  <Tab
+                  <TabRouteLink
+                    href={Routes.SettingsPage({ slug })}
                     value="general"
                     label="General"
-                    onClick={(event) => {
-                      event.preventDefault()
-                      router.push(Routes.SettingsPage({ slug }))
-                    }}
                   />
                   <Tab value="features" label="Features" />
-                  <Tab
+                  <TabRouteLink
+                    href={Routes.MembersSettingPage({ slug })}
                     value="members"
                     label="Members"
-                    onClick={(event) => {
-                      event.preventDefault()
-                      router.push(Routes.MembersSettingPage({ slug }))
-                    }}
                   />
                   {/* <Tab value="roles" label="Roles" /> */}
                 </Tabs>

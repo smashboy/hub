@@ -18,7 +18,7 @@ export type ExtendedResourceTypes =
   | "project.settings.invites"
   | "projects"
 
-export type ExtendedAbilityTypes = "follow" | "upvote"
+export type ExtendedAbilityTypes = "follow" | "upvote" | "accept" | "decline"
 
 const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
   async (ctx, { can, cannot }) => {
@@ -54,7 +54,8 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
         async (slug: string) => await checkFeedbackSettingsManagePermissions(slug, authUserId)
       )
 
-      can("manage", "project.invites")
+      can("accept", "project.invites")
+      can("decline", "project.invites")
 
       can(
         "manage",

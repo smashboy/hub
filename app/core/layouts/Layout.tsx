@@ -84,12 +84,14 @@ const AuthNavigation = () => {
           </Box>
         </Fade>
         <Menu anchorEl={menuEl} open={Boolean(menuEl)} onClose={handleCloseMenu}>
-          <MenuItem onClick={handleCloseMenu} component="a">
-            <ListItemIcon>
-              <InboxIcon color="primary" />
-            </ListItemIcon>
-            <ListItemText primary="Inbox" />
-          </MenuItem>
+          <Link href={Routes.InboxAllPage()} passHref>
+            <MenuItem onClick={handleCloseMenu} component="a">
+              <ListItemIcon>
+                <InboxIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="Inbox" />
+            </MenuItem>
+          </Link>
           <Link href={Routes.ProjectsPage()} passHref>
             <MenuItem onClick={handleCloseMenu} component="a">
               <ListItemText primary="Your projects" />

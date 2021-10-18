@@ -25,7 +25,7 @@ const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
       </Fade>
       <Fade in timeout={750}>
         <Grid item xs={12}>
-          <ManageProjectInvites invites={invites} />
+          <ManageProjectInvites invites={invites} slug={slug} />
         </Grid>
       </Fade>
     </Grid>
