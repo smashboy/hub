@@ -18,7 +18,7 @@ export const GetCreateFeedbackInfo = z.object({
 })
 
 export const CreateLabel = z.object({
-  name: z.string().min(1).max(25),
+  name: z.string().min(1).max(50),
   color: z.string(),
   projectSlug: z.string(),
   description: z.string().max(100).optional(),
@@ -105,4 +105,11 @@ export const DeleteProjectInvite = z.object({
 
 export const ManageProjectInvite = z.object({
   inviteId: z.number(),
+})
+
+export const CreateRoadmap = z.object({
+  name: z.string().min(1).max(75),
+  description: z.string().max(100).nullable(),
+  dueTo: z.date().nullable(),
+  projectSlug: z.string(),
 })

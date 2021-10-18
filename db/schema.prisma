@@ -129,7 +129,8 @@ model ProjectRoadmap {
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
   slug        String            @unique
-  title       String
+  name        String
+  dueTo       DateTime?
   description String?
   project     Project           @relation(fields: [projectId], references: [id])
   projectId   Int

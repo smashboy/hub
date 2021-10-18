@@ -13,6 +13,7 @@ export type ExtendedResourceTypes =
   | "project"
   | "project.invites"
   | "project.members"
+  | "project.roadmap"
   | "project.settings.general"
   | "project.settings.danger"
   | "project.settings.invites"
@@ -35,8 +36,11 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
     if (authUserId) {
       can("manage", "user")
 
+      can("create", "project")
       // TODO: maybe additional check for private project
       can("follow", "project")
+
+      can("create", "project.roadmap")
 
       // Feedback
       can("manage", "feedback")

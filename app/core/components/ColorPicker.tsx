@@ -1,4 +1,4 @@
-import { Box, ClickAwayListener, Grid, IconButton, TextField, Typography } from "@mui/material"
+import { Box, ClickAwayListener, Grid, IconButton, TextField } from "@mui/material"
 import randomcolor from "randomcolor"
 import { CustomPicker, ColorChangeHandler } from "react-color"
 import { Hue, Saturation, Alpha } from "react-color/lib/components/common"

@@ -10,7 +10,7 @@ export type FieldProps = {
   gridProps?: GridProps
 }
 
-export type LabeledTextFieldProps = TextFieldProps & FieldProps
+export type LabeledTextFieldProps = Omit<TextFieldProps, "value" | "onChange"> & FieldProps
 
 export const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
   name,

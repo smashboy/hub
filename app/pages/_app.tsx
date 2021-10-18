@@ -8,6 +8,8 @@ import {
   useQueryErrorResetBoundary,
 } from "blitz"
 import { GlobalStyles, ThemeProvider } from "@mui/material"
+import AdapterDateFns from "@mui/lab/AdapterDateFns"
+import LocalizationProvider from "@mui/lab/LocalizationProvider"
 import { SnackbarProvider } from "notistack"
 import lightTheme from "app/core/theme/lightTheme"
 import darkTheme from "app/core/theme/darkTheme"
@@ -17,15 +19,17 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <SnackbarProvider maxSnack={3}>
-        <ErrorBoundary
-          FallbackComponent={RootErrorFallback}
-          onReset={useQueryErrorResetBoundary().reset}
-        >
-          <GlobalStyles styles={{ body: { margin: 0, backgroundColor: "#121212" } }} />
-          {getLayout(<Component {...pageProps} />, pageProps)}
-        </ErrorBoundary>
-      </SnackbarProvider>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <SnackbarProvider maxSnack={3}>
+          <ErrorBoundary
+            FallbackComponent={RootErrorFallback}
+            onReset={useQueryErrorResetBoundary().reset}
+          >
+            <GlobalStyles styles={{ body: { margin: 0, backgroundColor: "#121212" } }} />
+            {getLayout(<Component {...pageProps} />, pageProps)}
+          </ErrorBoundary>
+        </SnackbarProvider>
+      </LocalizationProvider>
     </ThemeProvider>
   )
 }

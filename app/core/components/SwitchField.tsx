@@ -13,7 +13,7 @@ import { FieldProps } from "./LabeledTextField"
 
 type SwitchFieldProps = FieldProps & {
   helperMessage?: React.ReactNode
-  switchProps?: SwitchProps
+  switchProps?: Omit<SwitchProps, "value" | "onChange">
 }
 
 const SwitchField: React.FC<SwitchFieldProps> = ({

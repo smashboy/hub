@@ -153,7 +153,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                 value="feedback"
                 label="Feedback"
               />
-              <Tab value="roadmap" label="Roadmap" />
+              <TabRouteLink href={Routes.RoadmapPage({ slug })} value="roadmap" label="Roadmap" />
               <Tab value="jobs" label="Jobs" />
             </Tabs>
           </Grid>

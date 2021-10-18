@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import { BlitzPage, GetServerSideProps, getSession } from "blitz"
-import { Grid, Container } from "@mui/material"
+import { Grid } from "@mui/material"
 import { getProjectInfo, ProjectPageProps } from "app/project/helpers"
 import ProjectLayout from "app/project/layouts/ProjectLayout"
 import FeedbackListHeader from "app/project/components/FeedbackListHeader"
