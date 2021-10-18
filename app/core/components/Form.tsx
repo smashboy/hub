@@ -52,8 +52,6 @@ export function Form<S extends z.ZodType<any, any>>({
   })
   const [formError, setFormError] = useState<string | null>(null)
 
-  console.log(ctx.formState.errors)
-
   const disableSubmit = !forceEnableSubmit && (!ctx.formState.isValid || !ctx.formState.isDirty)
 
   const enableUpdateButton = updateButton && !isSM
