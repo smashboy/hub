@@ -12,6 +12,7 @@ type InboxInvitesPageProps = {
     project: {
       name: string
       slug: string
+      isPrivate: boolean
       description: string | null
       logoUrl: string | null
     }
@@ -55,6 +56,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
         select: {
           name: true,
           slug: true,
+          isPrivate: true,
           description: true,
           logoUrl: true,
         },

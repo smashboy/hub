@@ -12,6 +12,7 @@ type ProjectInviteItemProps = {
     project: {
       name: string
       slug: string
+      isPrivate: boolean
       description: string | null
       logoUrl: string | null
     }
@@ -22,7 +23,7 @@ type ProjectInviteItemProps = {
 const ProjectInviteItem: React.FC<ProjectInviteItemProps> = ({
   invite: {
     id,
-    project: { name, slug, description, logoUrl },
+    project: { name, slug, description, logoUrl, isPrivate },
   },
   onActionDone,
 }) => {
@@ -66,9 +67,15 @@ const ProjectInviteItem: React.FC<ProjectInviteItemProps> = ({
             </Grid>
             <Grid container item xs={10}>
               <Grid item xs={12}>
-                <RouteLink href={Routes.ProjectLandingPage({ slug })} variant="h6">
-                  {name}
-                </RouteLink>
+                {isPrivate ? (
+                  <Typography variant="h6" component="div" color="text.primary">
+                    {name}
+                  </Typography>
+                ) : (
+                  <RouteLink href={Routes.ProjectLandingPage({ slug })} variant="h6">
+                    {name}
+                  </RouteLink>
+                )}
               </Grid>
               {description && (
                 <Grid item xs={12}>
