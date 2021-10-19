@@ -34,6 +34,7 @@ export interface FeedbackPageProps extends ProjectPageProps {
       name: string
       color: string
     }>
+    roadmaps: Array<{ id: number; name: string }>
     participants: Array<{
       id: number
       user: {
@@ -64,6 +65,15 @@ export interface MembersSettingsPageProps extends ProjectPageProps {
       }
     }>
   }
+}
+
+export interface RoadmapsPageProps extends ProjectPageProps {
+  roadmaps: {
+    name: string
+    description: string | null
+    slug: string
+    dueTo: Date | null
+  }[]
 }
 
 // const session = await getSession(req, res)
@@ -112,6 +122,12 @@ export const getFeedback = async (
           id: true,
           name: true,
           color: true,
+        },
+      },
+      roadmaps: {
+        select: {
+          id: true,
+          name: true,
         },
       },
       participants: {
@@ -240,4 +256,27 @@ export const getProjectMembersSettings = async (
       invites: project!.invites,
     },
   }
+}
+
+export const getProjectRoadmaps = async (
+  slug: string
+): Promise<Promise<Omit<RoadmapsPageProps, "project">>> => {
+  const roadmaps = await db.projectRoadmap.findMany({
+    where: {
+      project: {
+        slug,
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    select: {
+      name: true,
+      description: true,
+      slug: true,
+      dueTo: true,
+    },
+  })
+
+  return { roadmaps }
 }

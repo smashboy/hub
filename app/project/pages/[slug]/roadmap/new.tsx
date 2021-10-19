@@ -46,7 +46,7 @@ const NewRoadmapPage: BlitzPage = ({ project: { slug } }: ProjectPageProps) => {
               onSubmit={async (roadmap) => {
                 try {
                   await createProjectRoadmapMutation({ ...roadmap, projectSlug: slug })
-                  router.push(Routes.RoadmapPage({ slug }))
+                  router.push(Routes.RoadmapsPage({ slug }))
                 } catch (error) {
                   if (error.code === "P2002" && error.meta?.target?.includes("slug")) {
                     return { name: "This project name is already being used" }

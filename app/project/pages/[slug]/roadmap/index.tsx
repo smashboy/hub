@@ -1,28 +1,44 @@
 import { BlitzPage, GetServerSideProps, getSession, Routes } from "blitz"
-import { Grid } from "@mui/material"
-import { getProjectInfo, ProjectPageProps } from "app/project/helpers"
+import { Grid, List } from "@mui/material"
+import { getProjectInfo, getProjectRoadmaps, RoadmapsPageProps } from "app/project/helpers"
 import ProjectLayout from "app/project/layouts/ProjectLayout"
 import { ButtonRouteLink } from "app/core/components/links"
+import RoadmapListItem from "app/project/components/RoadmapListItem"
+import { ProjectMemberRole } from "db"
 
-const RoadmapPage: BlitzPage<ProjectPageProps> = ({ project: { slug } }: ProjectPageProps) => {
+const RoadmapsPage: BlitzPage<RoadmapsPageProps> = ({
+  project: { slug, role },
+  roadmaps,
+}: RoadmapsPageProps) => {
   return (
     <Grid container spacing={2} sx={{ marginTop: 2 }}>
+      {(role === ProjectMemberRole.FOUNDER ||
+        role === ProjectMemberRole.ADMIN ||
+        role === ProjectMemberRole.MODERATOR) && (
+        <Grid item xs={12}>
+          <ButtonRouteLink href={Routes.NewRoadmapPage({ slug })} variant="contained" fullWidth>
+            New Roadmap
+          </ButtonRouteLink>
+        </Grid>
+      )}
       <Grid item xs={12}>
-        <ButtonRouteLink href={Routes.NewRoadmapPage({ slug })} variant="contained" fullWidth>
-          New Roadmap
-        </ButtonRouteLink>
+        <List component="div">
+          {roadmaps.map((roadmap) => (
+            <RoadmapListItem key={roadmap.slug} roadmap={roadmap} projectSlug={slug} />
+          ))}
+        </List>
       </Grid>
     </Grid>
   )
 }
 
-RoadmapPage.getLayout = (page, props: ProjectPageProps) => (
+RoadmapsPage.getLayout = (page, props: RoadmapsPageProps) => (
   <ProjectLayout title={props.project.name} selectedTab="roadmap" {...props}>
     {page}
   </ProjectLayout>
 )
 
-export const getServerSideProps: GetServerSideProps<ProjectPageProps> = async ({
+export const getServerSideProps: GetServerSideProps<RoadmapsPageProps> = async ({
   params,
   req,
   res,
@@ -30,16 +46,18 @@ export const getServerSideProps: GetServerSideProps<ProjectPageProps> = async ({
   const session = await getSession(req, res)
   const slug = (params?.slug as string) || null
 
-  const props = await getProjectInfo(slug, session)
+  const project = await getProjectInfo(slug, session)
 
-  if (!props)
+  if (!project)
     return {
       notFound: true,
     }
 
+  const roadmaps = await getProjectRoadmaps(slug!)
+
   return {
-    props,
+    props: { ...project, ...roadmaps },
   }
 }
 
-export default RoadmapPage
+export default RoadmapsPage

@@ -28,8 +28,9 @@ export type FeedbackEditorStore = {
   readOnly: boolean
   setTitle: (newTitle: string) => void
   setCategory: (newCategory: CategoryType) => void
-  setMemberIds: (members: number[]) => void
+  setMembers: (members: number[]) => void
   setLabels: (labels: string[]) => void
+  setRoadmaps: (ids: number[]) => void
   setReadOnly: (newValue: boolean) => void
   submit: (content: Descendant[]) => void
   onReset: () => void
@@ -63,13 +64,15 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
 
   const [title, setTitle] = useState(feedback?.title || "")
   const [category, setCategory] = useState<CategoryType>(feedback?.category || "none")
-  const [memberIds, setMemberIds] = useState<number[]>(
+  const [memberIds, setMembers] = useState<number[]>(
     initialValues?.feedback.participants.map(({ id }) => id) || []
   )
   const [labelIds, setLabelIds] = useState<string[]>(
     initialValues?.feedback.labels.map(({ id }) => id) || []
   )
-  const [roadmapIds, setRoadmapIds] = useState<number[]>([])
+  const [roadmapIds, setRoadmapIds] = useState<number[]>(
+    initialValues?.feedback.roadmaps.map(({ id }) => id) || []
+  )
 
   const [readOnly, setReadOnly] = useState(Boolean(initialValues))
   const [disableSubmit, setDisableSubmit] = useState(false)
@@ -81,7 +84,8 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
 
   const handleSetTitle = (newTitle: string) => setTitle(newTitle)
   const handleSetCategory = (newCategory: CategoryType) => setCategory(newCategory)
-  const handleSetMemberIds = (members: number[]) => setMemberIds(members)
+  const handleSetMemberIds = (members: number[]) => setMembers(members)
+  const handleSetRoadmapIds = (ids: number[]) => setRoadmapIds(ids)
   const handleSetLabelIds = (labels: string[]) => setLabelIds(labels)
   const handleSetReadOnly = (newValue: boolean) => setReadOnly(newValue)
 
@@ -135,8 +139,9 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
         initialContent: initialContent?.content || undefined,
         setTitle: handleSetTitle,
         setCategory: handleSetCategory,
-        setMemberIds: handleSetMemberIds,
+        setMembers: handleSetMemberIds,
         setLabels: handleSetLabelIds,
+        setRoadmaps: handleSetRoadmapIds,
         submit: handleSubmit,
         setReadOnly: handleSetReadOnly,
         onReset: handleReset,

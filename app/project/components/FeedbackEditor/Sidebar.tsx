@@ -34,7 +34,8 @@ const generateNewLabelValues = () => ({
 })
 
 const FeedbackSidebar: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
-  const { slug, setMemberIds, setLabels, labelIds, memberIds } = useFeedbackEditor()
+  const { slug, setMembers, setLabels, setRoadmaps, labelIds, memberIds, roadmapIds } =
+    useFeedbackEditor()
 
   const [project, { refetch }] = useQuery(
     getFeedbackOptions,
@@ -47,6 +48,7 @@ const FeedbackSidebar: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
   )
 
   const projectLabels = project.settings?.labels || []
+  const projectRoadmaps = project.roadmaps
 
   const [createLabelMutation] = useCustomMutation(createLabel, {
     successNotification: "New label has been created successfully!",
@@ -74,7 +76,7 @@ const FeedbackSidebar: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                 disabled={readOnly}
                 onChange={(event, value) => {
                   // @ts-ignore
-                  setMemberIds(value.map(({ id }) => id))
+                  setMembers(value.map(({ id }) => id))
                 }}
                 size="small"
                 renderOption={(props, { id, user: { username } }, { selected }) =>
@@ -173,26 +175,26 @@ const FeedbackSidebar: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
               <Autocomplete
                 size="small"
                 fullWidth
-                options={project.roadmaps}
+                options={projectRoadmaps}
+                value={projectRoadmaps.filter((roadmap) => roadmapIds.includes(roadmap.id))}
                 freeSolo
                 disablePortal
                 multiple
                 disabled={readOnly}
-                renderOption={(props, { title, id }, { selected }) =>
+                onChange={(event, value) => {
+                  // @ts-ignore
+                  setRoadmaps(value.map(({ id }) => id))
+                }}
+                renderOption={(props, { name, id }, { selected }) =>
                   selected ? null : (
                     <MenuItem {...props} key={id} divider>
-                      {title}
+                      {name}
                     </MenuItem>
                   )
                 }
                 renderTags={(roadmaps, getTagProps) =>
-                  roadmaps.map(({ title, id }, index) => (
-                    <Chip
-                      {...getTagProps({ index })}
-                      variant="outlined"
-                      label={title}
-                      key={title}
-                    />
+                  roadmaps.map(({ name, id }, index) => (
+                    <Chip {...getTagProps({ index })} variant="outlined" label={name} key={id} />
                   ))
                 }
                 renderInput={(params) => <TextField {...params} label="Roadmap" />}
