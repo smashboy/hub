@@ -128,13 +128,15 @@ model ProjectRoadmap {
   id          Int               @id @default(autoincrement())
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
-  slug        String            @unique
+  slug        String
   name        String
   dueTo       DateTime?
   description String?
   project     Project           @relation(fields: [projectId], references: [id])
   projectId   Int
   feedback    ProjectFeedback[]
+
+  @@unique([projectId, slug])
 }
 
 model ProjectFeedback {
