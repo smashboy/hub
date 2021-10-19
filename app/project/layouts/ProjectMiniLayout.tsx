@@ -10,13 +10,15 @@ const ProjectMiniLayout: React.FC<LayoutProps & ProjectPageProps> = ({
   title,
   children,
   project: { name, logoUrl, color, slug, description },
+  disableContainer,
+  disableNavigation,
 }) => {
   const isSM = useIsSmallDevice()
 
   const avatarSize = useMemo(() => (isSM ? 45 : 75), [isSM])
 
   return (
-    <Layout title={title}>
+    <Layout title={title} disableNavigation={disableNavigation} disableContainer={disableContainer}>
       <Grid container spacing={2} sx={{ marginTop: 1 }}>
         <Grid item xs={12}>
           <Container>

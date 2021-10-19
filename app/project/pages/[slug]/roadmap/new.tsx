@@ -49,7 +49,7 @@ const NewRoadmapPage: BlitzPage = ({ project: { slug } }: ProjectPageProps) => {
                   router.push(Routes.RoadmapsPage({ slug }))
                 } catch (error) {
                   if (error.code === "P2002" && error.meta?.target?.includes("slug")) {
-                    return { name: "This project name is already being used" }
+                    return { name: "This roadmap name is already being used" }
                   } else {
                     return { [FORM_ERROR]: error.toString() }
                   }

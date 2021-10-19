@@ -113,3 +113,9 @@ export const CreateRoadmap = z.object({
   dueTo: z.date().nullable(),
   projectSlug: z.string(),
 })
+
+export const UpdateProjectRoadmap = CreateRoadmap.omit({ projectSlug: true }).merge(
+  z.object({
+    roadmapId: z.number(),
+  })
+)

@@ -40,7 +40,7 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
       // TODO: maybe additional check for private project
       can("follow", "project")
 
-      can("create", "project.roadmap")
+      can("manage", "project.roadmap")
 
       // Feedback
       can("manage", "feedback")

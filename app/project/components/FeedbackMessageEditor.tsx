@@ -2,7 +2,7 @@ import { Descendant } from "slate"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import MarkdownEditor from "app/core/markdown/Editor"
 import createFeedbackMessage from "app/project/mutations/createFeedbackMessage"
-import { FeedbackMessagesListProps } from "../FeedbackMessagesList"
+import { FeedbackMessagesListProps } from "./FeedbackMessagesList"
 
 interface FeedbackMessageEditor extends FeedbackMessagesListProps {
   refetch: () => void

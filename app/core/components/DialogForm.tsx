@@ -25,6 +25,7 @@ function DialogForm<S extends z.ZodType<any, any>>({
   title,
   open,
   disableCloseOnSubmit,
+  resetOnSuccess,
   DialogProps,
   onClose,
   ...props
@@ -54,6 +55,13 @@ function DialogForm<S extends z.ZodType<any, any>>({
 
             if (errors.length === 0) {
               if (!disableCloseOnSubmit) handleCloseDialog()
+              if (resetOnSuccess)
+                ctx.reset(
+                  typeof initialValues === "function"
+                    ? // @ts-ignore
+                      initialValues()
+                    : values
+                )
               return
             }
 

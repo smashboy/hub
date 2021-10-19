@@ -31,12 +31,9 @@ import logout from "app/auth/mutations/logout"
 
 export interface LayoutProps {
   title?: string
-  children: ReactNode
-}
-
-export interface MainLayoutProps extends LayoutProps {
   disableNavigation?: boolean
   disableContainer?: boolean
+  children: ReactNode
 }
 
 const AuthNavigation = () => {
@@ -146,7 +143,7 @@ const AuthNavigationPlaceholder = () => (
   </>
 )
 
-const Layout = ({ title, disableContainer, disableNavigation, children }: MainLayoutProps) => {
+const Layout = ({ title, disableContainer, disableNavigation, children }: LayoutProps) => {
   const theme = useTheme()
 
   const scrollTrigger = useScrollTrigger({

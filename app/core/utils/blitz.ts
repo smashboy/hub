@@ -7,3 +7,6 @@ export const rgbColor2String = (color: RGBColor) =>
 
 export const animationTimeout = (index: number) => 250 * (index + 2)
 export const random = (min: number, max: number) => Math.floor(Math.random() * (max - min)) + min
+
+export const capitalizeString = (str: string) =>
+  str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()

@@ -76,6 +76,31 @@ export interface RoadmapsPageProps extends ProjectPageProps {
   }[]
 }
 
+export interface RoadmapPageProps extends ProjectPageProps {
+  roadmap: {
+    id: number
+    name: string
+    description: string | null
+    dueTo: Date | null
+    feedback: Array<{
+      author: {
+        username: string
+      }
+      id: number
+      labels: Array<{
+        name: string
+        color: string
+      }>
+      content: {
+        title: string
+        category: FeedbackCategory
+        status: FeedbackStatus
+      }
+      upvotedBy: number[]
+    }>
+  }
+}
+
 // const session = await getSession(req, res)
 // const userId = session?.userId || undefined
 // const slug = (params?.slug as string) || null
@@ -279,4 +304,68 @@ export const getProjectRoadmaps = async (
   })
 
   return { roadmaps }
+}
+
+export const getProjectRoadmap = async (
+  projectSlug: string,
+  roadmapSlug: string | null
+): Promise<Omit<RoadmapPageProps, "project"> | null> => {
+  if (!roadmapSlug) return null
+
+  const roadmap = await db.projectRoadmap.findFirst({
+    where: {
+      project: {
+        slug: projectSlug,
+      },
+      slug: roadmapSlug,
+    },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      dueTo: true,
+      feedback: {
+        select: {
+          id: true,
+          labels: {
+            select: {
+              name: true,
+              color: true,
+            },
+          },
+          content: {
+            select: {
+              title: true,
+              category: true,
+              status: true,
+            },
+          },
+          author: {
+            select: {
+              username: true,
+            },
+          },
+          upvotedBy: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      },
+    },
+  })
+
+  if (!roadmap) return null
+
+  const { feedback, ...otherProps } = roadmap
+
+  return {
+    roadmap: {
+      ...otherProps,
+      feedback: feedback.map(({ upvotedBy, ...otherProps }) => ({
+        ...otherProps,
+        upvotedBy: upvotedBy.map(({ id }) => id),
+      })),
+    },
+  }
 }
