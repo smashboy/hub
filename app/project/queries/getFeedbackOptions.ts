@@ -16,7 +16,7 @@ export default resolver.pipe(
         roadmaps: {
           select: {
             id: true,
-            title: true,
+            name: true,
           },
         },
         members: {
