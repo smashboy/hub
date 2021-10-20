@@ -1,5 +1,6 @@
 import db, { FeedbackCategory, ProjectMemberRole, FeedbackStatus } from "db"
 import { SessionContext } from "blitz"
+import { countProgress } from "app/core/utils/blitz"
 
 export interface ProjectPageProps {
   project: {
@@ -100,6 +101,7 @@ export interface RoadmapPageProps extends ProjectPageProps {
     name: string
     description: string | null
     dueTo: Date | null
+    progress: number
     feedback: Array<RoadmapFeedback>
   }
 }
@@ -328,6 +330,9 @@ export const getProjectRoadmap = async (
       description: true,
       dueTo: true,
       feedback: {
+        orderBy: {
+          createdAt: "desc",
+        },
         select: {
           id: true,
           createdAt: true,
@@ -363,9 +368,21 @@ export const getProjectRoadmap = async (
 
   const { feedback, ...otherProps } = roadmap
 
+  const totalCount = feedback.length
+
+  const closedFeedbackCount = feedback.filter(
+    ({ content: { status } }) =>
+      status === FeedbackStatus.BLOCKED ||
+      status === FeedbackStatus.CANCELED ||
+      status === FeedbackStatus.COMPLETED
+  ).length
+
+  const progress = countProgress(totalCount, closedFeedbackCount)
+
   return {
     roadmap: {
       ...otherProps,
+      progress,
       feedback: feedback.map(({ upvotedBy, ...otherProps }) => ({
         ...otherProps,
         upvotedBy: upvotedBy.map(({ id }) => id),

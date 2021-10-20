@@ -25,7 +25,23 @@ export default function App({ Component, pageProps }: AppProps) {
             FallbackComponent={RootErrorFallback}
             onReset={useQueryErrorResetBoundary().reset}
           >
-            <GlobalStyles styles={{ body: { margin: 0, backgroundColor: "#121212" } }} />
+            <GlobalStyles
+              styles={{
+                body: { margin: 0, backgroundColor: "#121212" },
+                "::-webkit-scrollbar": {
+                  width: 4,
+                  height: 4,
+                },
+
+                "::-webkit-scrollbar-track": {
+                  backgroundColor: "transparent",
+                },
+
+                "::-webkit-scrollbar-thumb": {
+                  background: "#313c4e",
+                },
+              }}
+            />
             {getLayout(<Component {...pageProps} />, pageProps)}
           </ErrorBoundary>
         </SnackbarProvider>

@@ -1,0 +1,135 @@
+import { FeedbackStatus, ProjectMemberRole } from "db"
+import { createContext, useContext, useState, useMemo } from "react"
+import { DropResult } from "react-beautiful-dnd"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import { RoadmapFeedback, RoadmapPageProps } from "../helpers"
+import useCustomMutation from "app/core/hooks/useCustomMutation"
+import updateFeedbackStatus from "../mutations/updateFeedbackStatus"
+import { countProgress } from "app/core/utils/blitz"
+
+export type RoadmapStoreProps = Pick<RoadmapPageProps, "roadmap"> & {
+  projectSlug: string
+  memberRole: ProjectMemberRole | null
+}
+
+type InfoState = {
+  id: number
+  name: string
+  description: string | null
+  dueTo: Date | null
+  progress: number
+}
+
+export type RoadmapStore = {
+  info: InfoState
+  feedback: RoadmapFeedback[]
+  projectSlug: string
+  canManage: boolean
+  isUpdatingFeedback: boolean
+  setInfo: (info: Partial<InfoState>) => void
+  setFeedback: (res: DropResult) => void
+}
+
+const RoadmapContext = createContext<RoadmapStore | null>(null)
+
+export const RoadmapProvider: React.FC<RoadmapStoreProps> = ({
+  projectSlug,
+  memberRole,
+  roadmap: { feedback: initialFeedback, ...roadmap },
+  children,
+}) => {
+  const user = useCurrentUser(false)
+
+  const [updateFeedbackStatusMutation, { isLoading: isUpdatingFeedback }] = useCustomMutation(
+    updateFeedbackStatus,
+    {}
+  )
+
+  const [info, setInfo] = useState<InfoState>(roadmap)
+  const [feedback, setFeedback] = useState(initialFeedback)
+
+  const canManage = useMemo(
+    () =>
+      Boolean(
+        user &&
+          (memberRole === ProjectMemberRole.FOUNDER ||
+            memberRole === ProjectMemberRole.ADMIN ||
+            memberRole === ProjectMemberRole.MODERATOR)
+      ),
+    [user, memberRole]
+  )
+
+  const handleSetInfo = (newInfo: InfoState) =>
+    setInfo((prevState) => ({ ...prevState, ...newInfo }))
+
+  const handleFeedback = async (res: DropResult) => {
+    const prevFeedback = feedback
+    const prevProgress = info.progress
+    try {
+      if (!res.destination || res.source.droppableId === res.destination.droppableId) return
+      const newStatus = res.destination.droppableId as FeedbackStatus
+      const feedbackId = parseInt(res.draggableId)
+
+      const updatedFeedback = prevFeedback.map((card) => {
+        if (card.id === feedbackId) {
+          const { content, ...otherProps } = card
+
+          return {
+            ...otherProps,
+            content: {
+              ...content,
+              status: newStatus,
+            },
+          }
+        }
+        return card
+      })
+
+      const totalCount = updatedFeedback.length
+
+      const closedFeedbackCount = updatedFeedback.filter(
+        ({ content: { status } }) =>
+          status === FeedbackStatus.BLOCKED ||
+          status === FeedbackStatus.CANCELED ||
+          status === FeedbackStatus.COMPLETED
+      ).length
+
+      const progress = countProgress(totalCount, closedFeedbackCount)
+
+      setFeedback(updatedFeedback)
+      setInfo((prevState) => ({ ...prevState, progress }))
+
+      await updateFeedbackStatusMutation({
+        feedbackId,
+        status: newStatus,
+      })
+    } catch (error) {
+      setFeedback(prevFeedback)
+      setInfo((prevState) => ({ ...prevState, progress: prevProgress }))
+    }
+  }
+
+  return (
+    <RoadmapContext.Provider
+      value={{
+        projectSlug,
+        info,
+        feedback,
+        canManage,
+        isUpdatingFeedback,
+        setInfo: handleSetInfo,
+        setFeedback: handleFeedback,
+      }}
+    >
+      {children}
+    </RoadmapContext.Provider>
+  )
+}
+
+export const useRoadmap = () => {
+  const store = useContext(RoadmapContext)
+
+  if (!store) throw new Error("useRoadmap must be used within RoadmapProvider")
+
+  return store
+}

@@ -10,3 +10,5 @@ export const random = (min: number, max: number) => Math.floor(Math.random() * (
 
 export const capitalizeString = (str: string) =>
   str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+
+export const countProgress = (total: number, done: number) => Math.floor((100 * done) / total)

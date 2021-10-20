@@ -45,6 +45,9 @@ const UpdateRoadmapDialog: React.FC<UpdateRoadmapDialogProps> = ({
       resetOnSuccess
       initialValues={roadmap}
       submitText="Update"
+      DialogProps={{
+        maxWidth: "sm",
+      }}
       onSubmit={async (roadmap) => {
         try {
           const updatedSlug = await updateProjectRoadmapMutation({ ...roadmap, roadmapId: id })
