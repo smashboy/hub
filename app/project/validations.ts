@@ -1,4 +1,4 @@
-import { FeedbackCategory, ProjectMemberRole } from "db"
+import { FeedbackCategory, FeedbackStatus, ProjectMemberRole } from "db"
 import * as z from "zod"
 
 export const projectName = z
@@ -54,6 +54,20 @@ export const UpdateFeedback = CreateFeedback.omit({ projectSlug: true }).merge(
     feedbackId: z.number(),
   })
 )
+
+export const UpdateFeedbackStatus = z.object({
+  feedbackId: z.number(),
+  status: z.enum([
+    FeedbackStatus.BLOCKED,
+    FeedbackStatus.CANCELED,
+    FeedbackStatus.COMPLETED,
+    FeedbackStatus.DUPLICATE,
+    FeedbackStatus.IN_PROGRESS,
+    FeedbackStatus.ON_REVIEW,
+    FeedbackStatus.PENDING,
+    FeedbackStatus.PLANNED,
+  ]),
+})
 
 export const CreateFeedbackMessage = z.object({
   feedbackId: z.number(),

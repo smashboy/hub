@@ -6,11 +6,15 @@ import { getProjectInfo, getProjectRoadmap, RoadmapPageProps } from "app/project
 import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
 import RoadmapBoard from "app/project/components/RoadmapBoard"
 import UpdateRoadmapDialog from "app/project/components/UpdateRoadmapDialog"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import { ProjectMemberRole } from "db"
 
 const RoadmapPage: BlitzPage<RoadmapPageProps> = ({
   roadmap: { id, feedback, ...roadmap },
-  project: { slug: projectSlug },
+  project: { slug: projectSlug, role },
 }: RoadmapPageProps) => {
+  const user = useCurrentUser(false)
+
   const [open, setOpen] = useState(false)
 
   const [{ name, description, dueTo }, setInfo] = useState(roadmap)
@@ -18,11 +22,18 @@ const RoadmapPage: BlitzPage<RoadmapPageProps> = ({
   const handleOpenDialog = () => setOpen(true)
   const handleCloseDialog = () => setOpen(false)
 
+  const canManage = Boolean(
+    user &&
+      (role === ProjectMemberRole.FOUNDER ||
+        role === ProjectMemberRole.ADMIN ||
+        role === ProjectMemberRole.MODERATOR)
+  )
+
   return (
     <>
       <Grid container sx={{ marginTop: 2 }}>
         <Container>
-          <Grid container spacing={1} xs={12}>
+          <Grid container item spacing={1} xs={12}>
             <Grid item xs={12}>
               <Divider />
             </Grid>
@@ -45,14 +56,16 @@ const RoadmapPage: BlitzPage<RoadmapPageProps> = ({
                 </Typography>
               </Grid>
             </Grid>
-            <Grid container item xs={3} md={2} alignItems="center">
-              <Button variant="contained" onClick={handleOpenDialog} fullWidth>
-                Edit
-              </Button>
-            </Grid>
+            {canManage && (
+              <Grid container item xs={3} md={2} alignItems="center">
+                <Button variant="contained" onClick={handleOpenDialog} fullWidth>
+                  Edit
+                </Button>
+              </Grid>
+            )}
           </Grid>
         </Container>
-        <RoadmapBoard feedback={feedback} />
+        <RoadmapBoard feedback={feedback} canManage={canManage} />
       </Grid>
       <UpdateRoadmapDialog
         open={open}

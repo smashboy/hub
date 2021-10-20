@@ -3,40 +3,29 @@ import UpvoteIcon from "@mui/icons-material/ArrowDropUp"
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from "react-beautiful-dnd"
 import { Card, CardContent, CardActionArea, Typography, Grid, Chip } from "@mui/material"
 import { formatRelative } from "date-fns"
+import { RoadmapFeedback } from "../helpers"
 
 type RoadmapCardProps = {
   index: number
-  feedback: {
-    author: {
-      username: string
-    }
-    id: number
-    labels: Array<{
-      name: string
-      color: string
-    }>
-    content: {
-      title: string
-      category: FeedbackCategory
-      status: FeedbackStatus
-    }
-    upvotedBy: number[]
-  }
+  feedback: RoadmapFeedback
+  disableDrag: boolean
 }
 
 const RoadmapCard: React.FC<RoadmapCardProps> = ({
   feedback: {
     id,
-    content: { title, status },
+    content: { title },
     author: { username },
     labels,
     upvotedBy,
+    createdAt,
   },
+  disableDrag,
   index,
 }) => {
   return (
-    <Draggable draggableId={`${id}`} index={index}>
-      {(dragProvided: DraggableProvided, dragSnapshot: DraggableStateSnapshot) => (
+    <Draggable draggableId={`${id}`} index={index} isDragDisabled={disableDrag}>
+      {(dragProvided: DraggableProvided) => (
         <Card
           ref={dragProvided.innerRef}
           {...dragProvided.draggableProps}
@@ -58,11 +47,8 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({
                 </Grid>
                 <Grid item xs={12}>
                   <Typography variant="subtitle2" component="div" color="text.secondary">
-                    {`#${id} opened ${formatRelative(new Date(), new Date())} by ${username}`}
+                    {`#${id} opened ${formatRelative(createdAt, new Date())} by ${username}`}
                   </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Chip label={status.replace("_", " ")} size="small" />
                 </Grid>
                 <Grid container item xs={12} spacing={1}>
                   {labels.map(({ name, color }) => (

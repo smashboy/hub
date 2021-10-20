@@ -76,28 +76,31 @@ export interface RoadmapsPageProps extends ProjectPageProps {
   }[]
 }
 
+export type RoadmapFeedback = {
+  author: {
+    username: string
+  }
+  id: number
+  createdAt: Date
+  labels: Array<{
+    name: string
+    color: string
+  }>
+  content: {
+    title: string
+    category: FeedbackCategory
+    status: FeedbackStatus
+  }
+  upvotedBy: number[]
+}
+
 export interface RoadmapPageProps extends ProjectPageProps {
   roadmap: {
     id: number
     name: string
     description: string | null
     dueTo: Date | null
-    feedback: Array<{
-      author: {
-        username: string
-      }
-      id: number
-      labels: Array<{
-        name: string
-        color: string
-      }>
-      content: {
-        title: string
-        category: FeedbackCategory
-        status: FeedbackStatus
-      }
-      upvotedBy: number[]
-    }>
+    feedback: Array<RoadmapFeedback>
   }
 }
 
@@ -327,6 +330,7 @@ export const getProjectRoadmap = async (
       feedback: {
         select: {
           id: true,
+          createdAt: true,
           labels: {
             select: {
               name: true,

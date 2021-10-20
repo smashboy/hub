@@ -4,29 +4,21 @@ import { Grid, Paper, Typography, Chip } from "@mui/material"
 import { capitalizeString } from "app/core/utils/blitz"
 import RoadmapCard from "./RoadmapCard"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
+import { RoadmapFeedback } from "../helpers"
 
 type RoadmapBoardColumnProps = {
   status: FeedbackStatus
   index: number
-  feedback: Array<{
-    author: {
-      username: string
-    }
-    id: number
-    labels: Array<{
-      name: string
-      color: string
-    }>
-    content: {
-      title: string
-      category: FeedbackCategory
-      status: FeedbackStatus
-    }
-    upvotedBy: number[]
-  }>
+  disableDrag: boolean
+  feedback: Array<RoadmapFeedback>
 }
 
-const RoadmapBoardColumn: React.FC<RoadmapBoardColumnProps> = ({ status, index, feedback }) => {
+const RoadmapBoardColumn: React.FC<RoadmapBoardColumnProps> = ({
+  status,
+  index,
+  feedback,
+  disableDrag,
+}) => {
   const isSM = useIsSmallDevice()
 
   return (
@@ -37,7 +29,6 @@ const RoadmapBoardColumn: React.FC<RoadmapBoardColumnProps> = ({ status, index, 
           paddingY: 0.5,
           paddingX: 1,
           height: "calc(100vh - 315px)",
-          overflowY: "auto",
         }}
       >
         <Grid container spacing={1} sx={{ height: "100%" }}>
@@ -59,8 +50,14 @@ const RoadmapBoardColumn: React.FC<RoadmapBoardColumnProps> = ({ status, index, 
                 {...provided.droppableProps}
               >
                 {feedback.map((card, index) => (
-                  <RoadmapCard key={card.id} feedback={card} index={index} />
+                  <RoadmapCard
+                    key={card.id}
+                    feedback={card}
+                    index={index}
+                    disableDrag={disableDrag}
+                  />
                 ))}
+                {provided.placeholder}
               </Grid>
             )}
           </Droppable>
