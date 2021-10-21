@@ -1,7 +1,6 @@
 import { BlitzPage, GetServerSideProps, getSession } from "blitz"
-import { Grid } from "@mui/material"
+import { Grid, Fade } from "@mui/material"
 import { getProjectInfo, getProjectRoadmap, RoadmapPageProps } from "app/project/helpers"
-import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
 import RoadmapBoard from "app/project/components/RoadmapBoard"
 import { RoadmapProvider } from "app/project/store/RoadmapContext"
 import RoadmapHeader from "app/core/components/RoadmapHeader"
@@ -14,12 +13,16 @@ const RoadmapPage: BlitzPage<RoadmapPageProps> = ({
   return (
     <RoadmapProvider projectSlug={projectSlug} roadmap={roadmap} memberRole={role}>
       <Grid container rowSpacing={2} sx={{ marginTop: 2 }}>
-        <Grid item xs={12}>
-          <RoadmapHeader />
-        </Grid>
-        <Grid item xs={12}>
-          <RoadmapBoard />
-        </Grid>
+        <Fade in timeout={500}>
+          <Grid item xs={12}>
+            <RoadmapHeader />
+          </Grid>
+        </Fade>
+        <Fade in timeout={750}>
+          <Grid item xs={12}>
+            <RoadmapBoard />
+          </Grid>
+        </Fade>
       </Grid>
     </RoadmapProvider>
   )
