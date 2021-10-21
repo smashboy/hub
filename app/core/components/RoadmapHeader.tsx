@@ -43,7 +43,7 @@ const RoadmapHeader = () => {
               />
             </RouteLink>
           </Grid>
-          <Grid container item xs={12} md={9}>
+          <Grid container item xs={9}>
             <Grid item xs={12}>
               <Typography variant="h5" color="text.primary" component="div">
                 {name}

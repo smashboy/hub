@@ -332,7 +332,9 @@ export const getProjectRoadmap = async (
       dueTo: true,
       feedback: {
         orderBy: {
-          createdAt: "desc",
+          upvotedBy: {
+            _count: "desc",
+          },
         },
         select: {
           id: true,

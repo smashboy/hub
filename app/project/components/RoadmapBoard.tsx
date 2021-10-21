@@ -9,12 +9,12 @@ import RoadmapFeedbackDialog from "./RoadmapFeedbackDialog"
 const RoadmapBoard = () => {
   const isSM = useIsSmallDevice()
 
-  const { feedback, setFeedback } = useRoadmap()
+  const { feedback, onDragEnd } = useRoadmap()
 
   return (
     <NoSsr>
       <Container maxWidth="xl">
-        <DragDropContext onDragEnd={setFeedback}>
+        <DragDropContext onDragEnd={onDragEnd}>
           {/* @ts-ignore */}
           <Grid
             container

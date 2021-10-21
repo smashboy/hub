@@ -28,7 +28,7 @@ export type RoadmapStore = {
   isUpdatingFeedback: boolean
   selectedFeedback: RoadmapFeedback | null
   setInfo: (info: Partial<InfoState>) => void
-  setFeedback: (res: DropResult) => void
+  onDragEnd: (res: DropResult) => void
   openFeedbackDialog: (feedback: RoadmapFeedback) => void
   updateUpvoteCounter: (feedbackId: number, userId: number) => void
   closeFeedbackDialog: () => void
@@ -70,7 +70,7 @@ export const RoadmapProvider: React.FC<RoadmapStoreProps> = ({
   const handleSetInfo = (newInfo: InfoState) =>
     setInfo((prevState) => ({ ...prevState, ...newInfo }))
 
-  const handleFeedback = async (res: DropResult) => {
+  const handleOnDragEnd = async (res: DropResult) => {
     const prevFeedback = feedback
     const prevProgress = info.progress
     try {
@@ -118,16 +118,18 @@ export const RoadmapProvider: React.FC<RoadmapStoreProps> = ({
   }
 
   const handleUpdateUpvoteCounter = (feedbackId: number, userId: number) => {
-    const updatedFeedback = feedback.map((card) => {
-      if (card.id === feedbackId) {
-        const { upvotedBy, ...otherProps } = card
+    let updatedFeedback = feedback
+      .map((card) => {
+        if (card.id === feedbackId) {
+          const { upvotedBy, ...otherProps } = card
 
-        if (upvotedBy.includes(userId))
-          return { ...otherProps, upvotedBy: upvotedBy.filter((id) => userId !== id) }
-        return { ...otherProps, upvotedBy: [...upvotedBy, userId] }
-      }
-      return card
-    })
+          if (upvotedBy.includes(userId))
+            return { ...otherProps, upvotedBy: upvotedBy.filter((id) => userId !== id) }
+          return { ...otherProps, upvotedBy: [...upvotedBy, userId] }
+        }
+        return card
+      })
+      .sort((a, b) => b.upvotedBy.length - a.upvotedBy.length)
 
     setFeedback(updatedFeedback)
   }
@@ -142,7 +144,7 @@ export const RoadmapProvider: React.FC<RoadmapStoreProps> = ({
         isUpdatingFeedback,
         selectedFeedback,
         setInfo: handleSetInfo,
-        setFeedback: handleFeedback,
+        onDragEnd: handleOnDragEnd,
         openFeedbackDialog: handleOpenFeedbackDialog,
         closeFeedbackDialog: handleCloseFeedbackDialog,
         updateUpvoteCounter: handleUpdateUpvoteCounter,
