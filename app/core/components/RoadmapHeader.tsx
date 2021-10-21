@@ -1,8 +1,11 @@
-import { useState } from "react"
+import { useState, useMemo } from "react"
+import { Routes } from "blitz"
 import { format } from "date-fns"
-import { Grid, Typography, Button, Container, LinearProgress, Divider } from "@mui/material"
+import { Grid, Typography, Button, Container, LinearProgress, Divider, Avatar } from "@mui/material"
 import UpdateRoadmapDialog from "app/project/components/UpdateRoadmapDialog"
 import { useRoadmap } from "app/project/store/RoadmapContext"
+import { RouteLink } from "./links"
+import { useIsSmallDevice } from "../hooks/useIsSmallDevice"
 
 const RoadmapHeader = () => {
   const {
@@ -11,6 +14,10 @@ const RoadmapHeader = () => {
     canManage,
     projectSlug,
   } = useRoadmap()
+
+  const isSM = useIsSmallDevice()
+
+  const avatarSize = useMemo(() => (isSM ? 45 : 75), [isSM])
 
   const [open, setOpen] = useState(false)
 
@@ -21,10 +28,22 @@ const RoadmapHeader = () => {
     <>
       <Container>
         <Grid container item spacing={1} xs={12}>
-          <Grid item xs={12}>
-            <Divider />
+          <Grid container item xs={2} md={1} alignItems="center">
+            <RouteLink href={Routes.ProjectLandingPage({ slug: projectSlug })}>
+              <Avatar
+                src="broken"
+                alt={name}
+                sx={{
+                  // bgcolor: color,
+                  width: avatarSize,
+                  height: avatarSize,
+                  fontSize: 32,
+                  marginRight: 3,
+                }}
+              />
+            </RouteLink>
           </Grid>
-          <Grid container item xs={12} md={10}>
+          <Grid container item xs={12} md={9}>
             <Grid item xs={12}>
               <Typography variant="h5" color="text.primary" component="div">
                 {name}
@@ -64,6 +83,9 @@ const RoadmapHeader = () => {
               </Button>
             </Grid>
           )}
+          <Grid item xs={12}>
+            <Divider />
+          </Grid>
         </Grid>
       </Container>
       <UpdateRoadmapDialog

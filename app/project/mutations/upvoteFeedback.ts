@@ -1,5 +1,5 @@
 import db from "db"
-import { resolver } from "blitz"
+import { resolver, NotFoundError } from "blitz"
 import Guard from "app/guard/ability"
 import { UpvoteFeedback } from "../validations"
 
@@ -25,7 +25,9 @@ export default resolver.pipe(
       },
     })
 
-    const upvotedBy = feedback?.upvotedBy.map(({ id }) => id) || []
+    if (!feedback) throw new NotFoundError("Feedback not found.")
+
+    const upvotedBy = feedback.upvotedBy.map(({ id }) => id) || []
 
     if (upvotedBy.includes(authUserId)) {
       await db.projectFeedback.update({

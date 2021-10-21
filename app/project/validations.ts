@@ -133,3 +133,8 @@ export const UpdateProjectRoadmap = CreateRoadmap.omit({ projectSlug: true }).me
     roadmapId: z.number(),
   })
 )
+
+export const GetFeedbackContent = z.object({
+  projectSlug: z.string(),
+  feedbackId: z.number(),
+})

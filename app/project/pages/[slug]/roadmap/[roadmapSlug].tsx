@@ -5,6 +5,7 @@ import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
 import RoadmapBoard from "app/project/components/RoadmapBoard"
 import { RoadmapProvider } from "app/project/store/RoadmapContext"
 import RoadmapHeader from "app/core/components/RoadmapHeader"
+import Layout from "app/core/layouts/Layout"
 
 const RoadmapPage: BlitzPage<RoadmapPageProps> = ({
   roadmap,
@@ -25,9 +26,9 @@ const RoadmapPage: BlitzPage<RoadmapPageProps> = ({
 }
 
 RoadmapPage.getLayout = (page, props: RoadmapPageProps) => (
-  <ProjectMiniLayout title={props.project.name} {...props} disableContainer>
+  <Layout title={props.project.name} disableContainer>
     {page}
-  </ProjectMiniLayout>
+  </Layout>
 )
 
 export const getServerSideProps: GetServerSideProps<RoadmapPageProps> = async ({

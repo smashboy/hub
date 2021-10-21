@@ -4,6 +4,7 @@ import { Grid, NoSsr, Container } from "@mui/material"
 import RoadmapBoardColumn from "./RoadmapBoardColumn"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import { useRoadmap } from "../store/RoadmapContext"
+import RoadmapFeedbackDialog from "./RoadmapFeedbackDialog"
 
 const RoadmapBoard = () => {
   const isSM = useIsSmallDevice()
@@ -21,10 +22,9 @@ const RoadmapBoard = () => {
             xs={12}
             spacing={2}
             sx={{
-              paddingBottom: 1,
               overflow: "auto",
               position: "relative",
-              maxHeight: "calc(100vh - 380px)",
+              height: "calc(100vh - 235px)",
             }}
             flexWrap={isSM ? undefined : "nowrap"}
           >
@@ -57,6 +57,7 @@ const RoadmapBoard = () => {
           </Grid>
         </DragDropContext>
       </Container>
+      <RoadmapFeedbackDialog />
     </NoSsr>
   )
 }

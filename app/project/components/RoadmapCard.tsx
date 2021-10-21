@@ -10,18 +10,17 @@ type RoadmapCardProps = {
   feedback: RoadmapFeedback
 }
 
-const RoadmapCard: React.FC<RoadmapCardProps> = ({
-  feedback: {
+const RoadmapCard: React.FC<RoadmapCardProps> = ({ feedback, index }) => {
+  const { isUpdatingFeedback, canManage, openFeedbackDialog } = useRoadmap()
+
+  const {
     id,
-    content: { title },
+    content: { title, id: contentId },
     author: { username },
     labels,
     upvotedBy,
     createdAt,
-  },
-  index,
-}) => {
-  const { isUpdatingFeedback, canManage } = useRoadmap()
+  } = feedback
 
   return (
     <Draggable
@@ -46,13 +45,22 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({
                 </Grid>
                 <Grid container item xs={10} spacing={1}>
                   <Grid item xs={12}>
-                    <Typography variant="h6" component="div" color="text.primary">
+                    <Typography
+                      variant="h6"
+                      component="div"
+                      color="text.primary"
+                      onClick={() => openFeedbackDialog(feedback)}
+                      sx={{ cursor: "pointer" }}
+                    >
                       {title}
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <Typography variant="subtitle2" component="div" color="text.secondary">
-                      {`#${id} opened ${formatRelative(createdAt, new Date())} by ${username}`}
+                      {`#${contentId} opened ${formatRelative(
+                        createdAt,
+                        new Date()
+                      )} by ${username}`}
                     </Typography>
                   </Grid>
                   <Grid container item xs={12} spacing={1}>

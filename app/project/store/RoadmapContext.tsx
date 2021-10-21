@@ -26,8 +26,12 @@ export type RoadmapStore = {
   projectSlug: string
   canManage: boolean
   isUpdatingFeedback: boolean
+  selectedFeedback: RoadmapFeedback | null
   setInfo: (info: Partial<InfoState>) => void
   setFeedback: (res: DropResult) => void
+  openFeedbackDialog: (feedback: RoadmapFeedback) => void
+  updateUpvoteCounter: (feedbackId: number, userId: number) => void
+  closeFeedbackDialog: () => void
 }
 
 const RoadmapContext = createContext<RoadmapStore | null>(null)
@@ -46,6 +50,7 @@ export const RoadmapProvider: React.FC<RoadmapStoreProps> = ({
   )
 
   const [info, setInfo] = useState<InfoState>(roadmap)
+  const [selectedFeedback, setSelectedFeedback] = useState<RoadmapFeedback | null>(null)
   const [feedback, setFeedback] = useState(initialFeedback)
 
   const canManage = useMemo(
@@ -58,6 +63,9 @@ export const RoadmapProvider: React.FC<RoadmapStoreProps> = ({
       ),
     [user, memberRole]
   )
+
+  const handleOpenFeedbackDialog = (feedback: RoadmapFeedback) => setSelectedFeedback(feedback)
+  const handleCloseFeedbackDialog = () => setSelectedFeedback(null)
 
   const handleSetInfo = (newInfo: InfoState) =>
     setInfo((prevState) => ({ ...prevState, ...newInfo }))
@@ -109,6 +117,21 @@ export const RoadmapProvider: React.FC<RoadmapStoreProps> = ({
     }
   }
 
+  const handleUpdateUpvoteCounter = (feedbackId: number, userId: number) => {
+    const updatedFeedback = feedback.map((card) => {
+      if (card.id === feedbackId) {
+        const { upvotedBy, ...otherProps } = card
+
+        if (upvotedBy.includes(userId))
+          return { ...otherProps, upvotedBy: upvotedBy.filter((id) => userId !== id) }
+        return { ...otherProps, upvotedBy: [...upvotedBy, userId] }
+      }
+      return card
+    })
+
+    setFeedback(updatedFeedback)
+  }
+
   return (
     <RoadmapContext.Provider
       value={{
@@ -117,8 +140,12 @@ export const RoadmapProvider: React.FC<RoadmapStoreProps> = ({
         feedback,
         canManage,
         isUpdatingFeedback,
+        selectedFeedback,
         setInfo: handleSetInfo,
         setFeedback: handleFeedback,
+        openFeedbackDialog: handleOpenFeedbackDialog,
+        closeFeedbackDialog: handleCloseFeedbackDialog,
+        updateUpvoteCounter: handleUpdateUpvoteCounter,
       }}
     >
       {children}

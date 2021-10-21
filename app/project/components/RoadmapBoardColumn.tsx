@@ -5,7 +5,6 @@ import { capitalizeString } from "app/core/utils/blitz"
 import RoadmapCard from "./RoadmapCard"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import { RoadmapFeedback } from "../helpers"
-import { useRoadmap } from "../store/RoadmapContext"
 
 type RoadmapBoardColumnProps = {
   status: FeedbackStatus
@@ -21,17 +20,16 @@ const RoadmapBoardColumn: React.FC<RoadmapBoardColumnProps> = ({ status, feedbac
       xs={12}
       sm="auto"
       container
-      sx={{ width: isSM ? undefined : `290px!important`, height: "100%" }}
+      sx={{ width: isSM ? undefined : `290px!important` }}
       flexDirection="column"
     >
       <Paper
         variant="outlined"
         sx={{
           paddingY: 0.5,
-          minHeight: "calc(100vh - 380px)",
         }}
       >
-        <Grid container rowSpacing={1} sx={{ height: "100%" }}>
+        <Grid container rowSpacing={1}>
           <Grid item container xs={12} sx={{ paddingX: 1 }}>
             <Grid item xs={9}>
               <Typography variant="h6" component="div" color="text.primary">
@@ -50,10 +48,9 @@ const RoadmapBoardColumn: React.FC<RoadmapBoardColumnProps> = ({ status, feedbac
                 rowSpacing={1}
                 xs={12}
                 sx={{
-                  minHeight: "calc(100% - 40px)",
-                  height: "100%",
-                  paddingBottom: 10,
+                  paddingBottom: 1,
                   // bgcolor: "red",
+                  minHeight: 250,
                   paddingX: 1,
                   marginTop: 0.25,
                 }}

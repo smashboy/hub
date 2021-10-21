@@ -88,6 +88,7 @@ export type RoadmapFeedback = {
     color: string
   }>
   content: {
+    id: number
     title: string
     category: FeedbackCategory
     status: FeedbackStatus
@@ -344,6 +345,7 @@ export const getProjectRoadmap = async (
           },
           content: {
             select: {
+              id: true,
               title: true,
               category: true,
               status: true,
