@@ -23,11 +23,11 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
   title,
   children,
   selectedTab,
-  project: { name, description, logoUrl, websiteUrl, color, slug, role },
+  project: { name, description, logoUrl, websiteUrl, color, slug, role, isFollowing },
 }) => {
   const isSM = useIsSmallDevice()
 
-  const [following, setIsFollowing] = useState(role === ProjectMemberRole.FOLLOWER || false)
+  const [following, setIsFollowing] = useState(isFollowing)
 
   const [followMutation, { isLoading: isLoadingFollow }] = useCustomMutation(followProject, {})
 
@@ -69,7 +69,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
               <Fade in timeout={500}>
                 <Grid container item xs={12} spacing={1} sx={{ marginTop: 2 }}>
                   {user && (
-                    <Grid item xs={12} md={3}>
+                    <Grid item xs={6} md={3}>
                       <ButtonRouteLink
                         href={Routes.CreateFeedbackPage({ slug })}
                         variant="contained"
@@ -81,8 +81,8 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                       </ButtonRouteLink>
                     </Grid>
                   )}
-                  {user && (!role || role === ProjectMemberRole.FOLLOWER) && (
-                    <Grid item xs={12} md={2}>
+                  {user && role !== ProjectMemberRole.FOUNDER && (
+                    <Grid item xs={6} md={2}>
                       <LoadingButton
                         variant="contained"
                         color="secondary"
@@ -100,7 +100,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                     </Grid>
                   )}
                   {websiteHost && websiteUrl && (
-                    <Grid item xs={12} md={2}>
+                    <Grid item xs={6} md={2}>
                       <ButtonWebLink
                         href={websiteUrl}
                         variant="contained"
@@ -115,7 +115,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                   )}
                   {user &&
                     (role === ProjectMemberRole.FOUNDER || role === ProjectMemberRole.ADMIN) && (
-                      <Grid item xs={12} md={2}>
+                      <Grid item xs={6} md={2}>
                         <ButtonRouteLink
                           href={Routes.SettingsPage({
                             slug,

@@ -16,7 +16,11 @@ export default resolver.pipe(
         },
       },
       select: {
-        id: true,
+        user: {
+          select: {
+            id: true,
+          },
+        },
       },
     })
 
@@ -35,7 +39,7 @@ export default resolver.pipe(
       },
     })
 
-    const membersIds = members.map(({ id }) => id)
+    const membersUserIds = members.map(({ user: { id } }) => id)
     const pendingInvitesUsersId = pendingInvites.map(({ user: { id } }) => id)
 
     let users = await db.user.findMany({
@@ -46,10 +50,6 @@ export default resolver.pipe(
         OR: [
           {
             username: {
-              contains: query,
-              mode: "insensitive",
-            },
-            email: {
               contains: query,
               mode: "insensitive",
             },
@@ -71,7 +71,7 @@ export default resolver.pipe(
     })
 
     users = users.filter(
-      ({ id }) => !membersIds.includes(id) && !pendingInvitesUsersId.includes(id)
+      ({ id }) => !membersUserIds.includes(id) && !pendingInvitesUsersId.includes(id)
     )
 
     return users

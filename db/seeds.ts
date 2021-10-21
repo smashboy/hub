@@ -108,17 +108,14 @@ const createMainProject = async ({
     },
   })
 
-  const customerQuery = db.projectMember.create({
+  const customerQuery = db.project.update({
+    where: {
+      id: project.id,
+    },
     data: {
-      role: ProjectMemberRole.FOLLOWER,
-      user: {
+      followers: {
         connect: {
           id: customer.id,
-        },
-      },
-      project: {
-        connect: {
-          id: project.id,
         },
       },
     },

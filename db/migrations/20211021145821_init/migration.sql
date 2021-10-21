@@ -11,7 +11,7 @@ CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'MODERATOR', 'USER');
 CREATE TYPE "FeedbackStatus" AS ENUM ('ON_REVIEW', 'PLANNED', 'IN_PROGRESS', 'BLOCKED', 'CANCELED', 'COMPLETED', 'PENDING', 'DUPLICATE');
 
 -- CreateEnum
-CREATE TYPE "ProjectMemberRole" AS ENUM ('FOUNDER', 'ADMIN', 'MODERATOR', 'MEMBER', 'FOLLOWER');
+CREATE TYPE "ProjectMemberRole" AS ENUM ('FOUNDER', 'ADMIN', 'MODERATOR', 'MEMBER');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -81,7 +81,7 @@ CREATE TABLE "ProjectMember" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "role" "ProjectMemberRole" NOT NULL DEFAULT E'FOLLOWER',
+    "role" "ProjectMemberRole" NOT NULL DEFAULT E'MEMBER',
     "projectId" INTEGER NOT NULL,
     "userId" INTEGER NOT NULL,
 
@@ -168,7 +168,7 @@ CREATE TABLE "ProjectFeedbackContent" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "title" TEXT NOT NULL,
     "category" "FeedbackCategory" NOT NULL,
-    "status" "FeedbackStatus" NOT NULL DEFAULT E'ON_REVIEW',
+    "status" "FeedbackStatus" NOT NULL DEFAULT E'PENDING',
     "content" TEXT NOT NULL,
     "projectSlug" TEXT NOT NULL,
 
@@ -200,6 +200,12 @@ CREATE TABLE "ProjectFeedbackLabel" (
 
 -- CreateTable
 CREATE TABLE "_ProjectFeedbackToUser" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_ProjectToUser" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
@@ -257,6 +263,12 @@ CREATE UNIQUE INDEX "_ProjectFeedbackToUser_AB_unique" ON "_ProjectFeedbackToUse
 
 -- CreateIndex
 CREATE INDEX "_ProjectFeedbackToUser_B_index" ON "_ProjectFeedbackToUser"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_ProjectToUser_AB_unique" ON "_ProjectToUser"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_ProjectToUser_B_index" ON "_ProjectToUser"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_ProjectFeedbackToProjectMember_AB_unique" ON "_ProjectFeedbackToProjectMember"("A", "B");
@@ -329,6 +341,12 @@ ALTER TABLE "_ProjectFeedbackToUser" ADD FOREIGN KEY ("A") REFERENCES "ProjectFe
 
 -- AddForeignKey
 ALTER TABLE "_ProjectFeedbackToUser" ADD FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ProjectToUser" ADD FOREIGN KEY ("A") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ProjectToUser" ADD FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_ProjectFeedbackToProjectMember" ADD FOREIGN KEY ("A") REFERENCES "ProjectFeedback"("id") ON DELETE CASCADE ON UPDATE CASCADE;

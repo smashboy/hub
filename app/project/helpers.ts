@@ -12,6 +12,7 @@ export interface ProjectPageProps {
     websiteUrl: string | null
     logoUrl: string | null
     role: ProjectMemberRole | null
+    isFollowing: boolean
   }
 }
 
@@ -208,6 +209,11 @@ export const getProjectInfo = async (
       description: true,
       websiteUrl: true,
       logoUrl: true,
+      followers: {
+        where: {
+          id: userId,
+        },
+      },
       members: {
         where: {
           userId,
@@ -221,14 +227,20 @@ export const getProjectInfo = async (
 
   if (!project) return null
 
-  const { members, isPrivate, ...otherProjectProps } = project
+  const { members, isPrivate, followers, ...otherProjectProps } = project
 
   const member = members[0]
 
-  if (isPrivate && (!member || member.role === ProjectMemberRole.FOLLOWER)) return null
+  if (isPrivate && !member) return null
 
   const props: ProjectPageProps = {
-    project: { ...otherProjectProps, slug, role: member?.role || null, isPrivate },
+    project: {
+      ...otherProjectProps,
+      slug,
+      role: member?.role || null,
+      isPrivate,
+      isFollowing: followers.length === 1,
+    },
   }
 
   if (!allowedRoles) return props
@@ -247,11 +259,6 @@ export const getProjectMembersSettings = async (
     },
     select: {
       members: {
-        where: {
-          NOT: {
-            role: ProjectMemberRole.FOLLOWER,
-          },
-        },
         select: {
           id: true,
           role: true,

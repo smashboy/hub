@@ -38,7 +38,7 @@ export const checkFeedbackSettingsManagePermissions = async (slug: string, userI
 
   if (!member) return false
 
-  return member.role !== ProjectMemberRole.FOLLOWER
+  return true
 }
 
 export const checkGeneralSettingsManagePersmissions = async (slug: string, userId: number) => {

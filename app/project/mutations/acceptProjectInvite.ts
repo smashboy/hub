@@ -24,7 +24,6 @@ export default resolver.pipe(
 
     await db.projectMember.create({
       data: {
-        role: ProjectMemberRole.MEMBER,
         project: {
           connect: {
             id: projectId,

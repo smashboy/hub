@@ -10,11 +10,22 @@ export default resolver.pipe(
     const authUserId = ctx.session.userId!
 
     let where: Prisma.ProjectWhereInput = {
-      members: {
-        some: {
-          userId: authUserId,
+      OR: [
+        {
+          members: {
+            some: {
+              userId: authUserId,
+            },
+          },
         },
-      },
+        {
+          followers: {
+            some: {
+              id: authUserId,
+            },
+          },
+        },
+      ],
     }
 
     where = searchQuery
@@ -22,6 +33,8 @@ export default resolver.pipe(
           ...where,
           ...{
             OR: [
+              // @ts-ignore
+              ...where.OR!,
               {
                 name: {
                   contains: searchQuery,

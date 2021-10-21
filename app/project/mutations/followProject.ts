@@ -1,5 +1,5 @@
 import db from "db"
-import { resolver } from "blitz"
+import { resolver, NotFoundError } from "blitz"
 import Guard from "app/guard/ability"
 import { FollowProject } from "../validations"
 
@@ -9,37 +9,47 @@ export default resolver.pipe(
   async ({ slug }, ctx) => {
     const authUserId = ctx.session.userId!
 
-    const member = await db.projectMember.findFirst({
+    const project = await db.project.findFirst({
       where: {
-        project: {
-          slug,
-        },
-        userId: authUserId,
+        slug,
       },
       select: {
-        id: true,
+        followers: {
+          where: {
+            id: authUserId,
+          },
+        },
       },
     })
 
-    if (member) {
-      await db.projectMember.delete({
+    if (!project) throw new NotFoundError("Project not found.")
+
+    const isFollowing = project.followers.length === 1
+
+    if (isFollowing) {
+      await db.project.update({
         where: {
-          id: member.id,
+          slug,
+        },
+        data: {
+          followers: {
+            disconnect: {
+              id: authUserId,
+            },
+          },
         },
       })
       return false
     }
 
-    await db.projectMember.create({
+    await db.project.update({
+      where: {
+        slug,
+      },
       data: {
-        user: {
+        followers: {
           connect: {
             id: authUserId,
-          },
-        },
-        project: {
-          connect: {
-            slug,
           },
         },
       },

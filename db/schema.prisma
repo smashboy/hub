@@ -31,6 +31,7 @@ model User {
   upvoted         ProjectFeedback[]
   messages        ProjectFeedbackMessage[]
   projectInvites  ProjectInvite[]
+  project         Project[]
 }
 
 model Session {
@@ -74,6 +75,7 @@ model Project {
   logoUrl     String?
   feedback    ProjectFeedback[]
   members     ProjectMember[]
+  followers   User[]
   landing     ProjectLanding?
   changelogs  ProjectChangelog[]
   roadmaps    ProjectRoadmap[]
@@ -86,7 +88,7 @@ model ProjectMember {
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
   user      User              @relation(fields: [userId], references: [id])
-  role      ProjectMemberRole @default(FOLLOWER)
+  role      ProjectMemberRole @default(MEMBER)
   project   Project           @relation(fields: [projectId], references: [id])
   projectId Int
   userId    Int
@@ -235,5 +237,4 @@ enum ProjectMemberRole {
   ADMIN
   MODERATOR
   MEMBER
-  FOLLOWER
 }
