@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react"
-import { Routes, useMutation } from "blitz"
+import { Routes } from "blitz"
 import { Avatar, Typography, Grid, Container, Tabs, Tab, Fade } from "@mui/material"
 import { ButtonWebLink, ButtonRouteLink, TabRouteLink } from "app/core/components/links"
 import Layout, { LayoutProps } from "app/core/layouts/Layout"
@@ -13,6 +13,7 @@ import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import followProject from "../mutations/followProject"
 import { LoadingButton } from "@mui/lab"
 import { ProjectMemberRole } from "db"
+import useCustomMutation from "app/core/hooks/useCustomMutation"
 
 type ProjectLayoutProps = {
   selectedTab: "landing" | "changelog" | "roadmap" | "jobs" | "feedback"
@@ -28,7 +29,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
 
   const [following, setIsFollowing] = useState(role === ProjectMemberRole.FOLLOWER || false)
 
-  const [followMutation, { isLoading: isLoadingFollow }] = useMutation(followProject)
+  const [followMutation, { isLoading: isLoadingFollow }] = useCustomMutation(followProject, {})
 
   const user = useCurrentUser(false)
 

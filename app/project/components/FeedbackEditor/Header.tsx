@@ -1,12 +1,11 @@
 import { FeedbackCategory } from "db"
-import { Suspense } from "react"
 import { Grid, TextField, MenuItem, Fade } from "@mui/material"
 import { CategoryType, useFeedbackEditor } from "app/project/store/FeedbackEditorContext"
 import ViewHeader from "./ViewHeader"
 
 type FeedbackSelectOption = { label: string; value: CategoryType }
 
-const feedbackOptions: FeedbackSelectOption[] = [
+export const feedbackOptions: FeedbackSelectOption[] = [
   {
     label: "Feature",
     value: FeedbackCategory.FEATURE,

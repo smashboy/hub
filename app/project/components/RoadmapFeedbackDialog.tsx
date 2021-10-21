@@ -1,4 +1,4 @@
-import { Routes, useQuery, useMutation } from "blitz"
+import { Routes, useQuery } from "blitz"
 import { useState, Suspense, useEffect } from "react"
 import { formatRelative } from "date-fns"
 import {
@@ -22,6 +22,7 @@ import getFeedbackContent from "../queries/getFeedbackContent"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import upvoteFeedback from "../mutations/upvoteFeedback"
+import useCustomMutation from "app/core/hooks/useCustomMutation"
 
 const Content: React.FC<{ projectSlug: string; feedbackId: number }> = ({
   projectSlug,
@@ -39,7 +40,7 @@ const RoadmapFeedbackDialog = ({}) => {
   const user = useCurrentUser(false)
   const isSM = useIsSmallDevice()
 
-  const [upvoteFeedbackMutation, { isLoading }] = useMutation(upvoteFeedback)
+  const [upvoteFeedbackMutation, { isLoading }] = useCustomMutation(upvoteFeedback, {})
 
   const { selectedFeedback, closeFeedbackDialog, projectSlug, updateUpvoteCounter } = useRoadmap()
 

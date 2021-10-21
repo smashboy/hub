@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react"
-import { useMutation } from "blitz"
 import { Grid, Fade, Typography, Chip, Button, Divider } from "@mui/material"
 import UpvoteIcon from "@mui/icons-material/ArrowDropUp"
 import { formatRelative } from "date-fns"
@@ -7,6 +6,7 @@ import { useFeedbackEditor } from "app/project/store/FeedbackEditorContext"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import upvoteFeedback from "app/project/mutations/upvoteFeedback"
 import { LoadingButton } from "@mui/lab"
+import useCustomMutation from "app/core/hooks/useCustomMutation"
 
 const FeedbackViewHeader = () => {
   const user = useCurrentUser(false)
@@ -15,7 +15,7 @@ const FeedbackViewHeader = () => {
   const [upvotedByUser, setUpvotedByUser] = useState(false)
   const [upvotedCounter, setUpvotedCounter] = useState(initialValues!.feedback.upvotedBy.length)
 
-  const [upvoteFeedbackMutation, { isLoading }] = useMutation(upvoteFeedback)
+  const [upvoteFeedbackMutation, { isLoading }] = useCustomMutation(upvoteFeedback, {})
 
   useEffect(() => {
     if (user) {

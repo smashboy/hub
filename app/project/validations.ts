@@ -138,3 +138,10 @@ export const GetFeedbackContent = z.object({
   projectSlug: z.string(),
   feedbackId: z.number(),
 })
+
+export const FilterRoadmapFeedback = z.object({
+  roadmapId: z.number(),
+  category: z
+    .enum([FeedbackCategory.BUG, FeedbackCategory.FEATURE, FeedbackCategory.IMPROVEMENT])
+    .nullable(),
+})

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react"
-import { useMutation } from "blitz"
 import { useDebounce } from "use-debounce"
 import {
   Button,
@@ -43,7 +42,7 @@ const InviteMembersDialog: React.FC<InviteMembersDialog> = ({ open, onClose, nam
     }
   )
 
-  const [searchUsersMutation, { isLoading: isSearchLoading }] = useMutation(searchUsers)
+  const [searchUsersMutation, { isLoading: isSearchLoading }] = useCustomMutation(searchUsers, {})
 
   const [searchQuery, setSearchQuery] = useState("")
   const [debouncedSearchQuery] = useDebounce(searchQuery, 1000)

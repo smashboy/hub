@@ -1,4 +1,5 @@
-import { FeedbackStatus, ProjectMemberRole } from "db"
+import { FeedbackCategory, FeedbackStatus, ProjectMemberRole } from "db"
+
 import { createContext, useContext, useState, useMemo } from "react"
 import { DropResult } from "react-beautiful-dnd"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
@@ -6,6 +7,7 @@ import { RoadmapFeedback, RoadmapPageProps } from "../helpers"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import updateFeedbackStatus from "../mutations/updateFeedbackStatus"
 import { countProgress } from "app/core/utils/blitz"
+import filterRoadmapFeedback from "../mutations/filterRoadmapFeedback"
 
 export type RoadmapStoreProps = Pick<RoadmapPageProps, "roadmap"> & {
   projectSlug: string
@@ -27,9 +29,11 @@ export type RoadmapStore = {
   canManage: boolean
   isUpdatingFeedback: boolean
   selectedFeedback: RoadmapFeedback | null
+  memberRole: ProjectMemberRole | null
   setInfo: (info: Partial<InfoState>) => void
   onDragEnd: (res: DropResult) => void
   openFeedbackDialog: (feedback: RoadmapFeedback) => void
+  filterRoadmap: (category: FeedbackCategory | null) => void
   updateUpvoteCounter: (feedbackId: number, userId: number) => void
   closeFeedbackDialog: () => void
 }
@@ -43,6 +47,8 @@ export const RoadmapProvider: React.FC<RoadmapStoreProps> = ({
   children,
 }) => {
   const user = useCurrentUser(false)
+
+  const [filterRoadmapFeedbackMutation] = useCustomMutation(filterRoadmapFeedback, {})
 
   const [updateFeedbackStatusMutation, { isLoading: isUpdatingFeedback }] = useCustomMutation(
     updateFeedbackStatus,
@@ -134,6 +140,14 @@ export const RoadmapProvider: React.FC<RoadmapStoreProps> = ({
     setFeedback(updatedFeedback)
   }
 
+  const handleFilterRoadmap = async (category: FeedbackCategory | null) => {
+    const updatedFeedback = await filterRoadmapFeedbackMutation({
+      roadmapId: info.id,
+      category,
+    })
+    setFeedback(updatedFeedback)
+  }
+
   return (
     <RoadmapContext.Provider
       value={{
@@ -143,8 +157,10 @@ export const RoadmapProvider: React.FC<RoadmapStoreProps> = ({
         canManage,
         isUpdatingFeedback,
         selectedFeedback,
+        memberRole,
         setInfo: handleSetInfo,
         onDragEnd: handleOnDragEnd,
+        filterRoadmap: handleFilterRoadmap,
         openFeedbackDialog: handleOpenFeedbackDialog,
         closeFeedbackDialog: handleCloseFeedbackDialog,
         updateUpvoteCounter: handleUpdateUpvoteCounter,
