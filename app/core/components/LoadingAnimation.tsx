@@ -8,7 +8,7 @@ export const LoadingAnimation = () => {
       display="flex"
       justifyContent="center"
       alignItems="center"
-      p={10}
+      paddingY={10}
     >
       <CircularProgress color="primary" />
     </Box>

@@ -1,5 +1,5 @@
 import { resolver, paginate } from "blitz"
-import db, { Prisma, ProjectMemberRole } from "db"
+import db, { Prisma } from "db"
 
 export interface GetProjectsInput extends Pick<Prisma.ProjectFindManyArgs, "skip" | "take"> {
   searchQuery?: string

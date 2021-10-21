@@ -23,6 +23,7 @@ import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import upvoteFeedback from "../mutations/upvoteFeedback"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
+import LoadingAnimation from "app/core/components/LoadingAnimation"
 
 const Content: React.FC<{ projectSlug: string; feedbackId: number }> = ({
   projectSlug,
@@ -147,13 +148,9 @@ const RoadmapFeedbackDialog = ({}) => {
         </Grid>
       </DialogTitle>
       <DialogContent>
-        <Grid container item xs={12} spacing={2} alignItems="center">
-          <Suspense fallback={null}>
-            <Grid item xs={12}>
-              <Content projectSlug={projectSlug} feedbackId={contentId} />
-            </Grid>
-          </Suspense>
-        </Grid>
+        <Suspense fallback={<LoadingAnimation />}>
+          <Content projectSlug={projectSlug} feedbackId={contentId} />
+        </Suspense>
       </DialogContent>
       <DialogActions>
         <Button onClick={closeFeedbackDialog}>Close</Button>

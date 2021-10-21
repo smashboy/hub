@@ -33,14 +33,6 @@ const RoadmapBoard = () => {
               feedback={feedback.filter((card) => card.content.status === FeedbackStatus.PENDING)}
             />
             <RoadmapBoardColumn
-              status={FeedbackStatus.CANCELED}
-              feedback={feedback.filter((card) => card.content.status === FeedbackStatus.CANCELED)}
-            />
-            <RoadmapBoardColumn
-              status={FeedbackStatus.BLOCKED}
-              feedback={feedback.filter((card) => card.content.status === FeedbackStatus.BLOCKED)}
-            />
-            <RoadmapBoardColumn
               status={FeedbackStatus.ON_REVIEW}
               feedback={feedback.filter((card) => card.content.status === FeedbackStatus.ON_REVIEW)}
             />
@@ -53,6 +45,14 @@ const RoadmapBoard = () => {
             <RoadmapBoardColumn
               status={FeedbackStatus.COMPLETED}
               feedback={feedback.filter((card) => card.content.status === FeedbackStatus.COMPLETED)}
+            />
+            <RoadmapBoardColumn
+              status={FeedbackStatus.CANCELED}
+              feedback={feedback.filter((card) => card.content.status === FeedbackStatus.CANCELED)}
+            />
+            <RoadmapBoardColumn
+              status={FeedbackStatus.BLOCKED}
+              feedback={feedback.filter((card) => card.content.status === FeedbackStatus.BLOCKED)}
             />
           </Grid>
         </DragDropContext>
