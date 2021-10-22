@@ -112,6 +112,7 @@ const FeedbackSidebar: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                 fullWidth
                 options={projectLabels}
                 value={projectLabels.filter((label) => labelIds.includes(label.id))}
+                getOptionLabel={({ name }) => name}
                 freeSolo
                 disablePortal
                 multiple
@@ -177,6 +178,7 @@ const FeedbackSidebar: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                 fullWidth
                 options={projectRoadmaps}
                 value={projectRoadmaps.filter((roadmap) => roadmapIds.includes(roadmap.id))}
+                getOptionLabel={({ name }) => name}
                 freeSolo
                 disablePortal
                 multiple
