@@ -9,7 +9,15 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
       return (
         <Paper
           {...attributes}
-          sx={{ marginX: 4, marginY: 2, padding: 2, bgcolor: "background.default" }}
+          sx={{
+            marginX: {
+              xs: 0,
+              md: 4,
+            },
+            marginY: 2,
+            padding: 2,
+            bgcolor: "background.default",
+          }}
           variant="outlined"
           component="blockquote"
         >

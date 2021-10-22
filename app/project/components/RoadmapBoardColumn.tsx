@@ -3,7 +3,6 @@ import { Droppable, DroppableProvided } from "react-beautiful-dnd"
 import { Grid, Paper, Typography, Chip } from "@mui/material"
 import { capitalizeString } from "app/core/utils/blitz"
 import RoadmapCard from "./RoadmapCard"
-import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import { RoadmapFeedback } from "../helpers"
 
 type RoadmapBoardColumnProps = {
@@ -12,15 +11,18 @@ type RoadmapBoardColumnProps = {
 }
 
 const RoadmapBoardColumn: React.FC<RoadmapBoardColumnProps> = ({ status, feedback }) => {
-  const isSM = useIsSmallDevice()
-
   return (
     <Grid
       item
       xs={12}
       sm="auto"
       container
-      sx={{ width: isSM ? undefined : `290px!important` }}
+      sx={{
+        width: {
+          xs: undefined,
+          md: "290px!important",
+        },
+      }}
       flexDirection="column"
     >
       <Paper
