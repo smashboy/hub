@@ -26,9 +26,7 @@ const FeedbackMessagesList: React.FC<FeedbackMessagesListProps> = ({ feedbackId,
     successNotification: "Message has been updated successfully!",
   })
 
-  const [deleteFeedbackMessageMutation] = useCustomMutation(deleteFeedbackMessage, {
-    successNotification: "Message has been deleted successfully!",
-  })
+  const [deleteFeedbackMessageMutation] = useCustomMutation(deleteFeedbackMessage, {})
 
   const [messages, { refetch }] = useQuery(getFeedbackMessages, {
     feedbackId,

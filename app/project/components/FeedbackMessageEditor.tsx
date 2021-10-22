@@ -13,9 +13,7 @@ const FeedbackMessageEditor: React.FC<FeedbackMessageEditor> = ({
   isPublic,
   refetch,
 }) => {
-  const [createFeedbackMessageMutation] = useCustomMutation(createFeedbackMessage, {
-    successNotification: "New message has been created successfully!",
-  })
+  const [createFeedbackMessageMutation] = useCustomMutation(createFeedbackMessage, {})
 
   const handleCreateNewMessage = async (content: Descendant[]) => {
     await createFeedbackMessageMutation({
