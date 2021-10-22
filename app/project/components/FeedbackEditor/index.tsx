@@ -9,7 +9,7 @@ import {
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import Header from "./Header"
 import Editor from "./Editor"
-import Sidebar from "./Sidebar"
+import FeedbackOptions from "./FeedbackOptions"
 
 const FeedbackEditor: React.FC<FeedbackEditorProps> = ({ slug, initialValues }) => {
   const isSM = useIsSmallDevice()
@@ -38,13 +38,9 @@ const FeedbackEditor: React.FC<FeedbackEditorProps> = ({ slug, initialValues }) 
             <Editor />
           </Grid>
           {showSettings && (
-            <Hidden smDown>
-              <Suspense fallback={<div />}>
-                <Grid item xs={3}>
-                  <Sidebar />
-                </Grid>
-              </Suspense>
-            </Hidden>
+            <Suspense fallback={<div />}>
+              <FeedbackOptions />
+            </Suspense>
           )}
         </Grid>
       </Container>

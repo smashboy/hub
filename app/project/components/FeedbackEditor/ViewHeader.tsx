@@ -42,8 +42,8 @@ const FeedbackViewHeader = () => {
 
   return (
     <Fade in timeout={500}>
-      <Grid container item xs={12} columnSpacing={1} sx={{ height: "fit-content" }}>
-        <Grid container item xs={showEditButton ? 10 : 11} spacing={1}>
+      <Grid container item xs={12} md={12} rowSpacing={1} sx={{ height: "fit-content" }}>
+        <Grid container item xs={12} md={8} spacing={1}>
           <Grid item xs={12}>
             <Typography variant="h5" color="text.primary">
               {title}
@@ -65,29 +65,35 @@ const FeedbackViewHeader = () => {
             </Grid>
           </Grid>
         </Grid>
-        {user && (
-          <Grid container item xs={1} justifyContent="center" alignItems="center">
-            <LoadingButton
-              onClick={handleUpvote}
-              variant="contained"
-              color="primary"
-              endIcon={<UpvoteIcon />}
-              loading={isLoading}
-            >
-              {upvotedCounter}
-            </LoadingButton>
-          </Grid>
-        )}
-        {showEditButton && (
-          <Grid container item xs={1} alignItems="center">
-            <Button
-              onClick={() => setReadOnly(false)}
-              variant="contained"
-              color="inherit"
-              fullWidth
-            >
-              Edit
-            </Button>
+
+        {(user || showEditButton) && (
+          <Grid container item spacing={1} xs={12} md={4} justifyContent="center">
+            {user && (
+              <Grid container item xs={6} md={3} alignItems="center">
+                <LoadingButton
+                  onClick={handleUpvote}
+                  variant="contained"
+                  color="primary"
+                  endIcon={<UpvoteIcon />}
+                  loading={isLoading}
+                  fullWidth
+                >
+                  {upvotedCounter}
+                </LoadingButton>
+              </Grid>
+            )}
+            {showEditButton && (
+              <Grid container item xs={6} md={3} alignItems="center">
+                <Button
+                  onClick={() => setReadOnly(false)}
+                  variant="contained"
+                  color="inherit"
+                  fullWidth
+                >
+                  Edit
+                </Button>
+              </Grid>
+            )}
           </Grid>
         )}
         <Grid item xs={12}>
