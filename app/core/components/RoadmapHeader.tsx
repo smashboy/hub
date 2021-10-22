@@ -95,7 +95,7 @@ const RoadmapHeader = () => {
               </Typography>
             </Grid>
             {progress !== null && (
-              <Grid container item xs={12} md={4} spacing={1} sx={{ paddingTop: 1 }}>
+              <Grid container item xs={12} md={6} spacing={1} sx={{ paddingTop: 1 }}>
                 <Grid item xs={12}>
                   <LinearProgress value={progress} variant="determinate" />
                 </Grid>
