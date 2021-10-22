@@ -36,7 +36,8 @@ const Editor = () => {
     onCancel?.()
   }
 
-  const maxHeight = readOnly ? "auto" : height
+  const maxHeight = readOnly ? "none" : height
+  const paperHeight = readOnly ? "auto" : height
 
   return (
     <Grid container item xs={12} spacing={2}>
@@ -44,7 +45,7 @@ const Editor = () => {
         <Paper
           variant="outlined"
           sx={{
-            height: maxHeight,
+            height: paperHeight,
             maxHeight,
             bgcolor: readOnly ? "transparent" : undefined,
             borderWidth: readOnly ? 0 : undefined,

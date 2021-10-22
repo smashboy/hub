@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import { useQuery } from "blitz"
-import { Container, Grid, Hidden, Paper } from "@mui/material"
+import { Container, Grid, Hidden } from "@mui/material"
 import getAbility from "app/guard/queries/getAbility"
 import {
   FeedbackEditorProps,
@@ -20,9 +20,8 @@ const FeedbackEditor: React.FC<FeedbackEditorProps> = ({ slug, initialValues }) 
   })
 
   const canManageSettings = res?.[0]?.can || false
-  const isInitialValues = Boolean(initialValues)
 
-  const showSettings = canManageSettings || isInitialValues
+  const showSettings = canManageSettings
 
   return (
     <FeedbackEditorProvider slug={slug} initialValues={initialValues}>
@@ -42,7 +41,7 @@ const FeedbackEditor: React.FC<FeedbackEditorProps> = ({ slug, initialValues }) 
             <Hidden smDown>
               <Suspense fallback={<div />}>
                 <Grid item xs={3}>
-                  <Sidebar readOnly={Boolean(initialValues) && !canManageSettings} />
+                  <Sidebar />
                 </Grid>
               </Suspense>
             </Hidden>

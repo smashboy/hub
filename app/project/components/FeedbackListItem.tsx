@@ -1,4 +1,4 @@
-import { FeedbackCategory } from "db"
+import { FeedbackCategory, ProjectMemberRole } from "db"
 import { Link, Routes } from "blitz"
 import UpvoteIcon from "@mui/icons-material/ArrowDropUp"
 import {
@@ -15,6 +15,7 @@ import { formatRelative } from "date-fns"
 
 type FeedbackListItemProps = {
   slug: string
+  role: ProjectMemberRole | null
   feedback: {
     id: number
     title: string
@@ -36,6 +37,7 @@ type FeedbackListItemProps = {
 
 const FeedbackListItem: React.FC<FeedbackListItemProps> = ({
   slug,
+  role,
   feedback: {
     title,
     id,
@@ -64,13 +66,15 @@ const FeedbackListItem: React.FC<FeedbackListItemProps> = ({
                     createdAt,
                     new Date()
                   )} by ${username}`}</Grid>
-                  <Grid container item xs={12} spacing={1}>
-                    {labels.map(({ id, name, color }) => (
-                      <Grid key={id} item xs="auto">
-                        <Chip label={name} key={name} sx={{ bgcolor: color }} size="small" />
-                      </Grid>
-                    ))}
-                  </Grid>
+                  {role && (
+                    <Grid container item xs={12} spacing={1}>
+                      {labels.map(({ id, name, color }) => (
+                        <Grid key={id} item xs="auto">
+                          <Chip label={name} key={name} sx={{ bgcolor: color }} size="small" />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  )}
                 </Grid>
               }
               primaryTypographyProps={{

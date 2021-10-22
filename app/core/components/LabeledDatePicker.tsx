@@ -38,7 +38,6 @@ const LabeledDatePicker: React.FC<LabeledDatePickerProps> = ({
         {...otherProps}
         disabled={disabled || isSubmitting}
         onChange={(date) => {
-          console.log(date)
           onChange(date)
         }}
         renderInput={(params) => (

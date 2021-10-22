@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react"
+import { createContext, useContext, useState, useEffect, useMemo } from "react"
 import { Descendant } from "slate"
 import { EditorProps, EditorStore } from "./types"
 
@@ -32,8 +32,8 @@ export const EditorProvider: React.FC<EditorProps> = ({
   const [disableSubmit, setDisableSubmit] = useState(disableSubmitProp || false)
 
   submitText = submitText || "Submit"
-  readOnly = Boolean(readOnly)
-  editVariant = Boolean(editVariant)
+  readOnly = readOnly || false
+  editVariant = editVariant || false
 
   useEffect(() => {
     if (disableSubmitProp !== undefined) setDisableSubmit(disableSubmitProp)

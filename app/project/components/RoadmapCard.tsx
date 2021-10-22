@@ -11,7 +11,7 @@ type RoadmapCardProps = {
 }
 
 const RoadmapCard: React.FC<RoadmapCardProps> = ({ feedback, index }) => {
-  const { isUpdatingFeedback, canManage, openFeedbackDialog } = useRoadmap()
+  const { isUpdatingFeedback, canManage, openFeedbackDialog, memberRole } = useRoadmap()
 
   const {
     id,
@@ -63,13 +63,15 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ feedback, index }) => {
                       )} by ${username}`}
                     </Typography>
                   </Grid>
-                  <Grid container item xs={12} spacing={1}>
-                    {labels.map(({ name, color }) => (
-                      <Grid key={name} item xs="auto">
-                        <Chip label={name} key={name} sx={{ bgcolor: color }} size="small" />
-                      </Grid>
-                    ))}
-                  </Grid>
+                  {memberRole && (
+                    <Grid container item xs={12} spacing={1}>
+                      {labels.map(({ name, color }) => (
+                        <Grid key={name} item xs="auto">
+                          <Chip label={name} key={name} sx={{ bgcolor: color }} size="small" />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  )}
                 </Grid>
               </Grid>
             </CardContent>

@@ -7,13 +7,15 @@ import FeedbackListHeader from "app/project/components/FeedbackListHeader"
 import FeedbackList from "app/project/components/FeedbackList"
 import FeedbackListPlaceholder from "app/project/components/FeedbackListPlaceholder"
 
-const FeedbackPage: BlitzPage<ProjectPageProps> = ({ project: { slug } }: ProjectPageProps) => {
+const FeedbackPage: BlitzPage<ProjectPageProps> = ({
+  project: { slug, role },
+}: ProjectPageProps) => {
   return (
     <Grid container spacing={1} sx={{ marginTop: 1 }}>
       <FeedbackListHeader />
       <Grid item xs={12}>
         <Suspense fallback={<FeedbackListPlaceholder />}>
-          <FeedbackList slug={slug} />
+          <FeedbackList slug={slug} role={role} />
         </Suspense>
       </Grid>
     </Grid>

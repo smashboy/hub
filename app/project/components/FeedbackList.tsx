@@ -1,3 +1,4 @@
+import { ProjectMemberRole } from "db"
 import { forwardRef, useMemo } from "react"
 import { useInfiniteQuery } from "blitz"
 import { Components, Virtuoso } from "react-virtuoso"
@@ -12,7 +13,10 @@ const getFeedbackInput =
   (page: GetFeedbackListInput = { take: 10, skip: 0, slug }) =>
     page
 
-const FeedbackList: React.FC<{ slug: string }> = ({ slug }) => {
+const FeedbackList: React.FC<{ slug: string; role: ProjectMemberRole | null }> = ({
+  slug,
+  role,
+}) => {
   const [feedbackPages, { isFetchingNextPage, fetchNextPage, hasNextPage }] = useInfiniteQuery(
     getFeedbackList,
     getFeedbackInput(slug),
@@ -61,8 +65,8 @@ const FeedbackList: React.FC<{ slug: string }> = ({ slug }) => {
         components={Components}
         endReached={handleFetchNext}
         style={{ height: "100%" }}
-        itemContent={(index, feedback) => (
-          <FeedbackListItem key={feedback.id} slug={slug} feedback={feedback} />
+        itemContent={(_, feedback) => (
+          <FeedbackListItem key={feedback.id} slug={slug} role={role} feedback={feedback} />
         )}
       />
     </Box>
