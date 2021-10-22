@@ -1,4 +1,3 @@
-import { FeedbackCategory } from "db"
 import { useState, useMemo } from "react"
 import { Routes } from "blitz"
 import { format } from "date-fns"
@@ -12,17 +11,20 @@ import {
   Avatar,
   TextField,
   MenuItem,
+  GridSize,
 } from "@mui/material"
+import BuildChangelogIcon from "@mui/icons-material/LibraryBooks"
+import EditIcon from "@mui/icons-material/Edit"
 import UpdateRoadmapDialog from "app/project/components/UpdateRoadmapDialog"
 import { useRoadmap } from "app/project/store/RoadmapContext"
-import { RouteLink } from "./links"
+import { ButtonRouteLink, RouteLink } from "./links"
 import { useIsSmallDevice } from "../hooks/useIsSmallDevice"
 import { feedbackOptions } from "app/project/components/FeedbackEditor/Header"
 import { CategoryType } from "app/project/store/FeedbackEditorContext"
 
 const RoadmapHeader = () => {
   const {
-    info: { name, description, dueTo, id, progress },
+    info: { name, description, dueTo, id, progress, slug },
     setInfo,
     filterRoadmap,
     canManage,
@@ -47,6 +49,14 @@ const RoadmapHeader = () => {
     await filterRoadmap(newCategory === "none" ? null : newCategory)
   }
 
+  const descriptionLayoutSize = useMemo(() => {
+    let size = 8
+
+    if (progress === 100 && canManage) return (size -= 2)
+    if (canManage) return (size -= 1)
+    return size
+  }, [progress, canManage]) as GridSize
+
   return (
     <>
       <Container>
@@ -66,7 +76,7 @@ const RoadmapHeader = () => {
               />
             </RouteLink>
           </Grid>
-          <Grid container item xs={6}>
+          <Grid container item xs={descriptionLayoutSize}>
             <Grid item xs={12}>
               <Typography variant="h5" color="text.primary" component="div">
                 {name}
@@ -116,10 +126,22 @@ const RoadmapHeader = () => {
             </TextField>
           </Grid>
           {canManage && (
-            <Grid container item xs={12} md={2} alignItems="center">
+            <Grid container item xs={6} md={1} alignItems="center">
               <Button variant="contained" onClick={handleOpenDialog} fullWidth>
-                Edit
+                <EditIcon />
               </Button>
+            </Grid>
+          )}
+          {progress === 100 && canManage && (
+            <Grid container item xs={6} md={1} alignItems="center">
+              <ButtonRouteLink
+                href={Routes.CreateChangelog({ slug: projectSlug, roadmapSlug: slug })}
+                variant="contained"
+                color="secondary"
+                fullWidth
+              >
+                <BuildChangelogIcon />
+              </ButtonRouteLink>
             </Grid>
           )}
           <Grid item xs={12}>

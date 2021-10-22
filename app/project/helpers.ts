@@ -100,6 +100,7 @@ export type RoadmapFeedback = {
 export interface RoadmapPageProps extends ProjectPageProps {
   roadmap: {
     id: number
+    slug: string
     name: string
     description: string | null
     dueTo: Date | null
@@ -392,6 +393,7 @@ export const getProjectRoadmap = async (
 
   return {
     roadmap: {
+      slug: roadmapSlug,
       ...otherProps,
       progress,
       feedback: feedback.map(({ upvotedBy, ...otherProps }) => ({

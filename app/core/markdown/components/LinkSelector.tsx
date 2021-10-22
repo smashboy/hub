@@ -1,14 +1,6 @@
 import { useState, useMemo } from "react"
-import {
-  Button,
-  BottomNavigationAction,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-} from "@mui/material"
+import { Button, BottomNavigationAction } from "@mui/material"
 import LinkIcon from "@mui/icons-material/Link"
-import Dialog from "app/core/components/Dialog"
 import { handleToolbarOptionClick, insertLink, isLinkActive, unwrapLink } from "../utils"
 import { useSlate } from "slate-react"
 import { BaseSelection, Editor } from "slate"
@@ -65,6 +57,7 @@ const LinkSelector: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
 
   const handleSubmit = (newLink) => {
     if (selectionPath) {
+      console.log(selectionPath)
       editor.apply({
         type: "set_selection",
         properties: null,

@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material"
+import { Paper, Typography } from "@mui/material"
 import { RenderElementProps } from "slate-react"
 import { Link } from "@mui/material"
 import { HeadingElement, LinkElement } from "../types"
@@ -6,7 +6,18 @@ import { HeadingElement, LinkElement } from "../types"
 const Element = ({ attributes, children, element }: RenderElementProps) => {
   switch (element.type) {
     case "block":
-      return <blockquote {...attributes}>{children}</blockquote>
+      return (
+        <Paper
+          {...attributes}
+          sx={{ marginX: 4, marginY: 2, padding: 2, bgcolor: "background.default" }}
+          variant="outlined"
+          component="blockquote"
+        >
+          <Typography variant="body1" color="text.primary">
+            {children}
+          </Typography>
+        </Paper>
+      )
     case "bul-list":
       return <ul {...attributes}>{children}</ul>
     case "heading":

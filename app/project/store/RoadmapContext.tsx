@@ -15,6 +15,7 @@ export type RoadmapStoreProps = Pick<RoadmapPageProps, "roadmap"> & {
 
 type InfoState = {
   id: number
+  slug: string
   name: string
   description: string | null
   dueTo: Date | null

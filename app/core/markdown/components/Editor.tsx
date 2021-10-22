@@ -17,24 +17,15 @@ const Editor = () => {
     submitText,
     disableSubmit,
     onSubmit,
-    content,
     disablePadding,
     readOnly,
     onCancel,
     height,
     editVariant,
-    resetContent,
   } = useEditor()
 
   const renderElement = useCallback((props) => <Element {...props} />, [])
   const renderLeaf = useCallback((props) => <Leaf {...props} />, [])
-
-  const handleSubmit = () => onSubmit?.(content)
-
-  const handleCancel = () => {
-    resetContent()
-    onCancel?.()
-  }
 
   const maxHeight = readOnly ? "none" : height
   const paperHeight = readOnly ? "auto" : height
@@ -71,13 +62,13 @@ const Editor = () => {
           {editVariant ? (
             <Grid container item xs={12} spacing={1} justifyContent="flex-end">
               <Grid item xs={2}>
-                <Button onClick={handleCancel} variant="contained" color="inherit" fullWidth>
+                <Button onClick={onCancel} variant="contained" color="inherit" fullWidth>
                   Cancel
                 </Button>
               </Grid>
               <Grid item xs={2}>
                 <LoadingButton
-                  onClick={handleSubmit}
+                  onClick={onSubmit}
                   variant="contained"
                   fullWidth
                   disabled={disableSubmit}
@@ -90,7 +81,7 @@ const Editor = () => {
             <Grid item xs={12}>
               {/* TODO: loading state */}
               <LoadingButton
-                onClick={handleSubmit}
+                onClick={onSubmit}
                 variant="contained"
                 fullWidth
                 disabled={disableSubmit}

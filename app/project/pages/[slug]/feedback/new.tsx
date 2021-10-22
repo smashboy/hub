@@ -1,7 +1,6 @@
-import { ProjectMemberRole } from "db"
 import { BlitzPage, GetServerSideProps, getSession } from "blitz"
 import { authConfig } from "app/core/configs/authConfig"
-import { getProjectInfo, ProjectPageProps } from "../../helpers"
+import { getProjectInfo, ProjectPageProps } from "../../../helpers"
 import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
 import FeedbackEditor from "app/project/components/FeedbackEditor"
 

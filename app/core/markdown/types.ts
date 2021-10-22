@@ -36,6 +36,14 @@ export interface HeadingElement extends CustomElementBase {
   level: HeadingLevel
 }
 
+export interface ListElement {
+  type: "bul-list" | "num-list"
+  children: Array<{
+    type: "list-item"
+    children: CustomText[]
+  }>
+}
+
 export interface LinkElement extends CustomElementBase {
   type: "link"
   url: string
@@ -56,6 +64,7 @@ export type BlockButtonProps = { icon: SvgIconComponent; format: ElementType; is
 export type CustomElement = HeadingElement | LinkElement | ImageElement | CustomElementBase
 
 export type EditorStore = {
+  editor: ReactEditor
   content: Descendant[]
   isFocused: boolean
   disableSubmit: boolean
@@ -67,18 +76,20 @@ export type EditorStore = {
   setIsFocused: (newValue: boolean) => void
   setContent: (newContent: Descendant[]) => void
   setDisableSubmit: (newValue: boolean) => void
-  onSubmit?: (content: Descendant[]) => void
-  onCancel?: () => void
+  onSubmit: () => void
+  onCancel: () => void
   resetContent: () => void
 }
 
 export type EditorProps = Partial<
-  Pick<EditorStore, "disableSubmit" | "onSubmit" | "onCancel" | "height" | "disablePadding">
+  Pick<EditorStore, "disableSubmit" | "onCancel" | "height" | "disablePadding">
 > & {
   initialContent?: Descendant[]
+  onSubmit?: (content: Descendant[]) => void
   submitText?: string
   readOnly?: boolean
   editVariant?: boolean
+  disableReset?: boolean
 }
 
 declare module "slate" {

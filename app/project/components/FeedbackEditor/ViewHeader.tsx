@@ -42,7 +42,7 @@ const FeedbackViewHeader = () => {
 
   return (
     <Fade in timeout={500}>
-      <Grid container item xs={12} columnSpacing={2} sx={{ height: "fit-content" }}>
+      <Grid container item xs={12} columnSpacing={1} sx={{ height: "fit-content" }}>
         <Grid container item xs={showEditButton ? 10 : 11} spacing={1}>
           <Grid item xs={12}>
             <Typography variant="h5" color="text.primary">
