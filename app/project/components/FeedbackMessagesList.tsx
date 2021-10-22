@@ -7,6 +7,7 @@ import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import updateFeedbackMessage from "../mutations/updateFeedbackMessage"
 import deleteFeedbackMessage from "../mutations/deleteFeedbackMessage"
+import { feedbackOptionsDrawerBleeding } from "./FeedbackEditor/FeedbackOptions"
 
 export interface FeedbackMessagesListProps {
   feedbackId: number
@@ -50,7 +51,13 @@ const FeedbackMessagesList: React.FC<FeedbackMessagesListProps> = ({ feedbackId,
   }
 
   return (
-    <Grid container item xs={12} spacing={2}>
+    <Grid
+      container
+      item
+      xs={12}
+      spacing={2}
+      sx={{ paddingBottom: `${feedbackOptionsDrawerBleeding + 10}px` }}
+    >
       {messages.length > 0 && (
         <>
           <Grid item xs={12}>

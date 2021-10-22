@@ -67,7 +67,7 @@ const FeedbackViewHeader = () => {
         </Grid>
 
         {(user || showEditButton) && (
-          <Grid container item spacing={1} xs={12} md={4} justifyContent="center">
+          <Grid container item spacing={1} xs={12} md={4} justifyContent="flex-end">
             {user && (
               <Grid container item xs={6} md={3} alignItems="center">
                 <LoadingButton

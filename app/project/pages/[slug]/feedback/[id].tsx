@@ -34,7 +34,7 @@ const SelectedFeedbackPage: BlitzPage<FeedbackPageProps> = ({
   }
 
   return (
-    <Container maxWidth={canManageSettings ? "xl" : "md"}>
+    <Container maxWidth={canManageSettings ? "xl" : "md"} disableGutters>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <FeedbackEditor slug={slug} initialValues={{ feedback }} />

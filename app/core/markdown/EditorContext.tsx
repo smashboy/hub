@@ -13,6 +13,7 @@ export const EditorProvider: React.FC<EditorProps> = ({
   disableSubmit: disableSubmitProp,
   initialContent,
   submitText,
+  updateOnRerender,
   editVariant,
   readOnly,
   disablePadding,
@@ -23,6 +24,8 @@ export const EditorProvider: React.FC<EditorProps> = ({
 }) => {
   // @ts-ignore
   const editor = useMemo(() => withHistory(withLinks(withReact(createEditor()))), [])
+
+  initialContent = useMemo(() => initialContent, [initialContent])
 
   const [content2Reset, setContent2Reset] = useState<Descendant[] | null>(null)
   const [content, setContent] = useState<Descendant[]>(
@@ -45,10 +48,13 @@ export const EditorProvider: React.FC<EditorProps> = ({
   editVariant = editVariant || false
 
   useEffect(() => {
-    if (disableReset !== false) {
-      if (!readOnly) return setContent2Reset(content)
-      if (readOnly && content2Reset) handleResetContent()
-    }
+    if (initialContent && updateOnRerender) setContent(initialContent)
+  }, [initialContent])
+
+  useEffect(() => {
+    if (disableReset) return
+    if (!readOnly) return setContent2Reset(content)
+    if (readOnly && content2Reset) handleResetContent()
   }, [readOnly])
 
   useEffect(() => {
@@ -88,7 +94,6 @@ export const EditorProvider: React.FC<EditorProps> = ({
 
   const handleSubmit = () => {
     onSubmit?.(content)
-    // handleResetContent()
     setContent2Reset(null)
   }
 

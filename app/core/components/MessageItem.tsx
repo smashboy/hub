@@ -29,8 +29,8 @@ type MessageItemProps = {
       avatarUrl: string | null
     }
   }
-  onMessageUpdate?: (id: number, content: string) => Promise<void>
-  onMessageDelete?: (id: number) => Promise<void>
+  onMessageUpdate: (id: number, content: string) => Promise<void>
+  onMessageDelete: (id: number) => Promise<void>
 }
 
 const MessageItem: React.FC<MessageItemProps> = ({
@@ -67,12 +67,12 @@ const MessageItem: React.FC<MessageItemProps> = ({
   }
 
   const handleUpdateMessage = async (newContent: Descendant[]) => {
-    await onMessageUpdate?.(id, JSON.stringify({ content: newContent }))
+    await onMessageUpdate(id, JSON.stringify({ content: newContent }))
     handleCloseEdit()
   }
 
   const handleDeleteMessage = async () => {
-    await onMessageDelete?.(id)
+    await onMessageDelete(id)
     handleCloseMenu()
   }
 
@@ -111,6 +111,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
                 onSubmit={handleUpdateMessage}
                 onCancel={handleCloseEdit}
                 initialContent={JSON.parse(content)?.content || null}
+                updateOnRerender
               />
             </Box>
           }

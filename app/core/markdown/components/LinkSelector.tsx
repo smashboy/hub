@@ -57,7 +57,6 @@ const LinkSelector: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
 
   const handleSubmit = (newLink) => {
     if (selectionPath) {
-      console.log(selectionPath)
       editor.apply({
         type: "set_selection",
         properties: null,

@@ -88,6 +88,7 @@ export type EditorProps = Partial<
   onSubmit?: (content: Descendant[]) => void
   submitText?: string
   readOnly?: boolean
+  updateOnRerender?: boolean
   editVariant?: boolean
   disableReset?: boolean
 }

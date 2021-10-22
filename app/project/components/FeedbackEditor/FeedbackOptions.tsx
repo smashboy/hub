@@ -232,10 +232,12 @@ const Options = () => {
   )
 }
 
-const drawerBleeding = 56
+export const feedbackOptionsDrawerBleeding = 56
 
 const FeedbackOptions = () => {
   const isSM = useIsSmallDevice()
+
+  const { readOnly } = useFeedbackEditor()
 
   const [open, setOpen] = useState(false)
 
@@ -252,7 +254,7 @@ const FeedbackOptions = () => {
           <Global
             styles={{
               ".MuiDrawer-root > .MuiPaper-root": {
-                height: `calc(80% - ${drawerBleeding}px)`,
+                height: `calc(80% - ${feedbackOptionsDrawerBleeding}px)`,
                 overflow: "visible",
                 background: "#000",
               },
@@ -265,7 +267,7 @@ const FeedbackOptions = () => {
             open={open}
             onClose={toggleDrawer(false)}
             onOpen={toggleDrawer(true)}
-            swipeAreaWidth={drawerBleeding}
+            swipeAreaWidth={feedbackOptionsDrawerBleeding}
             disableSwipeToOpen={false}
             ModalProps={{
               keepMounted: true,
@@ -276,7 +278,7 @@ const FeedbackOptions = () => {
                 position: "absolute",
                 width: "100%",
                 height: "100%",
-                top: -drawerBleeding,
+                top: -feedbackOptionsDrawerBleeding,
                 borderTopLeftRadius: 8,
                 borderTopRightRadius: 8,
                 visibility: "visible",
