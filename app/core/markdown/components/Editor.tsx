@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 import { dynamic } from "blitz"
-import { Grid, Hidden, Button, Paper } from "@mui/material"
+import { Grid, Button, Paper } from "@mui/material"
 import { LoadingButton } from "@mui/lab"
 import type { Editable as EditableType } from "slate-react"
 import Element from "./Element"
@@ -58,15 +58,15 @@ const Editor = () => {
         </Paper>
       </Grid>
       {!readOnly && (
-        <Hidden smDown>
+        <>
           {editVariant ? (
             <Grid container item xs={12} spacing={1} justifyContent="flex-end">
-              <Grid item xs={2}>
+              <Grid item xs={4} md={2}>
                 <Button onClick={onCancel} variant="contained" color="inherit" fullWidth>
                   Cancel
                 </Button>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={4} md={2}>
                 <LoadingButton
                   onClick={onSubmit}
                   variant="contained"
@@ -90,7 +90,7 @@ const Editor = () => {
               </LoadingButton>
             </Grid>
           )}
-        </Hidden>
+        </>
       )}
     </Grid>
   )

@@ -49,6 +49,7 @@ function DialogForm<S extends z.ZodType<any, any>>({
       {title && <DialogTitle>{title}</DialogTitle>}
       <FormProvider {...ctx}>
         <form
+          style={{ display: "contents" }}
           onSubmit={ctx.handleSubmit(async (values) => {
             const result = (await onSubmit(values)) || {}
             const errors = Object.entries(result)

@@ -1,4 +1,4 @@
-import { Grid, ButtonGroup, Hidden, BottomNavigation, Paper, Slide } from "@mui/material"
+import { Grid, ButtonGroup, Hidden, BottomNavigation, Paper, Slide, useTheme } from "@mui/material"
 import BoldIcon from "@mui/icons-material/FormatBold"
 import ItalicIcon from "@mui/icons-material/FormatItalic"
 import UnderlinedIcon from "@mui/icons-material/FormatUnderlined"
@@ -61,6 +61,8 @@ const blockButtons: BlockButtonProps[] = [
 const optionsCount = [...markButtons, ...blockButtons].length + 3
 
 const Toolbar = () => {
+  const theme = useTheme()
+
   const { isFocused, readOnly } = useEditor()
 
   if (readOnly) return null
@@ -101,7 +103,7 @@ const Toolbar = () => {
               left: 0,
               right: 0,
               overflowX: "auto",
-              zIndex: 10,
+              zIndex: theme.zIndex.modal,
             }}
             elevation={3}
           >
