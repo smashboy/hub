@@ -18,7 +18,7 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
             padding: 2,
             bgcolor: "background.default",
           }}
-          variant="outlined"
+          // variant="outlined"
           component="blockquote"
         >
           <Typography variant="body1" color="text.primary">
