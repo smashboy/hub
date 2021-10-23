@@ -128,6 +128,12 @@ export const CreateRoadmap = z.object({
   projectSlug: z.string(),
 })
 
+export const CreateChangelog = z.object({
+  projectSlug: z.string(),
+  title: z.string(),
+  content: z.string(),
+})
+
 export const UpdateProjectRoadmap = CreateRoadmap.omit({ projectSlug: true }).merge(
   z.object({
     roadmapId: z.number(),

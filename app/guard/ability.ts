@@ -14,6 +14,7 @@ export type ExtendedResourceTypes =
   | "project.invites"
   | "project.members"
   | "project.roadmap"
+  | "project.changelog"
   | "project.settings.general"
   | "project.settings.danger"
   | "project.settings.invites"
@@ -41,6 +42,14 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
       can("follow", "project")
 
       can("manage", "project.roadmap")
+
+      can("read", "project.changelog")
+
+      can(
+        "manage",
+        "project.changelog",
+        async (slug: string) => await checkFeedbackSettingsManagePermissions(slug, authUserId)
+      )
 
       // Feedback
       can("manage", "feedback")

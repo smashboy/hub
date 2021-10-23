@@ -109,6 +109,15 @@ export interface RoadmapPageProps extends ProjectPageProps {
   }
 }
 
+export interface ChangelogPageProps extends ProjectPageProps {
+  changelog: {
+    id: number
+    createdAt: Date
+    title: string
+    content: string
+  }
+}
+
 // const session = await getSession(req, res)
 // const userId = session?.userId || undefined
 // const slug = (params?.slug as string) || null
@@ -402,4 +411,30 @@ export const getProjectRoadmap = async (
       })),
     },
   }
+}
+
+export const getChangelog = async (
+  projectSlug: string,
+  changelogSlug: string | null
+): Promise<Omit<ChangelogPageProps, "project"> | null> => {
+  if (!changelogSlug) return null
+
+  const changelog = await db.projectChangelog.findFirst({
+    where: {
+      slug: changelogSlug,
+      project: {
+        slug: projectSlug,
+      },
+    },
+    select: {
+      id: true,
+      title: true,
+      createdAt: true,
+      content: true,
+    },
+  })
+
+  if (!changelog) return null
+
+  return { changelog }
 }

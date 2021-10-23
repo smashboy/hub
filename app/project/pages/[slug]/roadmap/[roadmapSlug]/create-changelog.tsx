@@ -2,7 +2,7 @@ import { FeedbackCategory, ProjectMemberRole } from "db"
 import { useState } from "react"
 import { Descendant } from "slate"
 import { BlitzPage, GetServerSideProps, getSession } from "blitz"
-import { Typography, Grid, Fade, useTheme, Container, Switch } from "@mui/material"
+import { Typography, Grid, Fade, useTheme, Container, Switch, TextField } from "@mui/material"
 import {
   getProjectInfo,
   getProjectRoadmap,
@@ -13,12 +13,14 @@ import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
 import MarkdownEditor from "app/core/markdown/Editor"
 import { HeadingElement, ListElement } from "app/core/markdown/types"
 import { capitalizeString } from "app/core/utils/blitz"
+import useCustomMutation from "app/core/hooks/useCustomMutation"
+import createProjectChangelog from "app/project/mutations/createProjectChangelog"
 
 const generateListFromFeedbackArray = (
   category: FeedbackCategory,
   feedback: RoadmapFeedback[]
-): Descendant[] | null => {
-  if (feedback.map.length === 0) return null
+): Descendant[] => {
+  if (feedback.length === 0) return []
 
   const content: ListElement = {
     type: "bul-list",
@@ -73,13 +75,30 @@ const generateChangelog = (
 
 const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
   roadmap: { name, description, feedback },
+  project: { slug },
 }: RoadmapPageProps) => {
   const theme = useTheme()
+
+  const [createProjectChangelogMutation] = useCustomMutation(createProjectChangelog, {
+    successNotification: "Changelog is live!",
+  })
+
+  const [title, setTitle] = useState(name)
 
   const [readOnly, setReadOnly] = useState(false)
 
   const handleReadOnly = (event: React.ChangeEvent<HTMLInputElement>) =>
     setReadOnly(event.target.checked)
+
+  const handleTitle = (event: React.ChangeEvent<HTMLInputElement>) => setTitle(event.target.value)
+
+  const handleSubmit = async (content: Descendant[]) => {
+    await createProjectChangelogMutation({
+      title,
+      content: JSON.stringify({ content }),
+      projectSlug: slug,
+    })
+  }
 
   return (
     <Grid container spacing={2} sx={{ marginTop: 1 }}>
@@ -105,17 +124,29 @@ const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
           </Grid>
         </Grid>
       </Fade>
-      <Grid item xs={12}>
-        <Fade in timeout={900}>
-          <Container maxWidth="lg" disableGutters>
-            <MarkdownEditor
-              initialContent={generateChangelog(description, feedback)}
-              readOnly={readOnly}
-              disableReset
+      <Fade in timeout={900}>
+        <Grid item container xs={12} spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              value={title}
+              onChange={handleTitle}
+              size="small"
+              label="Changelog name"
+              fullWidth
             />
-          </Container>
-        </Fade>
-      </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Container maxWidth="lg" disableGutters>
+              <MarkdownEditor
+                initialContent={generateChangelog(description, feedback)}
+                readOnly={readOnly}
+                disableReset
+                onSubmit={handleSubmit}
+              />
+            </Container>
+          </Grid>
+        </Grid>
+      </Fade>
     </Grid>
   )
 }

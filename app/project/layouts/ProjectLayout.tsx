@@ -148,7 +148,11 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                 value="landing"
                 label="Home"
               />
-              <Tab value="changelog" label="Changelog" component="a" />
+              <TabRouteLink
+                href={Routes.ChangelogListPage({ slug })}
+                value="changelog"
+                label="Changelog"
+              />
               <TabRouteLink
                 href={Routes.FeedbackPage({ slug })}
                 value="feedback"

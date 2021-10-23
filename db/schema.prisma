@@ -116,14 +116,16 @@ model ProjectLanding {
 }
 
 model ProjectChangelog {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  title       String
-  description String?
-  content     String
-  project     Project  @relation(fields: [projectId], references: [id])
-  projectId   Int
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title     String
+  slug      String
+  content   String
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId Int
+
+  @@unique([projectId, slug])
 }
 
 model ProjectRoadmap {

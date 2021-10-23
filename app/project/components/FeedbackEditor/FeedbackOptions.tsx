@@ -237,8 +237,6 @@ export const feedbackOptionsDrawerBleeding = 56
 const FeedbackOptions = () => {
   const isSM = useIsSmallDevice()
 
-  const { readOnly } = useFeedbackEditor()
-
   const [open, setOpen] = useState(false)
 
   const toggleDrawer = (newOpen: boolean) => () => setOpen(newOpen)
