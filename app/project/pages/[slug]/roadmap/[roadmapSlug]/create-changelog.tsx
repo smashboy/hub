@@ -33,7 +33,7 @@ const generateListFromFeedbackArray = (
   const heading: HeadingElement = {
     type: "heading",
     level: 6,
-    children: [{ text: `${capitalizeString(category)}s:` }],
+    children: [{ text: `${capitalizeString(category)}s` }],
   }
 
   return [heading, content] as Descendant[]

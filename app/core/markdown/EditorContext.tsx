@@ -19,6 +19,7 @@ export const EditorProvider: React.FC<EditorProps> = ({
   disablePadding,
   disableReset,
   height,
+  closeOnSubmit,
   onSubmit,
   onCancel,
 }) => {
@@ -95,6 +96,8 @@ export const EditorProvider: React.FC<EditorProps> = ({
   const handleSubmit = () => {
     onSubmit?.(content)
     setContent2Reset(null)
+
+    if (closeOnSubmit) onCancel?.()
   }
 
   const handleCancel = () => {

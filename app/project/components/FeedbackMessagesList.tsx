@@ -57,28 +57,28 @@ const FeedbackMessagesList: React.FC<FeedbackMessagesListProps> = ({ feedbackId,
       sx={{ paddingBottom: `${feedbackOptionsDrawerBleeding + 10}px` }}
     >
       {messages.length > 0 && (
+        <Grid item xs={12}>
+          <List component="div">
+            {messages.map((message) => (
+              <MessageItem
+                key={message.id}
+                message={message}
+                onMessageUpdate={handleUpdateMessage}
+                onMessageDelete={handleDeleteMessage}
+              />
+            ))}
+          </List>
+        </Grid>
+      )}
+      {user && (
         <>
-          <Grid item xs={12}>
-            <List component="div">
-              {messages.map((message) => (
-                <MessageItem
-                  key={message.id}
-                  message={message}
-                  onMessageUpdate={handleUpdateMessage}
-                  onMessageDelete={handleDeleteMessage}
-                />
-              ))}
-            </List>
-          </Grid>
           <Grid item xs={12}>
             <Divider />
           </Grid>
+          <Grid item xs={12}>
+            <FeedbackMessageEditor feedbackId={feedbackId} isPublic={isPublic} refetch={refetch} />
+          </Grid>
         </>
-      )}
-      {user && (
-        <Grid item xs={12}>
-          <FeedbackMessageEditor feedbackId={feedbackId} isPublic={isPublic} refetch={refetch} />
-        </Grid>
       )}
     </Grid>
   )

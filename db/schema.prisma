@@ -13,25 +13,26 @@ generator client {
 // --------------------------------------
 
 model User {
-  id              Int                      @id @default(autoincrement())
-  createdAt       DateTime                 @default(now())
-  updatedAt       DateTime                 @updatedAt
-  email           String                   @unique
-  username        String                   @unique
-  hashedPassword  String?
-  isEmailVerified Boolean                  @default(false)
-  isVerified      Boolean                  @default(false)
-  avatarUrl       String?
-  bio             String?
-  role            UserRole                 @default(USER)
-  tokens          Token[]
-  sessions        Session[]
-  projectMember   ProjectMember[]
-  feedback        ProjectFeedback[]        @relation("ProjectFeedbackAuthor")
-  upvoted         ProjectFeedback[]
-  messages        ProjectFeedbackMessage[]
-  projectInvites  ProjectInvite[]
-  project         Project[]
+  id                Int                      @id @default(autoincrement())
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  email             String                   @unique
+  username          String                   @unique
+  hashedPassword    String?
+  isEmailVerified   Boolean                  @default(false)
+  isVerified        Boolean                  @default(false)
+  avatarUrl         String?
+  bio               String?
+  role              UserRole                 @default(USER)
+  tokens            Token[]
+  sessions          Session[]
+  projectMember     ProjectMember[]
+  feedback          ProjectFeedback[]        @relation("ProjectFeedbackAuthor")
+  changelogFeedback ChangelogFeedback[]
+  upvoted           ProjectFeedback[]
+  messages          ProjectFeedbackMessage[]
+  projectInvites    ProjectInvite[]
+  project           Project[]
 }
 
 model Session {
@@ -116,16 +117,31 @@ model ProjectLanding {
 }
 
 model ProjectChangelog {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int                 @id @default(autoincrement())
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
   title     String
   slug      String
   content   String
-  project   Project  @relation(fields: [projectId], references: [id])
+  project   Project             @relation(fields: [projectId], references: [id])
   projectId Int
+  feedback  ChangelogFeedback[]
 
   @@unique([projectId, slug])
+}
+
+model ChangelogFeedback {
+  id          Int              @id @default(autoincrement())
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  rating      Int
+  description String?
+  changelog   ProjectChangelog @relation(fields: [changelogId], references: [id])
+  changelogId Int
+  user        User             @relation(fields: [userId], references: [id])
+  userId      Int
+
+  @@unique([userId, changelogId])
 }
 
 model ProjectRoadmap {

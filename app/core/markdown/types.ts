@@ -91,6 +91,7 @@ export type EditorProps = Partial<
   updateOnRerender?: boolean
   editVariant?: boolean
   disableReset?: boolean
+  closeOnSubmit?: boolean
 }
 
 declare module "slate" {

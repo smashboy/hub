@@ -182,7 +182,7 @@ const Layout = ({ title, disableContainer, disableNavigation, children }: Layout
           </Toolbar>
         </AppBar>
       )}
-      {disableContainer ? children : <Container>{children}</Container>}
+      {disableContainer ? children : <Container sx={{ paddingBottom: 5 }}>{children}</Container>}
     </>
   )
 }

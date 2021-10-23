@@ -15,6 +15,7 @@ export type ExtendedResourceTypes =
   | "project.members"
   | "project.roadmap"
   | "project.changelog"
+  | "project.changelog.feedback"
   | "project.settings.general"
   | "project.settings.danger"
   | "project.settings.invites"
@@ -44,6 +45,7 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
       can("manage", "project.roadmap")
 
       can("read", "project.changelog")
+      can("manage", "project.changelog.feedback")
 
       can(
         "manage",

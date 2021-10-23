@@ -115,6 +115,7 @@ export interface ChangelogPageProps extends ProjectPageProps {
     createdAt: Date
     title: string
     content: string
+    userRating: number | null
   }
 }
 
@@ -213,6 +214,7 @@ export const getProjectInfo = async (
       slug,
     },
     select: {
+      id: true,
       name: true,
       color: true,
       isPrivate: true,
@@ -224,22 +226,30 @@ export const getProjectInfo = async (
           id: userId,
         },
       },
-      members: {
-        where: {
-          userId,
-        },
-        select: {
-          role: true,
-        },
-      },
     },
   })
 
   if (!project) return null
 
-  const { members, isPrivate, followers, ...otherProjectProps } = project
+  const { isPrivate, followers, ...otherProjectProps } = project
 
-  const member = members[0]
+  let member: {
+    role: ProjectMemberRole
+  } | null = null
+
+  if (userId) {
+    member = await db.projectMember.findUnique({
+      where: {
+        projectId_userId: {
+          userId,
+          projectId: project.id,
+        },
+      },
+      select: {
+        role: true,
+      },
+    })
+  }
 
   if (isPrivate && !member) return null
 
@@ -415,9 +425,12 @@ export const getProjectRoadmap = async (
 
 export const getChangelog = async (
   projectSlug: string,
+  session: SessionContext,
   changelogSlug: string | null
 ): Promise<Omit<ChangelogPageProps, "project"> | null> => {
   if (!changelogSlug) return null
+
+  const userId = session?.userId || undefined
 
   const changelog = await db.projectChangelog.findFirst({
     where: {
@@ -436,5 +449,23 @@ export const getChangelog = async (
 
   if (!changelog) return null
 
-  return { changelog }
+  let userRating: number | null = null
+
+  if (userId) {
+    const feedback = await db.changelogFeedback.findUnique({
+      where: {
+        userId_changelogId: {
+          userId,
+          changelogId: changelog.id,
+        },
+      },
+      select: {
+        rating: true,
+      },
+    })
+
+    if (feedback) userRating = feedback.rating
+  }
+
+  return { changelog: { ...changelog, userRating } }
 }
