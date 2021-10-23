@@ -37,7 +37,7 @@ import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
   height: 6,
-  backgroundColor: theme.palette.mode === "light" ? grey[300] : grey[900],
+  backgroundColor: theme.palette.mode === "light" ? grey[300] : grey[700],
   borderRadius: 3,
   position: "absolute",
   top: 8,
@@ -254,7 +254,7 @@ const FeedbackOptions = () => {
               ".MuiDrawer-root > .MuiPaper-root": {
                 height: `calc(80% - ${feedbackOptionsDrawerBleeding}px)`,
                 overflow: "visible",
-                background: "#000",
+                background: "#212121",
               },
             }}
           />
@@ -280,7 +280,7 @@ const FeedbackOptions = () => {
                 borderTopLeftRadius: 8,
                 borderTopRightRadius: 8,
                 visibility: "visible",
-                bgcolor: "background.paper",
+                bgcolor: "#212121",
                 right: 0,
                 left: 0,
               }}
