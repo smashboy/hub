@@ -163,3 +163,8 @@ export const CreateChangelogFeedback = z.object({
   rating: z.number(),
   description: z.string().nullable(),
 })
+
+export const GetChangelogFeedback = z.object({
+  changelogId: z.number(),
+  projectSlug: z.string(),
+})

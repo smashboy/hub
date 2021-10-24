@@ -37,6 +37,10 @@ const RoadmapBoard = () => {
               feedback={feedback.filter((card) => card.content.status === FeedbackStatus.ON_REVIEW)}
             />
             <RoadmapBoardColumn
+              status={FeedbackStatus.PLANNED}
+              feedback={feedback.filter((card) => card.content.status === FeedbackStatus.PLANNED)}
+            />
+            <RoadmapBoardColumn
               status={FeedbackStatus.IN_PROGRESS}
               feedback={feedback.filter(
                 (card) => card.content.status === FeedbackStatus.IN_PROGRESS

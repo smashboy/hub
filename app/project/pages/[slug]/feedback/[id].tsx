@@ -40,9 +40,6 @@ const SelectedFeedbackPage: BlitzPage<FeedbackPageProps> = ({
           <FeedbackEditor slug={slug} initialValues={{ feedback }} />
         </Grid>
         <Grid container item xs={12} md={canManageSettings ? 9 : 12} spacing={2}>
-          <Grid item xs={12}>
-            <Divider />
-          </Grid>
           {canReadPrivateMessages && (
             <Grid item xs={12}>
               <Tabs value={selectedMessagesCategory} onChange={handleSelectMessagesCategory}>

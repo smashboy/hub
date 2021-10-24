@@ -45,7 +45,12 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
       can("manage", "project.roadmap")
 
       can("read", "project.changelog")
-      can("manage", "project.changelog.feedback")
+      can("create", "project.changelog.feedback")
+      can(
+        "read",
+        "project.changelog.feedback",
+        async (slug: string) => await checkFeedbackSettingsManagePermissions(slug, authUserId)
+      )
 
       can(
         "manage",

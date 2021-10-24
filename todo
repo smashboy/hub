@@ -1,10 +1,8 @@
 Editor:
   Header selector
   Image uploader
-  Blockquote custom component
 
 Permissions:
   permission helpres return true when slug === undefined
 
-Project:
-  rework followers
+
