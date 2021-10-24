@@ -15,7 +15,7 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ feedback, index }) => {
 
   const {
     id,
-    content: { title, id: contentId },
+    content: { title, id: contentId, category },
     author: { username },
     labels,
     upvotedBy,
@@ -62,6 +62,9 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ feedback, index }) => {
                         new Date()
                       )} by ${username}`}
                     </Typography>
+                  </Grid>
+                  <Grid container item xs={12}>
+                    <Chip label={category} size="small" />
                   </Grid>
                   {memberRole && (
                     <Grid container item xs={12} spacing={1}>

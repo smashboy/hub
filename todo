@@ -1,8 +1,20 @@
 Editor:
-  Header selector
-  Image uploader
+  ☐ Header selector
+  ☐ Image uploader
 
 Permissions:
-  permission helpres return true when slug === undefined
+  ☐ permission helpres return true when slug === undefined
 
+Roadmap:
+  ☐ Archive on changelog generate
 
+Inbox:
+  ☐ assigned to feedback
+  - feedback status changed for:
+    ☐ author
+    ☐ upvoters
+    ☐ participants
+  - feedback new message for:
+    ☐ author
+    ☐ participants
+  ☐ new changelog
