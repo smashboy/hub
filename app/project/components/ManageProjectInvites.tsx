@@ -28,7 +28,7 @@ export type Invites = Array<{
 type ManageInvitesSettingsProps = {
   slug: string
   name: string
-  invites: Intvites
+  invites: Invites
 }
 
 const ManageInvitesSettings: React.FC<ManageInvitesSettingsProps> = ({ invites, slug, name }) => {
