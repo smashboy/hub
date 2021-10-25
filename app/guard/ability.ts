@@ -1,8 +1,5 @@
 import { GuardBuilder } from "@blitz-guard/core"
-import {
-  checkFeedbackSettingsManagePermissions,
-  checkGeneralSettingsManagePersmissions,
-} from "./helpers"
+import { checkModeratorPersmissions, checkAdminPersmissions } from "./helpers"
 
 export type ExtendedResourceTypes =
   | "user"
@@ -49,13 +46,13 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
       can(
         "read",
         "project.changelog.feedback",
-        async (slug: string) => await checkFeedbackSettingsManagePermissions(slug, authUserId)
+        async (slug: string) => await checkModeratorPersmissions(slug, authUserId)
       )
 
       can(
         "manage",
         "project.changelog",
-        async (slug: string) => await checkFeedbackSettingsManagePermissions(slug, authUserId)
+        async (slug: string) => await checkModeratorPersmissions(slug, authUserId)
       )
 
       // Feedback
@@ -65,13 +62,13 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
       can(
         "manage",
         "feedback.messages.private",
-        async (slug: string) => await checkFeedbackSettingsManagePermissions(slug, authUserId)
+        async (slug: string) => await checkModeratorPersmissions(slug, authUserId)
       )
 
       can(
         "update",
         "feedback.settings",
-        async (slug: string) => await checkFeedbackSettingsManagePermissions(slug, authUserId)
+        async (slug: string) => await checkModeratorPersmissions(slug, authUserId)
       )
 
       can("accept", "project.invites")
@@ -80,7 +77,7 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
       can(
         "manage",
         "project.members",
-        async (slug: string) => await checkGeneralSettingsManagePersmissions(slug, authUserId)
+        async (slug: string) => await checkAdminPersmissions(slug, authUserId)
       )
 
       // Project settings
@@ -88,18 +85,18 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
       can(
         "manage",
         "project.settings.general",
-        async (slug: string) => await checkGeneralSettingsManagePersmissions(slug, authUserId)
+        async (slug: string) => await checkAdminPersmissions(slug, authUserId)
       )
       can(
         "manage",
         "project.settings.danger",
-        async (slug: string) => await checkGeneralSettingsManagePersmissions(slug, authUserId)
+        async (slug: string) => await checkAdminPersmissions(slug, authUserId)
       )
 
       can(
         "manage",
         "project.settings.invites",
-        async (slug: string) => await checkGeneralSettingsManagePersmissions(slug, authUserId)
+        async (slug: string) => await checkAdminPersmissions(slug, authUserId)
       )
 
       // const isUserEmailVerified = await checkEmailVerification(ctx);
