@@ -19,22 +19,30 @@ import searchUsers from "../mutations/searchUsers"
 import { LoadingButton } from "@mui/lab"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import createProjectInvites from "../mutations/createProjectInvites"
+import { Invites } from "./ManageProjectInvites"
 
-type InviteMembersDialog = {
-  open: boolean
-  onClose: () => void
-  name: string
-  slug: string
-}
-
-type Users = Array<{
+export type Users = Array<{
   id: number
   username: string
   email: string
   avatarUrl: string | null
 }>
 
-const InviteMembersDialog: React.FC<InviteMembersDialog> = ({ open, onClose, name, slug }) => {
+type InviteMembersDialog = {
+  open: boolean
+  onClose: () => void
+  name: string
+  slug: string
+  onSubmit: (newInvites: Invites) => void
+}
+
+const InviteMembersDialog: React.FC<InviteMembersDialog> = ({
+  open,
+  onClose,
+  name,
+  slug,
+  onSubmit,
+}) => {
   const [createProjectInvitesMutation, { isLoading: isLoadingCreateInvites }] = useCustomMutation(
     createProjectInvites,
     {
@@ -69,10 +77,12 @@ const InviteMembersDialog: React.FC<InviteMembersDialog> = ({ open, onClose, nam
     setSearchQuery(event.currentTarget.value)
 
   const handleCreateProjectInvites = async () => {
-    await createProjectInvitesMutation({
+    const newInvites = await createProjectInvitesMutation({
       projectSlug: slug,
       usersId: selectedUsers.map(({ id }) => id),
     })
+
+    onSubmit(newInvites)
 
     handleCloseDialog()
   }
@@ -140,7 +150,7 @@ const InviteMembersDialog: React.FC<InviteMembersDialog> = ({ open, onClose, nam
         <LoadingButton
           onClick={handleCreateProjectInvites}
           loading={isLoadingCreateInvites}
-          disabled={selectedUsers?.length === 0}
+          disabled={selectedUsers.length === 0}
         >
           Invite
         </LoadingButton>

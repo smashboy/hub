@@ -117,16 +117,6 @@ const RoadmapFeedbackDialog = ({}) => {
             spacing={1}
             justifyContent={isSM ? undefined : "flex-end"}
           >
-            <Grid item xs={6} md="auto">
-              <ButtonRouteLink
-                variant="contained"
-                color="inherit"
-                fullWidth={isSM}
-                href={Routes.SelectedFeedbackPage({ slug: projectSlug, id: contentId })}
-              >
-                <OpenIcon />
-              </ButtonRouteLink>
-            </Grid>
             {user && (
               <Grid item xs={6} md="auto">
                 <LoadingButton
@@ -141,6 +131,16 @@ const RoadmapFeedbackDialog = ({}) => {
                 </LoadingButton>
               </Grid>
             )}
+            <Grid item xs={6} md="auto">
+              <ButtonRouteLink
+                variant="contained"
+                color="inherit"
+                fullWidth={isSM}
+                href={Routes.SelectedFeedbackPage({ slug: projectSlug, id: contentId })}
+              >
+                <OpenIcon />
+              </ButtonRouteLink>
+            </Grid>
           </Grid>
           <Grid item xs={12}>
             <Divider />
