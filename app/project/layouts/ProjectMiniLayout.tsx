@@ -19,7 +19,7 @@ const ProjectMiniLayout: React.FC<LayoutProps & ProjectPageProps> = ({
 
   return (
     <Layout title={title} disableNavigation={disableNavigation} disableContainer={disableContainer}>
-      <Grid container spacing={2} sx={{ marginTop: 1 }}>
+      <Grid container rowSpacing={1} sx={{ marginTop: 1 }}>
         <Grid item xs={12}>
           <Container>
             <Fade in timeout={350}>

@@ -12,9 +12,7 @@ const RoadmapsPage: BlitzPage<RoadmapsPageProps> = ({
 }: RoadmapsPageProps) => {
   return (
     <Grid container spacing={2} sx={{ marginTop: 2 }}>
-      {(role === ProjectMemberRole.FOUNDER ||
-        role === ProjectMemberRole.ADMIN ||
-        role === ProjectMemberRole.MODERATOR) && (
+      {role && role !== ProjectMemberRole.MEMBER && (
         <Grid item xs={12}>
           <ButtonRouteLink href={Routes.NewRoadmapPage({ slug })} variant="contained" fullWidth>
             New Roadmap

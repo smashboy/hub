@@ -57,7 +57,8 @@ const FeedbackList: React.FC<{ slug: string; role: ProjectMemberRole | null }> =
   return (
     <Box
       sx={{
-        height: "calc(100vh - 400px)",
+        height: "calc(100vh - 360px)",
+        // bgcolor: "red",
       }}
     >
       <Virtuoso
