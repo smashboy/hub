@@ -17,12 +17,15 @@ import BuildChangelogIcon from "@mui/icons-material/LibraryBooks"
 import EditIcon from "@mui/icons-material/Edit"
 import UpdateRoadmapDialog from "app/project/components/UpdateRoadmapDialog"
 import { useRoadmap } from "app/project/store/RoadmapContext"
-import { ButtonRouteLink, RouteLink } from "./links"
-import { useIsSmallDevice } from "../hooks/useIsSmallDevice"
+import { ButtonRouteLink, RouteLink } from "app/core/components/links"
+import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import { feedbackOptions } from "app/project/components/FeedbackEditor/Header"
 import { CategoryType } from "app/project/store/FeedbackEditorContext"
 
-const RoadmapHeader = () => {
+const RoadmapHeader: React.FC<{ projectName: string; brandColor: string }> = ({
+  projectName,
+  brandColor,
+}) => {
   const {
     info: { name, description, dueTo, id, progress, slug },
     setInfo,
@@ -65,9 +68,9 @@ const RoadmapHeader = () => {
             <RouteLink href={Routes.ProjectLandingPage({ slug: projectSlug })}>
               <Avatar
                 src="broken"
-                alt={name}
+                alt={projectName}
                 sx={{
-                  // bgcolor: color,
+                  bgcolor: brandColor,
                   width: avatarSize,
                   height: avatarSize,
                   fontSize: 32,
