@@ -12,7 +12,7 @@ const FeedbackPage: BlitzPage<ProjectPageProps> = ({
 }: ProjectPageProps) => {
   return (
     <Grid container spacing={1} sx={{ marginTop: 1 }}>
-      <FeedbackListHeader />
+      <FeedbackListHeader projectSlug={slug} role={role} />
       <Grid item xs={12}>
         <Suspense fallback={<FeedbackListPlaceholder />}>
           <FeedbackList slug={slug} role={role} />

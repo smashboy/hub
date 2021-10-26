@@ -168,3 +168,7 @@ export const GetChangelogFeedback = z.object({
   changelogId: z.number(),
   projectSlug: z.string(),
 })
+
+export const GetFeedbackSearchOptions = z.object({
+  projectSlug: z.string(),
+})

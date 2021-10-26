@@ -31,8 +31,8 @@ const ProjectMiniLayout: React.FC<LayoutProps & ProjectPageProps> = ({
                       alt={name}
                       sx={{
                         bgcolor: color,
-                        width: avatarSize,
-                        height: avatarSize,
+                        width: 45,
+                        height: 45,
                         fontSize: 32,
                         marginRight: 3,
                       }}
