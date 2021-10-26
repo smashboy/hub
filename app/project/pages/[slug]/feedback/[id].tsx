@@ -7,6 +7,7 @@ import { getProjectInfo, getFeedback, FeedbackPageProps } from "app/project/help
 import getAbility from "app/guard/queries/getAbility"
 import { Suspense } from "react"
 import FeedbackMessagesList from "app/project/components/FeedbackMessagesList"
+import { FeedbackMessageCategory } from "db"
 
 const SelectedFeedbackPage: BlitzPage<FeedbackPageProps> = ({
   project: { slug },
@@ -24,12 +25,17 @@ const SelectedFeedbackPage: BlitzPage<FeedbackPageProps> = ({
     }
   )
 
-  const [selectedMessagesCategory, setSelectedMessagesCategory] = useState(1)
+  const [selectedMessagesCategory, setSelectedMessagesCategory] = useState<FeedbackMessageCategory>(
+    FeedbackMessageCategory.PUBLIC
+  )
 
   const canReadPrivateMessages = res?.[0]?.can || false
   const canManageSettings = res?.[1]?.can || false
 
-  const handleSelectMessagesCategory = (event: React.SyntheticEvent, newValue: number) => {
+  const handleSelectMessagesCategory = (
+    event: React.SyntheticEvent,
+    newValue: FeedbackMessageCategory
+  ) => {
     setSelectedMessagesCategory(newValue)
   }
 
@@ -43,16 +49,13 @@ const SelectedFeedbackPage: BlitzPage<FeedbackPageProps> = ({
           {canReadPrivateMessages && (
             <Grid item xs={12}>
               <Tabs value={selectedMessagesCategory} onChange={handleSelectMessagesCategory}>
-                <Tab value={1} label="Public" />
-                <Tab value={0} label="Private" />
+                <Tab value={FeedbackMessageCategory.PUBLIC} label="Public" />
+                <Tab value={FeedbackMessageCategory.INTERNAL} label="Internal" />
               </Tabs>
             </Grid>
           )}
           <Suspense fallback={null}>
-            <FeedbackMessagesList
-              feedbackId={feedback.id}
-              isPublic={Boolean(selectedMessagesCategory)}
-            />
+            <FeedbackMessagesList feedbackId={feedback.id} category={selectedMessagesCategory} />
           </Suspense>
         </Grid>
       </Grid>

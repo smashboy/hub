@@ -1,4 +1,4 @@
-import { FeedbackCategory, FeedbackStatus, ProjectMemberRole } from "db"
+import { FeedbackCategory, FeedbackMessageCategory, FeedbackStatus, ProjectMemberRole } from "db"
 import * as z from "zod"
 
 export const projectName = z
@@ -69,10 +69,16 @@ export const UpdateFeedbackStatus = z.object({
   ]),
 })
 
+const feedbackMessageCategory = z.enum([
+  FeedbackMessageCategory.INTERNAL,
+  FeedbackMessageCategory.PUBLIC,
+  FeedbackMessageCategory.PRIVATE,
+])
+
 export const CreateFeedbackMessage = z.object({
   feedbackId: z.number(),
   content: z.string(),
-  isPublic: z.boolean(),
+  category: feedbackMessageCategory,
 })
 
 export const UpdateFeedbackMessage = z.object({
@@ -84,7 +90,7 @@ export const DeleteFeedbcakMessage = UpdateFeedbackMessage.omit({ content: true 
 
 export const GetFeedbackMessages = z.object({
   feedbackId: z.number(),
-  isPublic: z.boolean(),
+  category: feedbackMessageCategory,
 })
 
 export const UpvoteFeedback = z.object({

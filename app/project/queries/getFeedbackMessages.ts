@@ -12,10 +12,10 @@ import { GetFeedbackMessages } from "../validations"
 export default resolver.pipe(
   resolver.zod(GetFeedbackMessages),
   Guard.authorizePipe("read", "feedback.messages"),
-  async ({ feedbackId, isPublic }) => {
+  async ({ feedbackId, category }) => {
     const messages = await db.projectFeedbackMessage.findMany({
       where: {
-        isPublic,
+        category,
         feedbackId,
       },
       orderBy: {
