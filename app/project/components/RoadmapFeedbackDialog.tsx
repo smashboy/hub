@@ -134,7 +134,7 @@ const RoadmapFeedbackDialog = ({}) => {
             <Grid item xs={6} md="auto">
               <ButtonRouteLink
                 variant="contained"
-                color="inherit"
+                color="secondary"
                 fullWidth={isSM}
                 href={Routes.SelectedFeedbackPage({ slug: projectSlug, id: contentId })}
               >

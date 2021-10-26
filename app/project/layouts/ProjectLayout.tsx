@@ -104,7 +104,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                       <ButtonWebLink
                         href={websiteUrl}
                         variant="contained"
-                        color="inherit"
+                        color="secondary"
                         size="small"
                         endIcon={<OpenIcon />}
                         fullWidth
@@ -122,7 +122,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                           })}
                           variant="contained"
                           size="small"
-                          color="inherit"
+                          color="secondary"
                           endIcon={<SettingsIcon />}
                           fullWidth
                         >

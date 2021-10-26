@@ -171,7 +171,7 @@ const ManageMembersSettings: React.FC<ManageMembersSettingsProps> = ({ members, 
           <Grid container item xs={12} md={2} alignItems="center">
             <Button
               variant="contained"
-              color="inherit"
+              color="secondary"
               endIcon={<ArrowIcon />}
               disableElevation
               fullWidth
