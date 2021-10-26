@@ -1,5 +1,5 @@
 import { Link, Routes } from "blitz"
-import { ListItem, ListItemText, Fade, Box, Grid } from "@mui/material"
+import { ListItem, ListItemText, Fade, Box, Grid, LinearProgress, Typography } from "@mui/material"
 import { format } from "date-fns"
 
 type RoadmapListItemProps = {
@@ -9,11 +9,12 @@ type RoadmapListItemProps = {
     description: string | null
     slug: string
     dueTo: Date | null
+    progress: number
   }
 }
 
 const RoadmapListItem: React.FC<RoadmapListItemProps> = ({
-  roadmap: { name, description, slug, dueTo },
+  roadmap: { name, description, slug, dueTo, progress },
   projectSlug,
 }) => {
   return (
@@ -32,6 +33,18 @@ const RoadmapListItem: React.FC<RoadmapListItemProps> = ({
                   )}
                   <Grid item xs={12}>
                     {dueTo ? `Due by ${format(dueTo, "dd MMMM, yyyy")}` : "No due date"}
+                  </Grid>
+                  <Grid container item xs={12} md={3} spacing={1} sx={{ paddingTop: 1 }}>
+                    <Grid item xs={12}>
+                      <LinearProgress value={progress} variant="determinate" />
+                    </Grid>
+                    <Grid container item xs={12} justifyContent="flex-end">
+                      <Typography
+                        variant="subtitle2"
+                        color="text.secondary"
+                        component="div"
+                      >{`${progress}% done`}</Typography>
+                    </Grid>
                   </Grid>
                 </Grid>
               }

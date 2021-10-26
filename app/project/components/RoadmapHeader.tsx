@@ -97,20 +97,18 @@ const RoadmapHeader: React.FC<{ projectName: string; brandColor: string }> = ({
                 {dueTo ? `Due by ${format(dueTo, "dd MMMM, yyyy")}` : "No due date"}
               </Typography>
             </Grid>
-            {progress !== null && (
-              <Grid container item xs={12} md={6} spacing={1} sx={{ paddingTop: 1 }}>
-                <Grid item xs={12}>
-                  <LinearProgress value={progress} variant="determinate" />
-                </Grid>
-                <Grid container item xs={12} justifyContent="flex-end">
-                  <Typography
-                    variant="subtitle2"
-                    color="text.secondary"
-                    component="div"
-                  >{`${progress}% done`}</Typography>
-                </Grid>
+            <Grid container item xs={12} md={6} spacing={1} sx={{ paddingTop: 1 }}>
+              <Grid item xs={12}>
+                <LinearProgress value={progress} variant="determinate" />
               </Grid>
-            )}
+              <Grid container item xs={12} justifyContent="flex-end">
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  component="div"
+                >{`${progress}% done`}</Typography>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid container item xs={12} md={3} alignItems="center">
             <TextField

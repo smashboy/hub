@@ -127,7 +127,7 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
             <Grid item xs={9}>
               <TextField
                 onChange={handleSearchInput}
-                label={` Filter by ${buttonText.toLowerCase()}`}
+                label={`Filter by ${buttonText.toLowerCase()}`}
                 size="small"
                 fullWidth
               />

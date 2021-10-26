@@ -24,15 +24,15 @@ const ProjectMiniLayout: React.FC<LayoutProps & ProjectPageProps> = ({
           <Container>
             <Fade in timeout={350}>
               <Grid container>
-                <Grid container item xs={2} md={1}>
+                <Grid container item xs={2} md={1} alignItems="center">
                   <RouteLink href={Routes.ProjectLandingPage({ slug })}>
                     <Avatar
                       src="broken"
                       alt={name}
                       sx={{
                         bgcolor: color,
-                        width: 45,
-                        height: 45,
+                        width: avatarSize,
+                        height: avatarSize,
                         fontSize: 32,
                         marginRight: 3,
                       }}

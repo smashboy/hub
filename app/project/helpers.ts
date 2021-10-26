@@ -70,12 +70,13 @@ export interface MembersSettingsPageProps extends ProjectPageProps {
 }
 
 export interface RoadmapsPageProps extends ProjectPageProps {
-  roadmaps: {
+  roadmaps: Array<{
     name: string
     description: string | null
     slug: string
     dueTo: Date | null
-  }[]
+    progress: number
+  }>
 }
 
 export type RoadmapFeedback = {
@@ -333,10 +334,34 @@ export const getProjectRoadmaps = async (
       description: true,
       slug: true,
       dueTo: true,
+      feedback: {
+        select: {
+          content: {
+            select: {
+              status: true,
+            },
+          },
+        },
+      },
     },
   })
 
-  return { roadmaps }
+  return {
+    roadmaps: roadmaps.map(({ feedback, ...otherProps }) => {
+      const totalCount = feedback.length
+
+      const closedFeedbackCount = feedback.filter(
+        ({ content: { status } }) =>
+          status === FeedbackStatus.BLOCKED ||
+          status === FeedbackStatus.CANCELED ||
+          status === FeedbackStatus.COMPLETED
+      ).length
+
+      const progress = countProgress(totalCount, closedFeedbackCount)
+
+      return { ...otherProps, progress }
+    }),
+  }
 }
 
 export const getProjectRoadmap = async (

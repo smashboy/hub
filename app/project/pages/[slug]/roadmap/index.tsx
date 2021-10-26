@@ -5,16 +5,23 @@ import ProjectLayout from "app/project/layouts/ProjectLayout"
 import { ButtonRouteLink } from "app/core/components/links"
 import RoadmapListItem from "app/project/components/RoadmapListItem"
 import { ProjectMemberRole } from "db"
+import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 
 const RoadmapsPage: BlitzPage<RoadmapsPageProps> = ({
   project: { slug, role },
   roadmaps,
 }: RoadmapsPageProps) => {
+  const isSM = useIsSmallDevice()
+
   return (
-    <Grid container spacing={2} sx={{ marginTop: 2 }}>
+    <Grid container spacing={1} sx={{ marginTop: 1 }}>
       {role && role !== ProjectMemberRole.MEMBER && (
-        <Grid item xs={12}>
-          <ButtonRouteLink href={Routes.NewRoadmapPage({ slug })} variant="contained" fullWidth>
+        <Grid container item xs={12} justifyContent="flex-end">
+          <ButtonRouteLink
+            href={Routes.NewRoadmapPage({ slug })}
+            variant="contained"
+            fullWidth={isSM}
+          >
             New Roadmap
           </ButtonRouteLink>
         </Grid>
