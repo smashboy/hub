@@ -13,20 +13,27 @@ import CancelIcon from "@mui/icons-material/Close"
 import PaperBox from "app/core/components/PaperBox"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import deleteProjectInvite from "../mutations/deleteProjectInvite"
+import InviteMembersDialog from "./InviteMembersDialog"
+import { useMemberInvitesDialog } from "../store/MemberInvitesDialogContext"
+
+export type Invites = Array<{
+  id: number
+  user: {
+    username: string
+    email: string
+    avatarUrl: string | null
+  }
+}>
 
 type ManageInvitesSettingsProps = {
   slug: string
-  invites: Array<{
-    id: number
-    user: {
-      username: string
-      email: string
-      avatarUrl: string | null
-    }
-  }>
+  name: string
+  invites: Invites
 }
 
-const ManageInvitesSettings: React.FC<ManageInvitesSettingsProps> = ({ invites, slug }) => {
+const ManageInvitesSettings: React.FC<ManageInvitesSettingsProps> = ({ invites, slug, name }) => {
+  const { open, setClose } = useMemberInvitesDialog()
+
   const [deleteProjectInviteMutation] = useCustomMutation(deleteProjectInvite, {
     successNotification: "Invite has been canceled!",
   })
@@ -112,30 +119,48 @@ const ManageInvitesSettings: React.FC<ManageInvitesSettingsProps> = ({ invites, 
     setRows(updatedRows)
   }
 
+  const handleProjectInvites = (newInvites: Invites) => {
+    const newRows = newInvites.map(({ id, user: { username, email } }) => ({
+      id,
+      username,
+      email,
+    }))
+    setRows((prevState) => [...prevState, ...newRows])
+  }
+
   return (
-    <PaperBox title="Pending invites" sx={{ height: 400, paddingBottom: 9 }}>
-      <Grid container sx={{ height: "100%" }} spacing={1}>
-        <Grid item xs={12}>
-          <TextField
-            variant="outlined"
-            size="small"
-            label="Search"
-            onChange={handleSearch}
-            fullWidth
-          />
+    <>
+      <PaperBox title="Pending invites" sx={{ height: 400, paddingBottom: 9 }}>
+        <Grid container sx={{ height: "100%" }} spacing={1}>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              size="small"
+              label="Search"
+              onChange={handleSearch}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sx={{ height: "100%" }}>
+            <DataGrid
+              columns={columns}
+              rows={rows}
+              filterModel={filterModel}
+              autoPageSize
+              disableColumnMenu
+              disableSelectionOnClick
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} sx={{ height: "100%" }}>
-          <DataGrid
-            columns={columns}
-            rows={rows}
-            filterModel={filterModel}
-            autoPageSize
-            disableColumnMenu
-            disableSelectionOnClick
-          />
-        </Grid>
-      </Grid>
-    </PaperBox>
+      </PaperBox>
+      <InviteMembersDialog
+        open={open}
+        onClose={setClose}
+        name={name}
+        slug={slug}
+        onSubmit={handleProjectInvites}
+      />
+    </>
   )
 }
 

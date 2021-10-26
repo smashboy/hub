@@ -1,15 +1,15 @@
 import { ProjectMemberRole } from "db"
 import { BlitzPage, getSession, GetServerSideProps } from "blitz"
-import { Grid, Divider, Typography, Button, Fade } from "@mui/material"
+import { Grid, Typography, Button, Fade } from "@mui/material"
 import ColorPicker from "app/core/components/ColorPicker"
 import Form from "app/core/components/Form"
 import LabeledTextField from "app/core/components/LabeledTextField"
 import PaperBox from "app/core/components/PaperBox"
-import SwitchField from "app/core/components/SwitchField"
+// import SwitchField from "app/core/components/SwitchField"
 import { authConfig } from "app/core/configs/authConfig"
 import { getProjectInfo, ProjectPageProps } from "app/project/helpers"
 import ProjectSettingsLayout from "app/project/layouts/ProjectSettingsLayout"
-import { UpdateProject, UpdateIsProjectPrivateDanger } from "app/project/validations"
+import { UpdateProject } from "app/project/validations"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import updateGeneralSettings from "app/project/mutations/updateGeneralSettings"
 import updateIsPrivateSetting from "app/project/mutations/updateIsPrivateSetting"
@@ -21,9 +21,9 @@ const SettingsPage: BlitzPage<ProjectPageProps> = ({
     successNotification: "General settings has been updated successfully!",
   })
 
-  const [updateIsPrivateSettingMutation] = useCustomMutation(updateIsPrivateSetting, {
-    successNotification: "Privacy visibility setting has been updated successfully!",
-  })
+  // const [updateIsPrivateSettingMutation] = useCustomMutation(updateIsPrivateSetting, {
+  //   successNotification: "Privacy visibility setting has been updated successfully!",
+  // })
 
   return (
     <Grid container spacing={2}>
@@ -64,7 +64,7 @@ const SettingsPage: BlitzPage<ProjectPageProps> = ({
         <Grid item xs={12}>
           <PaperBox title="Danger Zone" dangerZone>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <Form
                   schema={UpdateIsProjectPrivateDanger.omit({ slug: true })}
                   submitText="Update"
@@ -83,10 +83,10 @@ const SettingsPage: BlitzPage<ProjectPageProps> = ({
                     helperMessage="Will this project be publicly available. Changing this option will effect project accessibility for your users."
                   />
                 </Form>
-              </Grid>
-              <Grid item xs={12}>
+              </Grid> */}
+              {/* <Grid item xs={12}>
                 <Divider />
-              </Grid>
+              </Grid> */}
               <Grid container item xs={12}>
                 <Grid container item xs={12} md={9}>
                   <Grid item xs={12}>

@@ -3,19 +3,19 @@ import { Grid, Fade } from "@mui/material"
 import { getProjectInfo, getProjectRoadmap, RoadmapPageProps } from "app/project/helpers"
 import RoadmapBoard from "app/project/components/RoadmapBoard"
 import { RoadmapProvider } from "app/project/store/RoadmapContext"
-import RoadmapHeader from "app/core/components/RoadmapHeader"
+import RoadmapHeader from "../../../../components/RoadmapHeader"
 import Layout from "app/core/layouts/Layout"
 
 const RoadmapPage: BlitzPage<RoadmapPageProps> = ({
   roadmap,
-  project: { slug: projectSlug, role },
+  project: { slug: projectSlug, role, name, color },
 }: RoadmapPageProps) => {
   return (
     <RoadmapProvider projectSlug={projectSlug} roadmap={roadmap} memberRole={role}>
       <Grid container rowSpacing={2} sx={{ marginTop: 2 }}>
         <Fade in timeout={500}>
           <Grid item xs={12}>
-            <RoadmapHeader />
+            <RoadmapHeader projectName={name} brandColor={color} />
           </Grid>
         </Fade>
         <Fade in timeout={750}>

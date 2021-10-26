@@ -21,8 +21,21 @@ export default resolver.pipe(
             },
           },
         },
+        select: {
+          id: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+              email: true,
+              avatarUrl: true,
+            },
+          },
+        },
       })
     )
-    await db.$transaction(queries)
+    const newInvites = await db.$transaction(queries)
+
+    return newInvites
   }
 )

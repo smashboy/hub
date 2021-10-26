@@ -72,11 +72,11 @@ const NewProjectPage: BlitzPage = () => {
                 rows={4}
                 maxRows={4}
               />
-              <SwitchField
+              {/* <SwitchField
                 label="Private project"
                 name="isPrivate"
                 helperMessage="Will this project be publicly available."
-              />
+              /> */}
             </Form>
           </Container>
         </Fade>

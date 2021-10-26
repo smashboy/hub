@@ -17,19 +17,26 @@ export const checkEmailVerification = async (ctx: Ctx) => {
   return user!.isEmailVerified
 }
 
-export const checkFeedbackSettingsManagePermissions = async (slug: string, userId: number) => {
-  const member = await db.projectMember.findFirst({
+export const checkModeratorPersmissions = async (slug: string, userId: number) => {
+  const project = await db.project.findFirst({
     where: {
-      AND: [
-        {
-          project: {
-            slug,
-          },
-        },
-        {
-          userId,
-        },
-      ],
+      slug,
+    },
+    select: {
+      id: true,
+    },
+  })
+
+  if (!project) return false
+
+  const { id: projectId } = project
+
+  const member = await db.projectMember.findUnique({
+    where: {
+      projectId_userId: {
+        projectId,
+        userId,
+      },
     },
     select: {
       role: true,
@@ -38,22 +45,29 @@ export const checkFeedbackSettingsManagePermissions = async (slug: string, userI
 
   if (!member) return false
 
-  return true
+  return member.role !== ProjectMemberRole.MEMBER
 }
 
-export const checkGeneralSettingsManagePersmissions = async (slug: string, userId: number) => {
-  const member = await db.projectMember.findFirst({
+export const checkAdminPersmissions = async (slug: string, userId: number) => {
+  const project = await db.project.findFirst({
     where: {
-      AND: [
-        {
-          project: {
-            slug,
-          },
-        },
-        {
-          userId,
-        },
-      ],
+      slug,
+    },
+    select: {
+      id: true,
+    },
+  })
+
+  if (!project) return false
+
+  const { id: projectId } = project
+
+  const member = await db.projectMember.findUnique({
+    where: {
+      projectId_userId: {
+        projectId,
+        userId,
+      },
     },
     select: {
       role: true,

@@ -10,7 +10,7 @@ interface FeedbackMessageEditor extends FeedbackMessagesListProps {
 
 const FeedbackMessageEditor: React.FC<FeedbackMessageEditor> = ({
   feedbackId,
-  isPublic,
+  category,
   refetch,
 }) => {
   const [createFeedbackMessageMutation] = useCustomMutation(createFeedbackMessage, {})
@@ -18,7 +18,7 @@ const FeedbackMessageEditor: React.FC<FeedbackMessageEditor> = ({
   const handleCreateNewMessage = async (content: Descendant[]) => {
     await createFeedbackMessageMutation({
       feedbackId,
-      isPublic,
+      category,
       content: JSON.stringify({ content }),
     })
     refetch()

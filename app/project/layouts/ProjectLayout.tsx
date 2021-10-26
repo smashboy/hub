@@ -37,17 +37,17 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
 
   return (
     <Layout title={title}>
-      <Grid container spacing={2} sx={{ marginTop: 1 }}>
+      <Grid container rowSpacing={1} sx={{ marginTop: 1 }}>
         <Grid item xs={12}>
           <Container maxWidth="md">
-            <Grid container>
+            <Grid container rowSpacing={1}>
               <Fade in timeout={350}>
                 <Grid container>
-                  <Grid container item xs={3} md={2} justifyContent="flex-end">
+                  <Grid container item xs={3} md={2} justifyContent="flex-end" alignItems="center">
                     <Avatar
                       src="broken"
                       alt={name}
-                      sx={{ bgcolor: color, width: 75, height: 75, fontSize: 32, marginRight: 3 }}
+                      sx={{ bgcolor: color, width: 65, height: 65, fontSize: 32, marginRight: 3 }}
                     />
                   </Grid>
                   <Grid container item xs={9} md={10} alignItems="flex-start">
@@ -67,7 +67,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                 </Grid>
               </Fade>
               <Fade in timeout={500}>
-                <Grid container item xs={12} spacing={1} sx={{ marginTop: 2 }}>
+                <Grid container item xs={12} spacing={1}>
                   {user && (
                     <Grid item xs={12} md={3}>
                       <ButtonRouteLink
@@ -104,7 +104,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                       <ButtonWebLink
                         href={websiteUrl}
                         variant="contained"
-                        color="inherit"
+                        color="secondary"
                         size="small"
                         endIcon={<OpenIcon />}
                         fullWidth
@@ -122,7 +122,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                           })}
                           variant="contained"
                           size="small"
-                          color="inherit"
+                          color="secondary"
                           endIcon={<SettingsIcon />}
                           fullWidth
                         >

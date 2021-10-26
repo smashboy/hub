@@ -35,12 +35,7 @@ const ProjectsList: React.FC<{ searchQuery: string }> = ({ searchQuery }) => {
         </List>
       )),
       item: VirtualListItem,
-      Footer: () =>
-        isFetchingNextPage ? (
-          <Box width="100%" display="flex" justifyContent="center" p={2}>
-            <LoadingAnimation />
-          </Box>
-        ) : null,
+      Footer: () => (isFetchingNextPage ? <LoadingAnimation padding={0} /> : null),
     }),
     [isFetchingNextPage]
   )

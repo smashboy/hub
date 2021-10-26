@@ -48,6 +48,7 @@ const FeedbackEditorHeader = () => {
             value={category}
             onChange={handleCategory}
             fullWidth
+            autoComplete="off"
             select
           >
             {feedbackOptions.map(({ label, value }) => (

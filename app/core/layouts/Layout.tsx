@@ -97,7 +97,7 @@ const AuthNavigation = () => {
           <MenuItem onClick={handleCloseMenu}>
             <ListItemText primary="Your feedback" />
           </MenuItem>
-          <Divider variant="middle" />
+          {/* <Divider variant="middle" /> */}
           <Link href={Routes.NewProjectPage()} passHref>
             <MenuItem onClick={handleCloseMenu} component="a">
               <ListItemIcon>
@@ -106,13 +106,13 @@ const AuthNavigation = () => {
               <ListItemText primary="New project" />
             </MenuItem>
           </Link>
-          <MenuItem onClick={handleCloseMenu}>
+          {/* <MenuItem onClick={handleCloseMenu}>
             <ListItemIcon>
               <SettingsIcon color="primary" />
             </ListItemIcon>
             <ListItemText primary="Account settings" />
-          </MenuItem>
-          <Divider variant="middle" />
+          </MenuItem> */}
+          {/* <Divider variant="middle" /> */}
           <MenuItem
             onClick={async () => {
               await logoutMutation()

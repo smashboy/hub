@@ -11,24 +11,27 @@ import { authConfig } from "app/core/configs/authConfig"
 import ProjectSettingsLayout from "app/project/layouts/ProjectSettingsLayout"
 import ManageMembersSettings from "app/project/components/ManageMembersSettings"
 import ManageProjectInvites from "app/project/components/ManageProjectInvites"
+import { MemberInvitesDialogProvider } from "app/project/store/MemberInvitesDialogContext"
 
 const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
   memberSettings: { members, invites },
   project: { slug, name },
 }: MembersSettingsPageProps) => {
   return (
-    <Grid container spacing={2}>
-      <Fade in timeout={500}>
-        <Grid item xs={12}>
-          <ManageMembersSettings members={members} slug={slug} name={name} />
-        </Grid>
-      </Fade>
-      <Fade in timeout={750}>
-        <Grid item xs={12}>
-          <ManageProjectInvites invites={invites} slug={slug} />
-        </Grid>
-      </Fade>
-    </Grid>
+    <MemberInvitesDialogProvider>
+      <Grid container spacing={2}>
+        <Fade in timeout={500}>
+          <Grid item xs={12}>
+            <ManageMembersSettings members={members} slug={slug} name={name} />
+          </Grid>
+        </Fade>
+        <Fade in timeout={750}>
+          <Grid item xs={12}>
+            <ManageProjectInvites invites={invites} slug={slug} name={name} />
+          </Grid>
+        </Fade>
+      </Grid>
+    </MemberInvitesDialogProvider>
   )
 }
 

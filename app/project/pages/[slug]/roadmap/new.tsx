@@ -56,7 +56,7 @@ const NewRoadmapPage: BlitzPage = ({ project: { slug } }: ProjectPageProps) => {
                 }
               }}
             >
-              <LabeledTextField label="Name *" name="name" size="small" />
+              <LabeledTextField label="Name *" name="name" size="small" autoComplete="off" />
               <LabeledDatePicker label="Due to" name="dueTo" textFieldProps={{ size: "small" }} />
               <LabeledTextField
                 label="Description"

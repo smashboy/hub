@@ -8,10 +8,11 @@ import useCustomMutation from "app/core/hooks/useCustomMutation"
 import updateFeedbackMessage from "../mutations/updateFeedbackMessage"
 import deleteFeedbackMessage from "../mutations/deleteFeedbackMessage"
 import { feedbackOptionsDrawerBleeding } from "./FeedbackEditor/FeedbackOptions"
+import { FeedbackMessageCategory } from "db"
 
 export interface FeedbackMessagesListProps {
   feedbackId: number
-  isPublic: boolean
+  category: FeedbackMessageCategory
 }
 
 // const getMessagesInput =
@@ -19,7 +20,7 @@ export interface FeedbackMessagesListProps {
 //   (page: GetFeedbackMessagesInput = { take: 10, skip: 0, feedbackId, isPublic }) =>
 //     page
 
-const FeedbackMessagesList: React.FC<FeedbackMessagesListProps> = ({ feedbackId, isPublic }) => {
+const FeedbackMessagesList: React.FC<FeedbackMessagesListProps> = ({ feedbackId, category }) => {
   const user = useCurrentUser()
 
   const [updateFeedbackMessageMutation] = useCustomMutation(updateFeedbackMessage, {
@@ -30,7 +31,7 @@ const FeedbackMessagesList: React.FC<FeedbackMessagesListProps> = ({ feedbackId,
 
   const [messages, { refetch }] = useQuery(getFeedbackMessages, {
     feedbackId,
-    isPublic,
+    category,
   })
 
   const handleUpdateMessage = async (id: number, content: string) => {
@@ -77,7 +78,7 @@ const FeedbackMessagesList: React.FC<FeedbackMessagesListProps> = ({ feedbackId,
       )}
       {user && (
         <Grid item xs={12}>
-          <FeedbackMessageEditor feedbackId={feedbackId} isPublic={isPublic} refetch={refetch} />
+          <FeedbackMessageEditor feedbackId={feedbackId} category={category} refetch={refetch} />
         </Grid>
       )}
     </Grid>

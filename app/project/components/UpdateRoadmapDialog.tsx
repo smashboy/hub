@@ -68,7 +68,7 @@ const UpdateRoadmapDialog: React.FC<UpdateRoadmapDialogProps> = ({
         }
       }}
     >
-      <LabeledTextField label="Name *" name="name" size="small" />
+      <LabeledTextField label="Name *" name="name" size="small" autoComplete="off" />
       <LabeledDatePicker label="Due to" name="dueTo" textFieldProps={{ size: "small" }} />
       <LabeledTextField label="Description" name="description" size="small" multiline rows={4} />
     </DialogForm>

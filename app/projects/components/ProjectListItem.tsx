@@ -39,8 +39,8 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({
           <ListItem alignItems="flex-start" component="a" button divider>
             <ListItemAvatar>
               <Avatar
-                src={logoUrl || ""}
-                alt="name"
+                src={logoUrl || "broken"}
+                alt={name}
                 sx={{ bgcolor: color, width: 45, height: 45 }}
               />
             </ListItemAvatar>

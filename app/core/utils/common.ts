@@ -35,3 +35,8 @@ export type ReturnAsync<T> = T extends Promise<infer U>
   : T extends (...args: any) => infer U
   ? U
   : T
+
+export type ArrayElement<ArrayType extends readonly unknown[]> =
+  ArrayType extends readonly (infer ElementType)[] ? ElementType : never
+
+export type PickSingleKeyValue<O, K extends keyof O> = Pick<O, K>[K]

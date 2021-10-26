@@ -18,6 +18,7 @@ import useCustomMutation from "app/core/hooks/useCustomMutation"
 import updateMemberRole from "app/project/mutations/updateMemberRole"
 import deleteProjectMember from "app/project/mutations/deleteProjectMember"
 import InviteMembersDialog from "./InviteMembersDialog"
+import { useMemberInvitesDialog } from "../store/MemberInvitesDialogContext"
 
 type ManageMembersSettingsProps = {
   slug: string
@@ -34,15 +35,16 @@ type ManageMembersSettingsProps = {
 }
 
 const ManageMembersSettings: React.FC<ManageMembersSettingsProps> = ({ members, slug, name }) => {
+  const { setOpen } = useMemberInvitesDialog()
+
   const [updateMemberRoleMutation] = useCustomMutation(updateMemberRole, {
     successNotification: "Member status has been updated successfully!",
   })
 
   const [deleteProjectMemberMutation] = useCustomMutation(deleteProjectMember, {
-    successNotification: "Member has been deleted successfully!",
+    successNotification: "Member has been removed successfully!",
   })
 
-  const [openNewMemberDialog, setOpenNewMemberDialog] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [debouncedSearchQuery] = useDebounce(searchQuery, 1000)
 
@@ -125,9 +127,6 @@ const ManageMembersSettings: React.FC<ManageMembersSettingsProps> = ({ members, 
     [rows]
   )
 
-  const handleOpenNewMemberDialog = () => setOpenNewMemberDialog(true)
-  const handleCloseNewMemberDialog = () => setOpenNewMemberDialog(false)
-
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) =>
     setSearchQuery(event.currentTarget.value)
 
@@ -172,7 +171,7 @@ const ManageMembersSettings: React.FC<ManageMembersSettingsProps> = ({ members, 
           <Grid container item xs={12} md={2} alignItems="center">
             <Button
               variant="contained"
-              color="inherit"
+              color="secondary"
               endIcon={<ArrowIcon />}
               disableElevation
               fullWidth
@@ -184,7 +183,7 @@ const ManageMembersSettings: React.FC<ManageMembersSettingsProps> = ({ members, 
             <Button
               variant="contained"
               color="primary"
-              onClick={handleOpenNewMemberDialog}
+              onClick={setOpen}
               disableElevation
               fullWidth
             >
@@ -206,12 +205,6 @@ const ManageMembersSettings: React.FC<ManageMembersSettingsProps> = ({ members, 
           </Grid>
         </Grid>
       </PaperBox>
-      <InviteMembersDialog
-        open={openNewMemberDialog}
-        onClose={handleCloseNewMemberDialog}
-        name={name}
-        slug={slug}
-      />
     </>
   )
 }

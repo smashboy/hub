@@ -17,12 +17,15 @@ import BuildChangelogIcon from "@mui/icons-material/LibraryBooks"
 import EditIcon from "@mui/icons-material/Edit"
 import UpdateRoadmapDialog from "app/project/components/UpdateRoadmapDialog"
 import { useRoadmap } from "app/project/store/RoadmapContext"
-import { ButtonRouteLink, RouteLink } from "./links"
-import { useIsSmallDevice } from "../hooks/useIsSmallDevice"
+import { ButtonRouteLink, RouteLink } from "app/core/components/links"
+import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import { feedbackOptions } from "app/project/components/FeedbackEditor/Header"
 import { CategoryType } from "app/project/store/FeedbackEditorContext"
 
-const RoadmapHeader = () => {
+const RoadmapHeader: React.FC<{ projectName: string; brandColor: string }> = ({
+  projectName,
+  brandColor,
+}) => {
   const {
     info: { name, description, dueTo, id, progress, slug },
     setInfo,
@@ -65,9 +68,9 @@ const RoadmapHeader = () => {
             <RouteLink href={Routes.ProjectLandingPage({ slug: projectSlug })}>
               <Avatar
                 src="broken"
-                alt={name}
+                alt={projectName}
                 sx={{
-                  // bgcolor: color,
+                  bgcolor: brandColor,
                   width: avatarSize,
                   height: avatarSize,
                   fontSize: 32,
@@ -94,20 +97,18 @@ const RoadmapHeader = () => {
                 {dueTo ? `Due by ${format(dueTo, "dd MMMM, yyyy")}` : "No due date"}
               </Typography>
             </Grid>
-            {progress !== null && (
-              <Grid container item xs={12} md={6} spacing={1} sx={{ paddingTop: 1 }}>
-                <Grid item xs={12}>
-                  <LinearProgress value={progress} variant="determinate" />
-                </Grid>
-                <Grid container item xs={12} justifyContent="flex-end">
-                  <Typography
-                    variant="subtitle2"
-                    color="text.secondary"
-                    component="div"
-                  >{`${progress}% done`}</Typography>
-                </Grid>
+            <Grid container item xs={12} md={6} spacing={1} sx={{ paddingTop: 1 }}>
+              <Grid item xs={12}>
+                <LinearProgress value={progress} variant="determinate" />
               </Grid>
-            )}
+              <Grid container item xs={12} justifyContent="flex-end">
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  component="div"
+                >{`${progress}% done`}</Typography>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid container item xs={12} md={3} alignItems="center">
             <TextField

@@ -177,14 +177,14 @@ model ProjectFeedback {
 }
 
 model ProjectFeedbackMessage {
-  id         Int             @id @default(autoincrement())
-  createdAt  DateTime        @default(now())
-  updatedAt  DateTime        @updatedAt
-  isPublic   Boolean         @default(true)
+  id         Int                     @id @default(autoincrement())
+  createdAt  DateTime                @default(now())
+  updatedAt  DateTime                @updatedAt
+  category   FeedbackMessageCategory @default(PUBLIC)
   content    String
-  author     User            @relation(fields: [userId], references: [id])
+  author     User                    @relation(fields: [userId], references: [id])
   userId     Int
-  feedback   ProjectFeedback @relation(fields: [feedbackId], references: [id])
+  feedback   ProjectFeedback         @relation(fields: [feedbackId], references: [id])
   feedbackId Int
 }
 
@@ -248,6 +248,12 @@ enum FeedbackStatus {
   COMPLETED
   PENDING
   DUPLICATE
+}
+
+enum FeedbackMessageCategory {
+  PUBLIC
+  PRIVATE
+  INTERNAL
 }
 
 enum ProjectMemberRole {

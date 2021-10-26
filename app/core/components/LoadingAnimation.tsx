@@ -1,6 +1,6 @@
 import { Box, CircularProgress } from "@mui/material"
 
-export const LoadingAnimation = () => {
+export const LoadingAnimation: React.FC<{ padding?: number }> = ({ padding }) => {
   return (
     <Box
       width="100%"
@@ -8,7 +8,7 @@ export const LoadingAnimation = () => {
       display="flex"
       justifyContent="center"
       alignItems="center"
-      paddingY={10}
+      paddingY={padding ?? 10}
     >
       <CircularProgress color="primary" />
     </Box>

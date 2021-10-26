@@ -13,6 +13,7 @@ import createChangelogFeedback from "app/project/mutations/createChangelogFeedba
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import ChangelogFeedbackDialog from "app/project/components/ChangelogFeedbackDialog"
 import { RatingIconContainer } from "app/project/components/RatingIconContainer"
+import { ProjectMemberRole } from "db"
 
 const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
   changelog: { title, content, createdAt, id, userRating },
@@ -89,7 +90,7 @@ const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
               </Grid>
             </Grid>
           </Fade>
-          {role && !editMode && (
+          {role && role !== ProjectMemberRole.MEMBER && !editMode && (
             <>
               <Grid item container xs={3} alignItems="center" justifyContent="flex-end">
                 <Button variant="contained" onClick={handleOpenFeedbackDialog}>
