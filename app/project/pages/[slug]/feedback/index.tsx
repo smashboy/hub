@@ -10,6 +10,7 @@ import FeedbackList from "app/project/components/FeedbackList"
 import FeedbackListPlaceholder from "app/project/components/FeedbackListPlaceholder"
 
 export type FeedbackFilterKey = "labels" | "members" | "roadmaps" | "searchQuery"
+export type FeedbackSortKey = "newest" | "oldest" | "upvoted-more" | "upvoted-less"
 
 export type FeedbackFilter = Partial<{
   [key in FeedbackFilterKey]: Prisma.ProjectFeedbackWhereInput
@@ -19,36 +20,37 @@ const _createFilter = (
   key: FeedbackFilterKey,
   ids: Array<string | number>
 ): Prisma.ProjectFeedbackWhereInput => {
-  if (key === "labels")
-    return {
-      labels: {
-        some: {
-          id: {
-            in: ids as string[],
+  switch (key) {
+    case "labels":
+      return {
+        labels: {
+          some: {
+            id: {
+              in: ids as string[],
+            },
           },
         },
-      },
-    }
-
-  if (key === "members")
-    return {
-      participants: {
-        some: {
-          id: {
-            in: ids as number[],
+      }
+    case "members":
+      return {
+        participants: {
+          some: {
+            id: {
+              in: ids as number[],
+            },
           },
         },
-      },
-    }
-
-  return {
-    roadmaps: {
-      some: {
-        id: {
-          in: ids as number[],
+      }
+    default:
+      return {
+        roadmaps: {
+          some: {
+            id: {
+              in: ids as number[],
+            },
+          },
         },
-      },
-    },
+      }
   }
 }
 
@@ -56,7 +58,8 @@ const FeedbackPage: BlitzPage<ProjectPageProps> = ({
   project: { slug, role },
 }: ProjectPageProps) => {
   const [filter, setFilter] = useState<FeedbackFilter>({})
-  const [debouncedFilter] = useDebounce(filter, 1000)
+  const [sortBy, setSortBy] = useState<FeedbackSortKey>("newest")
+  const [debouncedFilter] = useDebounce(filter, 500)
 
   const handleFilter = (key: FeedbackFilterKey) => (ids: Array<string | number>) => {
     const newFilter = { ...filter }
@@ -96,17 +99,20 @@ const FeedbackPage: BlitzPage<ProjectPageProps> = ({
     }
   }
 
+  const handleSort = (key: FeedbackSortKey) => setSortBy(key)
+
   return (
     <Grid container spacing={1} sx={{ marginTop: 1 }}>
       <FeedbackListHeader
         projectSlug={slug}
         role={role}
+        onSort={handleSort}
         onOptionsFilter={handleFilter}
         onSearchQueryFilter={handleSearchQuery}
       />
       <Grid item xs={12}>
         <Suspense fallback={<FeedbackListPlaceholder />}>
-          <FeedbackList slug={slug} role={role} filter={debouncedFilter} />
+          <FeedbackList slug={slug} role={role} filter={debouncedFilter} sortBy={sortBy} />
         </Suspense>
       </Grid>
     </Grid>
