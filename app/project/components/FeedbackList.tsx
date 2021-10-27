@@ -22,7 +22,7 @@ const _buildWhereInput = (filter: FeedbackFilter): Prisma.ProjectFeedbackWhereIn
   if (filters.length === 0) return
 
   return {
-    OR: filters,
+    AND: filters,
   }
 }
 
