@@ -1,18 +1,15 @@
 import db, { Prisma } from "db"
 import { resolver, paginate } from "blitz"
 
-export interface GetFeedbackListInput extends Pick<Prisma.ProjectFindManyArgs, "skip" | "take"> {
+export interface GetFeedbackListInput
+  extends Pick<Prisma.ProjectFeedbackFindManyArgs, "skip" | "take" | "where" | "orderBy"> {
   slug: string
-  searchQuery?: string
-}
-
-const orderBy: Prisma.ProjectFeedbackOrderByWithRelationInput = {
-  createdAt: "desc",
 }
 
 export default resolver.pipe(
-  async ({ skip = 0, take = 10, searchQuery, slug }: GetFeedbackListInput) => {
-    const where: Prisma.ProjectFeedbackWhereInput = {
+  async ({ skip = 0, take = 10, where, orderBy, slug }: GetFeedbackListInput) => {
+    where = {
+      ...where,
       projectSlug: slug,
     }
 

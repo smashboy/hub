@@ -35,6 +35,8 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
 
   const websiteHost = useMemo(() => (websiteUrl ? new URL(websiteUrl).host : null), [websiteUrl])
 
+  const avatarSize = useMemo(() => (isSM ? 55 : 65), [isSM])
+
   return (
     <Layout title={title}>
       <Grid container rowSpacing={1} sx={{ marginTop: 1 }}>
@@ -47,12 +49,18 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                     <Avatar
                       src="broken"
                       alt={name}
-                      sx={{ bgcolor: color, width: 65, height: 65, fontSize: 32, marginRight: 3 }}
+                      sx={{
+                        bgcolor: color,
+                        width: avatarSize,
+                        height: avatarSize,
+                        fontSize: 32,
+                        marginRight: 3,
+                      }}
                     />
                   </Grid>
                   <Grid container item xs={9} md={10} alignItems="flex-start">
                     <Grid item xs={12}>
-                      <Typography variant="h4" color="text.primary">
+                      <Typography variant={isSM ? "h5" : "h4"} color="text.primary">
                         {name}
                       </Typography>
                     </Grid>

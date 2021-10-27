@@ -1,10 +1,10 @@
-import { useState, Suspense, useEffect } from "react"
-import { SvgIcon, Menu, Button, TextField, ButtonProps, Grid, Divider } from "@mui/material"
+import { useState, useEffect, useMemo } from "react"
+import { SvgIcon, Button, ButtonProps, Grid, Badge } from "@mui/material"
 import { useDebounce } from "use-debounce"
-import LoadingAnimation from "../LoadingAnimation"
 import { ArrayElement, ReturnAsync } from "../../utils/common"
-import SearchDropdownList from "./List"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
+import SearchDropdownDialogList from "./DialogList"
+import SearchDropdownMenuList from "./MenuList"
 
 export interface Option {
   id: string | number
@@ -26,9 +26,20 @@ type SearchDropdownProps<I extends Object, F extends QueryFunc<I>> = {
   queryFunc: F
   renderOption: (item: ArrayElement<ReturnAsync<F>>) => Option
   mapQueryResultToSearchOptions: (item: ArrayElement<ReturnAsync<F>>) => SearchOption
-  multiSelect?: boolean
+  // multiSelect?: boolean
   onSubmit: (selected: Array<string | number>) => void
   buttonProps?: Omit<ButtonProps, "onClick" | "endIcon">
+}
+
+export type SearchDropdownListProps<I extends Object, F extends QueryFunc<I>> = {
+  queryFunc: F
+  projectSlug: string
+  selected: Array<string | number>
+  filtered: Array<string | number>
+  renderOption: (item: ArrayElement<ReturnAsync<F>>) => Option
+  onDataFetched: (items: Array<ArrayElement<ReturnAsync<F>>>) => void
+  onSelect: (id: string | number) => void
+  height?: string | number
 }
 
 const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
@@ -37,6 +48,7 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
   buttonProps,
   renderOption,
   queryFunc,
+  onSubmit,
   mapQueryResultToSearchOptions,
   projectSlug,
 }: SearchDropdownProps<I, F>) => {
@@ -45,22 +57,21 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
   const Icon = icon
 
   const [selected, setSelected] = useState<Array<string | number>>([])
+  const [applied, setApplied] = useState<Array<string | number>>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500)
   const [filtered, setFiltered] = useState<Array<string | number>>([])
   const [searchOptions, setSearchOptions] = useState<SearchOption[]>([])
   const [menuEl, setMenuEl] = useState<null | HTMLElement>(null)
 
-  const isOpen = Boolean(menuEl)
+  const open = useMemo(() => Boolean(menuEl), [menuEl])
+  const title = useMemo(() => `FeedbackFilter by ${buttonText.toLowerCase()}`, [buttonText])
 
-  useEffect(() => {
-    if (!isOpen) {
-      setSearchQuery("")
-      setFiltered([])
-      setSearchOptions([])
-      setSelected([])
-    }
-  }, [isOpen])
+  const disableApply = useMemo(() => {
+    if (selected.length === 0 && applied.length > 0) return false
+    if (selected.length === 0 && applied.length === 0) return true
+    return false
+  }, [selected, applied])
 
   useEffect(() => {
     const handleSearchQuery = () => {
@@ -79,9 +90,20 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
     handleSearchQuery()
   }, [debouncedSearchQuery])
 
-  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) =>
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setMenuEl(event.currentTarget)
-  const handleCloseMenu = () => setMenuEl(null)
+    setSelected(applied)
+  }
+
+  const handleCloseMenu = () => {
+    setMenuEl(null)
+    setTimeout(() => {
+      setSearchQuery("")
+      setFiltered([])
+      setSearchOptions([])
+      setSelected([])
+    }, 150)
+  }
 
   const handleSetSearchOptions = (items: Array<ArrayElement<ReturnAsync<F>>>) =>
     setSearchOptions(
@@ -98,70 +120,66 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
     setSelected([...selected, id])
   }
 
+  const handleApplyResults = () => {
+    onSubmit(selected)
+    setApplied(selected)
+    setSearchQuery("")
+    setMenuEl(null)
+    setFiltered([])
+    setSearchOptions([])
+  }
+
   return (
     <>
       <Grid item xs="auto">
-        <Button
-          variant="contained"
-          color="inherit"
-          disableElevation
-          {...buttonProps}
-          onClick={handleOpenMenu}
-          endIcon={isSM ? undefined : <Icon />}
-        >
-          {isSM ? <Icon /> : buttonText}
-        </Button>
+        <Badge badgeContent={applied.length} color="primary">
+          <Button
+            variant="contained"
+            color="inherit"
+            disableElevation
+            {...buttonProps}
+            onClick={handleOpenMenu}
+            endIcon={isSM ? undefined : <Icon />}
+          >
+            {isSM ? <Icon /> : buttonText}
+          </Button>
+        </Badge>
       </Grid>
-      <Menu
-        anchorEl={menuEl}
-        open={isOpen}
-        onClose={handleCloseMenu}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        // sx={{ ".MuiMenu-list": { maxWidth: 350 } }}
-      >
-        <Grid container rowSpacing={1}>
-          <Grid container item xs={12} columnSpacing={1} sx={{ paddingX: 1 }}>
-            <Grid item xs={9}>
-              <TextField
-                onChange={handleSearchInput}
-                label={`Filter by ${buttonText.toLowerCase()}`}
-                size="small"
-                fullWidth
-              />
-            </Grid>
-
-            <Grid container item xs={3} alignItems="center">
-              <Button
-                variant="contained"
-                disabled={selected.length === 0}
-                disableElevation
-                size="small"
-              >
-                Apply
-              </Button>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Divider variant="fullWidth" />
-          </Grid>
-          <Suspense fallback={<LoadingAnimation padding={0} />}>
-            <Grid item xs={12}>
-              <SearchDropdownList
-                queryFunc={queryFunc}
-                projectSlug={projectSlug}
-                renderOption={renderOption}
-                selected={selected}
-                filtered={filtered}
-                onDataFetched={handleSetSearchOptions}
-                onSelect={handleSelectItem}
-              />
-            </Grid>
-          </Suspense>
-        </Grid>
-      </Menu>
+      {!isSM && (
+        <SearchDropdownMenuList
+          anchorEl={menuEl}
+          open={open}
+          title={title}
+          onSearch={handleSearchInput}
+          onClose={handleCloseMenu}
+          queryFunc={queryFunc}
+          projectSlug={projectSlug}
+          renderOption={renderOption}
+          selected={selected}
+          disableSubmit={disableApply}
+          filtered={filtered}
+          onSubmit={handleApplyResults}
+          onDataFetched={handleSetSearchOptions}
+          onSelect={handleSelectItem}
+        />
+      )}
+      {isSM && (
+        <SearchDropdownDialogList
+          open={open}
+          title={title}
+          onSearch={handleSearchInput}
+          onClose={handleCloseMenu}
+          queryFunc={queryFunc}
+          projectSlug={projectSlug}
+          renderOption={renderOption}
+          selected={selected}
+          disableSubmit={disableApply}
+          filtered={filtered}
+          onSubmit={handleApplyResults}
+          onDataFetched={handleSetSearchOptions}
+          onSelect={handleSelectItem}
+        />
+      )}
     </>
   )
 }

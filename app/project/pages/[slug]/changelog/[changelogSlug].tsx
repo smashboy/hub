@@ -77,7 +77,7 @@ const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
       <Container maxWidth="md" disableGutters sx={{ marginTop: 3 }}>
         <Grid container spacing={2}>
           <Fade in timeout={350}>
-            <Grid container item xs={role ? 8 : 12} spacing={1}>
+            <Grid container item xs={12} md={role ? 8 : 12} spacing={1}>
               <Grid item xs={12}>
                 <Typography variant="h3" color="text.primary">
                   {title}
@@ -92,13 +92,18 @@ const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
           </Fade>
           {role && role !== ProjectMemberRole.MEMBER && !editMode && (
             <>
-              <Grid item container xs={3} alignItems="center" justifyContent="flex-end">
-                <Button variant="contained" onClick={handleOpenFeedbackDialog}>
+              <Grid item container xs={6} md={3} alignItems="center" justifyContent="flex-end">
+                <Button variant="contained" onClick={handleOpenFeedbackDialog} fullWidth>
                   User Feedback
                 </Button>
               </Grid>
-              <Grid item container xs={1} alignItems="center" justifyContent="flex-end">
-                <Button variant="contained" color="secondary" onClick={handleEditChangelog}>
+              <Grid item container xs={6} md={1} alignItems="center" justifyContent="flex-end">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleEditChangelog}
+                  fullWidth
+                >
                   Edit
                 </Button>
               </Grid>

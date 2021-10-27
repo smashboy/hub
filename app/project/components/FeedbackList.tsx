@@ -1,4 +1,4 @@
-import { ProjectMemberRole } from "db"
+import { ProjectMemberRole, Prisma } from "db"
 import { forwardRef, useMemo } from "react"
 import { useInfiniteQuery } from "blitz"
 import { Components, Virtuoso } from "react-virtuoso"
@@ -7,19 +7,67 @@ import VirtualListItem from "app/core/components/VirtualListItem"
 import LoadingAnimation from "app/core/components/LoadingAnimation"
 import getFeedbackList, { GetFeedbackListInput } from "../queries/getFeedbackList"
 import FeedbackListItem from "./FeedbackListItem"
+import { FeedbackFilter, FeedbackSortKey } from "../pages/[slug]/feedback"
+
+type FeedbackListProps = {
+  slug: string
+  role: ProjectMemberRole | null
+  filter: FeedbackFilter
+  sortBy: FeedbackSortKey
+}
+
+const _buildWhereInput = (filter: FeedbackFilter): Prisma.ProjectFeedbackWhereInput | undefined => {
+  const filters = Object.values(filter)
+
+  if (filters.length === 0) return
+
+  return {
+    OR: filters,
+  }
+}
+
+const _buildSortInput = (key: FeedbackSortKey): Prisma.ProjectFeedbackOrderByWithRelationInput => {
+  switch (key) {
+    case "oldest":
+      return {
+        createdAt: "asc",
+      }
+    case "upvoted-more":
+      return {
+        upvotedBy: {
+          _count: "desc",
+        },
+      }
+    case "upvoted-less":
+      return {
+        upvotedBy: {
+          _count: "asc",
+        },
+      }
+    default:
+      return {
+        createdAt: "desc",
+      }
+  }
+}
 
 const getFeedbackInput =
-  (slug: string) =>
-  (page: GetFeedbackListInput = { take: 10, skip: 0, slug }) =>
+  (slug: string, filter: FeedbackFilter, sortKey: FeedbackSortKey) =>
+  (
+    page: GetFeedbackListInput = {
+      take: 10,
+      skip: 0,
+      slug,
+      where: _buildWhereInput(filter),
+      orderBy: _buildSortInput(sortKey),
+    }
+  ) =>
     page
 
-const FeedbackList: React.FC<{ slug: string; role: ProjectMemberRole | null }> = ({
-  slug,
-  role,
-}) => {
+const FeedbackList: React.FC<FeedbackListProps> = ({ slug, role, filter, sortBy }) => {
   const [feedbackPages, { isFetchingNextPage, fetchNextPage, hasNextPage }] = useInfiniteQuery(
     getFeedbackList,
-    getFeedbackInput(slug),
+    getFeedbackInput(slug, filter, sortBy),
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
       refetchOnWindowFocus: false,
