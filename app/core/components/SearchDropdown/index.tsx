@@ -26,7 +26,7 @@ type SearchDropdownProps<I extends Object, F extends QueryFunc<I>> = {
   queryFunc: F
   renderOption: (item: ArrayElement<ReturnAsync<F>>) => Option
   mapQueryResultToSearchOptions: (item: ArrayElement<ReturnAsync<F>>) => SearchOption
-  multiSelect?: boolean
+  // multiSelect?: boolean
   onSubmit: (selected: Array<string | number>) => void
   buttonProps?: Omit<ButtonProps, "onClick" | "endIcon">
 }

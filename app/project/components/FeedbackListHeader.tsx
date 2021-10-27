@@ -48,7 +48,6 @@ const FeedbackListHeader: React.FC<{
                 id,
                 query: `${name} ${description ?? ""}`,
               })}
-              multiSelect
             />
             <SearchDropdown
               projectSlug={projectSlug}
@@ -64,7 +63,6 @@ const FeedbackListHeader: React.FC<{
                 id,
                 query: username,
               })}
-              multiSelect
             />
           </>
         )}
@@ -79,7 +77,6 @@ const FeedbackListHeader: React.FC<{
             primary: name,
           })}
           mapQueryResultToSearchOptions={({ id, name }) => ({ id, query: name })}
-          multiSelect
         />
         <Grid item xs="auto">
           <Button variant="contained" color="inherit" endIcon={<SortIcon />}>
