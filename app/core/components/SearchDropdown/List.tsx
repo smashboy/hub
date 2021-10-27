@@ -2,9 +2,8 @@ import { useMemo, forwardRef, useEffect } from "react"
 import { useQuery } from "blitz"
 import { Components, Virtuoso } from "react-virtuoso"
 import { List, Box, ListItemButton, ListItemIcon, Checkbox, ListItemText } from "@mui/material"
-import { Option, QueryFunc } from "./index"
+import { QueryFunc, SearchDropdownListProps } from "./index"
 import VirtualListItem from "../VirtualListItem"
-import { ArrayElement, ReturnAsync } from "app/core/utils/common"
 
 // export type GetFeedbackSearchOptionsInput = {
 //   projectSlug: string
@@ -12,16 +11,6 @@ import { ArrayElement, ReturnAsync } from "app/core/utils/common"
 //   take: number
 //   skip: number
 // }
-
-type SearchDropdownListProps<I extends Object, F extends QueryFunc<I>> = {
-  queryFunc: F
-  projectSlug: string
-  selected: Array<string | number>
-  filtered: Array<string | number>
-  renderOption: (item: ArrayElement<ReturnAsync<F>>) => Option
-  onDataFetched: (items: Array<ArrayElement<ReturnAsync<F>>>) => void
-  onSelect: (id: string | number) => void
-}
 
 const SearchDropdownList = <I extends Object, F extends QueryFunc<I>>({
   queryFunc,
@@ -31,6 +20,7 @@ const SearchDropdownList = <I extends Object, F extends QueryFunc<I>>({
   selected,
   onDataFetched,
   onSelect,
+  height,
 }: SearchDropdownListProps<I, F>) => {
   const [items] = useQuery(queryFunc, {
     projectSlug,
@@ -58,7 +48,8 @@ const SearchDropdownList = <I extends Object, F extends QueryFunc<I>>({
   return (
     <Box
       sx={{
-        height: "355px",
+        height: height || "355px",
+        // bgcolor: "red",
       }}
     >
       <Virtuoso
@@ -66,7 +57,7 @@ const SearchDropdownList = <I extends Object, F extends QueryFunc<I>>({
         components={Components}
         style={{ height: "100%" }}
         itemContent={(index, { id, primary, secondary }) => (
-          <ListItemButton onClick={() => onSelect(id)} key={id} divider dense>
+          <ListItemButton onClick={() => onSelect(id)} key={id} divider dense focusRipple={false}>
             <ListItemIcon>
               <Checkbox checked={selected.includes(id)} edge="start" tabIndex={-1} disableRipple />
             </ListItemIcon>

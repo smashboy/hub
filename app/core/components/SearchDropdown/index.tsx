@@ -1,10 +1,10 @@
-import { useState, Suspense, useEffect } from "react"
-import { SvgIcon, Menu, Button, TextField, ButtonProps, Grid, Divider } from "@mui/material"
+import { useState, useEffect } from "react"
+import { SvgIcon, Button, ButtonProps, Grid } from "@mui/material"
 import { useDebounce } from "use-debounce"
-import LoadingAnimation from "../LoadingAnimation"
 import { ArrayElement, ReturnAsync } from "../../utils/common"
-import SearchDropdownList from "./List"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
+import SearchDropdownDialogList from "./DialogList"
+import SearchDropdownMenuList from "./MenuList"
 
 export interface Option {
   id: string | number
@@ -31,6 +31,17 @@ type SearchDropdownProps<I extends Object, F extends QueryFunc<I>> = {
   buttonProps?: Omit<ButtonProps, "onClick" | "endIcon">
 }
 
+export type SearchDropdownListProps<I extends Object, F extends QueryFunc<I>> = {
+  queryFunc: F
+  projectSlug: string
+  selected: Array<string | number>
+  filtered: Array<string | number>
+  renderOption: (item: ArrayElement<ReturnAsync<F>>) => Option
+  onDataFetched: (items: Array<ArrayElement<ReturnAsync<F>>>) => void
+  onSelect: (id: string | number) => void
+  height?: string | number
+}
+
 const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
   buttonText,
   icon,
@@ -53,14 +64,7 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
 
   const isOpen = Boolean(menuEl)
 
-  useEffect(() => {
-    if (!isOpen) {
-      setSearchQuery("")
-      setFiltered([])
-      setSearchOptions([])
-      setSelected([])
-    }
-  }, [isOpen])
+  const title = `Filter by ${buttonText.toLowerCase()}`
 
   useEffect(() => {
     const handleSearchQuery = () => {
@@ -81,7 +85,13 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) =>
     setMenuEl(event.currentTarget)
-  const handleCloseMenu = () => setMenuEl(null)
+  const handleCloseMenu = () => {
+    setSearchQuery("")
+    setFiltered([])
+    setSearchOptions([])
+    setSelected([])
+    setMenuEl(null)
+  }
 
   const handleSetSearchOptions = (items: Array<ArrayElement<ReturnAsync<F>>>) =>
     setSearchOptions(
@@ -112,56 +122,39 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
           {isSM ? <Icon /> : buttonText}
         </Button>
       </Grid>
-      <Menu
-        anchorEl={menuEl}
-        open={isOpen}
-        onClose={handleCloseMenu}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        // sx={{ ".MuiMenu-list": { maxWidth: 350 } }}
-      >
-        <Grid container rowSpacing={1}>
-          <Grid container item xs={12} columnSpacing={1} sx={{ paddingX: 1 }}>
-            <Grid item xs={9}>
-              <TextField
-                onChange={handleSearchInput}
-                label={`Filter by ${buttonText.toLowerCase()}`}
-                size="small"
-                fullWidth
-              />
-            </Grid>
-
-            <Grid container item xs={3} alignItems="center">
-              <Button
-                variant="contained"
-                disabled={selected.length === 0}
-                disableElevation
-                size="small"
-              >
-                Apply
-              </Button>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Divider variant="fullWidth" />
-          </Grid>
-          <Suspense fallback={<LoadingAnimation padding={0} />}>
-            <Grid item xs={12}>
-              <SearchDropdownList
-                queryFunc={queryFunc}
-                projectSlug={projectSlug}
-                renderOption={renderOption}
-                selected={selected}
-                filtered={filtered}
-                onDataFetched={handleSetSearchOptions}
-                onSelect={handleSelectItem}
-              />
-            </Grid>
-          </Suspense>
-        </Grid>
-      </Menu>
+      {!isSM && (
+        <SearchDropdownMenuList
+          anchorEl={menuEl}
+          open={isOpen}
+          title={title}
+          onSearch={handleSearchInput}
+          onClose={handleCloseMenu}
+          queryFunc={queryFunc}
+          projectSlug={projectSlug}
+          renderOption={renderOption}
+          selected={selected}
+          disableSubmit={selected.length === 0}
+          filtered={filtered}
+          onDataFetched={handleSetSearchOptions}
+          onSelect={handleSelectItem}
+        />
+      )}
+      {isSM && (
+        <SearchDropdownDialogList
+          open={isOpen}
+          title={title}
+          onSearch={handleSearchInput}
+          onClose={handleCloseMenu}
+          queryFunc={queryFunc}
+          projectSlug={projectSlug}
+          renderOption={renderOption}
+          selected={selected}
+          disableSubmit={selected.length === 0}
+          filtered={filtered}
+          onDataFetched={handleSetSearchOptions}
+          onSelect={handleSelectItem}
+        />
+      )}
     </>
   )
 }

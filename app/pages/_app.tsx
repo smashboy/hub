@@ -38,7 +38,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 },
 
                 "::-webkit-scrollbar-thumb": {
-                  background: "#313c4e",
+                  background: "#ffffff",
                 },
               }}
             />
