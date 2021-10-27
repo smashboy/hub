@@ -10,6 +10,7 @@ export interface SearchDropdownDialogListProps<I extends Object, F extends Query
   title: string
   onSearch: (event: React.ChangeEvent<HTMLInputElement>) => void
   open: boolean
+  onSubmit: () => void
   onClose: () => void
   disableSubmit: boolean
 }
@@ -19,6 +20,7 @@ const SearchDropdownDialogList = <I extends Object, F extends QueryFunc<I>>({
   title,
   onClose,
   disableSubmit,
+  onSubmit,
   onSearch,
   ...otherProps
 }: SearchDropdownDialogListProps<I, F>) => {
@@ -39,7 +41,9 @@ const SearchDropdownDialogList = <I extends Object, F extends QueryFunc<I>>({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button disabled={disableSubmit}>Apply</Button>
+        <Button onClick={onSubmit} disabled={disableSubmit}>
+          Apply
+        </Button>
       </DialogActions>
     </Dialog>
   )

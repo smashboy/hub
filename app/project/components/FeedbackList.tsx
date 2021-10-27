@@ -1,4 +1,4 @@
-import { ProjectMemberRole } from "db"
+import { ProjectMemberRole, Prisma } from "db"
 import { forwardRef, useMemo } from "react"
 import { useInfiniteQuery } from "blitz"
 import { Components, Virtuoso } from "react-virtuoso"
@@ -7,19 +7,33 @@ import VirtualListItem from "app/core/components/VirtualListItem"
 import LoadingAnimation from "app/core/components/LoadingAnimation"
 import getFeedbackList, { GetFeedbackListInput } from "../queries/getFeedbackList"
 import FeedbackListItem from "./FeedbackListItem"
+import { FeedbackFilter } from "../pages/[slug]/feedback"
+
+type FeedbackListProps = {
+  slug: string
+  role: ProjectMemberRole | null
+  filter: FeedbackFilter
+}
+
+const _buildWhereInput = (filter: FeedbackFilter): Prisma.ProjectFeedbackWhereInput | undefined => {
+  const filters = Object.values(filter)
+
+  if (filters.length === 0) return
+
+  return {
+    OR: filters,
+  }
+}
 
 const getFeedbackInput =
-  (slug: string) =>
-  (page: GetFeedbackListInput = { take: 10, skip: 0, slug }) =>
+  (slug: string, filter: FeedbackFilter) =>
+  (page: GetFeedbackListInput = { take: 10, skip: 0, slug, where: _buildWhereInput(filter) }) =>
     page
 
-const FeedbackList: React.FC<{ slug: string; role: ProjectMemberRole | null }> = ({
-  slug,
-  role,
-}) => {
+const FeedbackList: React.FC<FeedbackListProps> = ({ slug, role, filter }) => {
   const [feedbackPages, { isFetchingNextPage, fetchNextPage, hasNextPage }] = useInfiniteQuery(
     getFeedbackList,
-    getFeedbackInput(slug),
+    getFeedbackInput(slug, filter),
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
       refetchOnWindowFocus: false,

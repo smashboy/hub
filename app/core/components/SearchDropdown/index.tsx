@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react"
-import { SvgIcon, Button, ButtonProps, Grid } from "@mui/material"
+import { useState, useEffect, useMemo } from "react"
+import { SvgIcon, Button, ButtonProps, Grid, Badge } from "@mui/material"
 import { useDebounce } from "use-debounce"
 import { ArrayElement, ReturnAsync } from "../../utils/common"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
@@ -48,6 +48,7 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
   buttonProps,
   renderOption,
   queryFunc,
+  onSubmit,
   mapQueryResultToSearchOptions,
   projectSlug,
 }: SearchDropdownProps<I, F>) => {
@@ -56,15 +57,21 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
   const Icon = icon
 
   const [selected, setSelected] = useState<Array<string | number>>([])
+  const [applied, setApplied] = useState<Array<string | number>>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500)
   const [filtered, setFiltered] = useState<Array<string | number>>([])
   const [searchOptions, setSearchOptions] = useState<SearchOption[]>([])
   const [menuEl, setMenuEl] = useState<null | HTMLElement>(null)
 
-  const isOpen = Boolean(menuEl)
+  const open = useMemo(() => Boolean(menuEl), [menuEl])
+  const title = useMemo(() => `FeedbackFilter by ${buttonText.toLowerCase()}`, [buttonText])
 
-  const title = `Filter by ${buttonText.toLowerCase()}`
+  const disableApply = useMemo(() => {
+    if (selected.length === 0 && applied.length > 0) return false
+    if (selected.length === 0 && applied.length === 0) return true
+    return false
+  }, [selected, applied])
 
   useEffect(() => {
     const handleSearchQuery = () => {
@@ -83,14 +90,19 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
     handleSearchQuery()
   }, [debouncedSearchQuery])
 
-  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) =>
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setMenuEl(event.currentTarget)
+    setSelected(applied)
+  }
+
   const handleCloseMenu = () => {
-    setSearchQuery("")
-    setFiltered([])
-    setSearchOptions([])
-    setSelected([])
     setMenuEl(null)
+    setTimeout(() => {
+      setSearchQuery("")
+      setFiltered([])
+      setSearchOptions([])
+      setSelected([])
+    }, 150)
   }
 
   const handleSetSearchOptions = (items: Array<ArrayElement<ReturnAsync<F>>>) =>
@@ -108,24 +120,35 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
     setSelected([...selected, id])
   }
 
+  const handleApplyResults = () => {
+    onSubmit(selected)
+    setApplied(selected)
+    setSearchQuery("")
+    setMenuEl(null)
+    setFiltered([])
+    setSearchOptions([])
+  }
+
   return (
     <>
       <Grid item xs="auto">
-        <Button
-          variant="contained"
-          color="inherit"
-          disableElevation
-          {...buttonProps}
-          onClick={handleOpenMenu}
-          endIcon={isSM ? undefined : <Icon />}
-        >
-          {isSM ? <Icon /> : buttonText}
-        </Button>
+        <Badge badgeContent={applied.length} color="primary">
+          <Button
+            variant="contained"
+            color="inherit"
+            disableElevation
+            {...buttonProps}
+            onClick={handleOpenMenu}
+            endIcon={isSM ? undefined : <Icon />}
+          >
+            {isSM ? <Icon /> : buttonText}
+          </Button>
+        </Badge>
       </Grid>
       {!isSM && (
         <SearchDropdownMenuList
           anchorEl={menuEl}
-          open={isOpen}
+          open={open}
           title={title}
           onSearch={handleSearchInput}
           onClose={handleCloseMenu}
@@ -133,15 +156,16 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
           projectSlug={projectSlug}
           renderOption={renderOption}
           selected={selected}
-          disableSubmit={selected.length === 0}
+          disableSubmit={disableApply}
           filtered={filtered}
+          onSubmit={handleApplyResults}
           onDataFetched={handleSetSearchOptions}
           onSelect={handleSelectItem}
         />
       )}
       {isSM && (
         <SearchDropdownDialogList
-          open={isOpen}
+          open={open}
           title={title}
           onSearch={handleSearchInput}
           onClose={handleCloseMenu}
@@ -149,8 +173,9 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
           projectSlug={projectSlug}
           renderOption={renderOption}
           selected={selected}
-          disableSubmit={selected.length === 0}
+          disableSubmit={disableApply}
           filtered={filtered}
+          onSubmit={handleApplyResults}
           onDataFetched={handleSetSearchOptions}
           onSelect={handleSelectItem}
         />

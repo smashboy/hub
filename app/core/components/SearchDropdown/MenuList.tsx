@@ -15,6 +15,7 @@ const SearchDropdownMenuList = <I extends Object, F extends QueryFunc<I>>({
   title,
   onClose,
   onSearch,
+  onSubmit,
   disableSubmit,
   anchorEl,
   ...otherProps
@@ -36,7 +37,13 @@ const SearchDropdownMenuList = <I extends Object, F extends QueryFunc<I>>({
             <TextField onChange={onSearch} label={title} size="small" fullWidth />
           </Grid>
           <Grid container item xs={3} alignItems="center">
-            <Button variant="contained" disabled={disableSubmit} disableElevation size="small">
+            <Button
+              onClick={onSubmit}
+              variant="contained"
+              disabled={disableSubmit}
+              disableElevation
+              size="small"
+            >
               Apply
             </Button>
           </Grid>

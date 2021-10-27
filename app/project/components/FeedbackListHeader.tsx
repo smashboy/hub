@@ -1,3 +1,4 @@
+import { ProjectMemberRole } from "db"
 import { Grid, Button, Chip } from "@mui/material"
 import RoadmapIcon from "@mui/icons-material/Map"
 import ParticipantsIcon from "@mui/icons-material/PeopleAlt"
@@ -9,18 +10,23 @@ import getFeedbackSearchLabelOptions from "../queries/getFeedbackSearchLabelOpti
 import getFeedbackSearchMemberOptions from "../queries/getFeedbackSearchMemberOptions"
 import getFeedbackSearchRoadmapOptions from "../queries/getFeedbackSearchRoadmapOptions"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
-import { ProjectMemberRole } from "db"
+import { FeedbackFilterKey } from "../pages/[slug]/feedback"
 
-const FeedbackListHeader: React.FC<{ projectSlug: string; role: ProjectMemberRole | null }> = ({
-  projectSlug,
-  role,
-}) => {
+const FeedbackListHeader: React.FC<{
+  projectSlug: string
+  role: ProjectMemberRole | null
+  onOptionsFilter: (key: FeedbackFilterKey) => (ids: Array<string | number>) => void
+  onSearchQueryFilter: (newQuery: string) => void
+}> = ({ projectSlug, role, onOptionsFilter, onSearchQueryFilter }) => {
   const isSM = useIsSmallDevice()
+
+  const handleSeach = (event: React.ChangeEvent<HTMLInputElement>) =>
+    onSearchQueryFilter(event.currentTarget.value)
 
   return (
     <Grid item container xs={12} spacing={1}>
       <Grid item xs={12}>
-        <SearchField placeholder="Search feedback..." />
+        <SearchField onChange={handleSeach} placeholder="Search feedback..." />
       </Grid>
       <Grid container item xs={12} spacing={1} justifyContent={isSM ? "center" : "flex-end"}>
         {role && (
@@ -29,7 +35,7 @@ const FeedbackListHeader: React.FC<{ projectSlug: string; role: ProjectMemberRol
               projectSlug={projectSlug}
               buttonText="Labels"
               icon={LabelIcon}
-              onSubmit={() => {}}
+              onSubmit={onOptionsFilter("labels")}
               queryFunc={getFeedbackSearchLabelOptions}
               renderOption={({ name, description, color, id }) => ({
                 id,
@@ -48,7 +54,7 @@ const FeedbackListHeader: React.FC<{ projectSlug: string; role: ProjectMemberRol
               projectSlug={projectSlug}
               buttonText="Members"
               icon={ParticipantsIcon}
-              onSubmit={() => {}}
+              onSubmit={onOptionsFilter("members")}
               queryFunc={getFeedbackSearchMemberOptions}
               renderOption={({ id, user: { username } }) => ({
                 id,
@@ -66,7 +72,7 @@ const FeedbackListHeader: React.FC<{ projectSlug: string; role: ProjectMemberRol
           projectSlug={projectSlug}
           buttonText="Roadmaps"
           icon={RoadmapIcon}
-          onSubmit={() => {}}
+          onSubmit={onOptionsFilter("roadmaps")}
           queryFunc={getFeedbackSearchRoadmapOptions}
           renderOption={({ id, name }) => ({
             id,
