@@ -65,7 +65,7 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
   const [menuEl, setMenuEl] = useState<null | HTMLElement>(null)
 
   const open = useMemo(() => Boolean(menuEl), [menuEl])
-  const title = useMemo(() => `FeedbackFilter by ${buttonText.toLowerCase()}`, [buttonText])
+  const title = useMemo(() => `Filter by ${buttonText.toLowerCase()}`, [buttonText])
 
   const disableApply = useMemo(() => {
     if (selected.length === 0 && applied.length > 0) return false

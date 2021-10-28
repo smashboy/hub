@@ -4,10 +4,10 @@ import { useInfiniteQuery } from "blitz"
 import { Components, Virtuoso } from "react-virtuoso"
 import { List, Box } from "@mui/material"
 import VirtualListItem from "app/core/components/VirtualListItem"
-import LoadingAnimation from "app/core/components/LoadingAnimation"
 import getFeedbackList, { GetFeedbackListInput } from "../queries/getFeedbackList"
 import FeedbackListItem from "./FeedbackListItem"
 import { FeedbackFilter, FeedbackSortKey } from "../pages/[slug]/feedback"
+import { LoadingButton } from "@mui/lab"
 
 type FeedbackListProps = {
   slug: string
@@ -22,7 +22,7 @@ const _buildWhereInput = (filter: FeedbackFilter): Prisma.ProjectFeedbackWhereIn
   if (filters.length === 0) return
 
   return {
-    OR: filters,
+    AND: filters,
   }
 }
 
@@ -53,16 +53,16 @@ const _buildSortInput = (key: FeedbackSortKey): Prisma.ProjectFeedbackOrderByWit
 
 const getFeedbackInput =
   (slug: string, filter: FeedbackFilter, sortKey: FeedbackSortKey) =>
-  (
-    page: GetFeedbackListInput = {
-      take: 10,
-      skip: 0,
+  (newPage: Partial<GetFeedbackListInput> = { take: 10, skip: 0 }): GetFeedbackListInput => {
+    const page: GetFeedbackListInput = {
+      ...newPage,
       slug,
       where: _buildWhereInput(filter),
       orderBy: _buildSortInput(sortKey),
     }
-  ) =>
-    page
+
+    return page
+  }
 
 const FeedbackList: React.FC<FeedbackListProps> = ({ slug, role, filter, sortBy }) => {
   const [feedbackPages, { isFetchingNextPage, fetchNextPage, hasNextPage }] = useInfiniteQuery(
@@ -89,18 +89,20 @@ const FeedbackList: React.FC<FeedbackListProps> = ({ slug, role, filter, sortBy 
       )),
       item: VirtualListItem,
       Footer: () =>
-        isFetchingNextPage ? (
-          <Box width="100%" display="flex" justifyContent="center" p={2}>
-            <LoadingAnimation />
-          </Box>
+        hasNextPage ? (
+          <LoadingButton
+            onClick={() => fetchNextPage()}
+            variant="outlined"
+            loading={isFetchingNextPage}
+            fullWidth
+            sx={{ marginTop: 1 }}
+          >
+            Load More
+          </LoadingButton>
         ) : null,
     }),
-    [isFetchingNextPage]
+    [isFetchingNextPage, hasNextPage, fetchNextPage]
   )
-
-  const handleFetchNext = () => {
-    if (hasNextPage) fetchNextPage()
-  }
 
   return (
     <Box
@@ -112,7 +114,6 @@ const FeedbackList: React.FC<FeedbackListProps> = ({ slug, role, filter, sortBy 
       <Virtuoso
         data={feedback}
         components={Components}
-        endReached={handleFetchNext}
         style={{ height: "100%" }}
         itemContent={(_, feedback) => (
           <FeedbackListItem key={feedback.id} slug={slug} role={role} feedback={feedback} />

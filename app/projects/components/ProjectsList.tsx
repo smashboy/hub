@@ -6,12 +6,11 @@ import VirtualListItem from "app/core/components/VirtualListItem"
 import getProjects, { GetProjectsInput } from "../queries/getProjects"
 import ProjectListItem from "./ProjectListItem"
 import { useDebounce } from "use-debounce"
-import LoadingAnimation from "app/core/components/LoadingAnimation"
+import { LoadingButton } from "@mui/lab"
 
 const getProjectsInput =
   (searchQuery?: string) =>
-  (page: GetProjectsInput = { take: 10, skip: 0, searchQuery }) =>
-    page
+  (page: GetProjectsInput = { take: 10, skip: 0 }) => ({ ...page, searchQuery })
 
 const ProjectsList: React.FC<{ searchQuery: string }> = ({ searchQuery }) => {
   const [debouncedSearchQuery] = useDebounce(searchQuery, 1000)
@@ -35,14 +34,21 @@ const ProjectsList: React.FC<{ searchQuery: string }> = ({ searchQuery }) => {
         </List>
       )),
       item: VirtualListItem,
-      Footer: () => (isFetchingNextPage ? <LoadingAnimation padding={0} /> : null),
+      Footer: () =>
+        hasNextPage ? (
+          <LoadingButton
+            onClick={() => fetchNextPage()}
+            variant="outlined"
+            loading={isFetchingNextPage}
+            fullWidth
+            sx={{ marginTop: 1 }}
+          >
+            Load More
+          </LoadingButton>
+        ) : null,
     }),
-    [isFetchingNextPage]
+    [isFetchingNextPage, hasNextPage, fetchNextPage]
   )
-
-  const handleFetchNext = () => {
-    if (hasNextPage) fetchNextPage()
-  }
 
   return (
     <Box
@@ -53,7 +59,6 @@ const ProjectsList: React.FC<{ searchQuery: string }> = ({ searchQuery }) => {
       <Virtuoso
         data={projects}
         components={Components}
-        endReached={handleFetchNext}
         style={{ height: "100%" }}
         itemContent={(index, project) => (
           <ProjectListItem
