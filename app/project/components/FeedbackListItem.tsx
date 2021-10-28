@@ -15,7 +15,7 @@ import { formatRelative } from "date-fns"
 
 type FeedbackListItemProps = {
   slug: string
-  role: ProjectMemberRole | null
+  role?: ProjectMemberRole | null
   feedback: {
     id: number
     title: string

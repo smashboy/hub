@@ -94,9 +94,11 @@ const AuthNavigation = () => {
               <ListItemText primary="Your projects" />
             </MenuItem>
           </Link>
-          <MenuItem onClick={handleCloseMenu}>
-            <ListItemText primary="Your feedback" />
-          </MenuItem>
+          <Link href={Routes.AuthUserFeedbackPage()} passHref>
+            <MenuItem onClick={handleCloseMenu}>
+              <ListItemText primary="Your feedback" />
+            </MenuItem>
+          </Link>
           {/* <Divider variant="middle" /> */}
           <Link href={Routes.NewProjectPage()} passHref>
             <MenuItem onClick={handleCloseMenu} component="a">
