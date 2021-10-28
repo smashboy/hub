@@ -3,16 +3,14 @@ import { useInfiniteQuery } from "blitz"
 import { Components, Virtuoso } from "react-virtuoso"
 import { Global } from "@emotion/react"
 import { Box, CssBaseline } from "@mui/material"
-import { Timeline } from "@mui/lab"
+import { LoadingButton, Timeline } from "@mui/lab"
 import VirtualListItem from "app/core/components/VirtualListItem"
-import LoadingAnimation from "app/core/components/LoadingAnimation"
 import getChangelogList, { GetChangelogListInput } from "../queries/getChangelogList"
 import ChangelogListItem from "./ChangelogListItem"
 
 const getChangelogInput =
   (slug: string) =>
-  (page: GetChangelogListInput = { take: 10, skip: 0, slug }) =>
-    page
+  (page: Partial<GetChangelogListInput> = { take: 1, skip: 0 }) => ({ ...page, slug })
 
 const ChangelogList: React.FC<{ slug: string }> = ({ slug }) => {
   const [feedbackPages, { isFetchingNextPage, fetchNextPage, hasNextPage }] = useInfiniteQuery(
@@ -38,18 +36,20 @@ const ChangelogList: React.FC<{ slug: string }> = ({ slug }) => {
       )),
       item: VirtualListItem,
       Footer: () =>
-        isFetchingNextPage ? (
-          <Box width="100%" display="flex" justifyContent="center" p={2}>
-            <LoadingAnimation />
-          </Box>
+        hasNextPage ? (
+          <LoadingButton
+            onClick={() => fetchNextPage()}
+            variant="outlined"
+            loading={isFetchingNextPage}
+            fullWidth
+            sx={{ marginTop: 1 }}
+          >
+            Load More
+          </LoadingButton>
         ) : null,
     }),
-    [isFetchingNextPage]
+    [isFetchingNextPage, hasNextPage, fetchNextPage]
   )
-
-  const handleFetchNext = () => {
-    if (hasNextPage) fetchNextPage()
-  }
 
   return (
     <Box
@@ -73,7 +73,6 @@ const ChangelogList: React.FC<{ slug: string }> = ({ slug }) => {
       <Virtuoso
         data={changelogs}
         components={Components}
-        endReached={handleFetchNext}
         style={{ height: "100%" }}
         itemContent={(_, changelog) => (
           <ChangelogListItem key={changelog.slug} projectSlug={slug} changelog={changelog} />

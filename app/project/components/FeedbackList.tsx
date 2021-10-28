@@ -4,7 +4,6 @@ import { useInfiniteQuery } from "blitz"
 import { Components, Virtuoso } from "react-virtuoso"
 import { List, Box } from "@mui/material"
 import VirtualListItem from "app/core/components/VirtualListItem"
-import LoadingAnimation from "app/core/components/LoadingAnimation"
 import getFeedbackList, { GetFeedbackListInput } from "../queries/getFeedbackList"
 import FeedbackListItem from "./FeedbackListItem"
 import { FeedbackFilter, FeedbackSortKey } from "../pages/[slug]/feedback"
@@ -54,7 +53,7 @@ const _buildSortInput = (key: FeedbackSortKey): Prisma.ProjectFeedbackOrderByWit
 
 const getFeedbackInput =
   (slug: string, filter: FeedbackFilter, sortKey: FeedbackSortKey) =>
-  (newPage: Partial<GetFeedbackListInput> = { take: 2, skip: 0 }): GetFeedbackListInput => {
+  (newPage: Partial<GetFeedbackListInput> = { take: 10, skip: 0 }): GetFeedbackListInput => {
     const page: GetFeedbackListInput = {
       ...newPage,
       slug,

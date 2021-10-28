@@ -9,48 +9,47 @@ export default resolver.pipe(
   async ({ skip = 0, take = 10, searchQuery }: GetProjectsInput, ctx) => {
     const authUserId = ctx.session.userId!
 
-    let where: Prisma.ProjectWhereInput = {
-      OR: [
-        {
-          members: {
-            some: {
-              userId: authUserId,
-            },
+    const defaultQuery = [
+      {
+        members: {
+          some: {
+            userId: authUserId,
           },
         },
-        {
-          followers: {
-            some: {
-              id: authUserId,
-            },
+      },
+      {
+        followers: {
+          some: {
+            id: authUserId,
           },
         },
-      ],
-    }
+      },
+    ]
 
-    where = searchQuery
-      ? {
-          ...where,
-          ...{
+    const searchQueryOptions = searchQuery
+      ? [
+          {
             OR: [
-              // @ts-ignore
-              ...where.OR!,
               {
                 name: {
                   contains: searchQuery,
-                  mode: "insensitive",
+                  mode: "insensitive" as Prisma.QueryMode,
                 },
               },
               {
                 description: {
                   contains: searchQuery,
-                  mode: "insensitive",
+                  mode: "insensitive" as Prisma.QueryMode,
                 },
               },
             ],
           },
-        }
-      : where
+        ]
+      : []
+
+    const where: Prisma.ProjectWhereInput = {
+      AND: [{ OR: defaultQuery }, ...searchQueryOptions],
+    }
 
     const {
       items: projects,
