@@ -10,7 +10,7 @@ import getAuthFeedbackList, { GetAuthFeedbackListInput } from "../queries/getAut
 import FeedbackListItem from "app/project/components/FeedbackListItem"
 import FeedbackListPlaceholder from "app/project/components/FeedbackListPlaceholder"
 
-const getAuthFeedbackInput = (page: GetAuthFeedbackListInput = { take: 10, skip: 0 }) => page
+const getAuthFeedbackInput = (page: GetAuthFeedbackListInput = { take: 15, skip: 0 }) => page
 
 const FeedbackList = () => {
   const [feedbackPages, { isFetchingNextPage, fetchNextPage, hasNextPage }] = useInfiniteQuery(
