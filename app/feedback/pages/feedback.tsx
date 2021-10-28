@@ -81,11 +81,11 @@ const AuthUserFeedbackPage: BlitzPage = () => {
           </Typography>
         </Fade>
       </Grid>
-      <Suspense fallback={<FeedbackListPlaceholder />}>
-        <Grid item xs={12}>
+      <Grid item xs={12}>
+        <Suspense fallback={<FeedbackListPlaceholder />}>
           <FeedbackList />
-        </Grid>
-      </Suspense>
+        </Suspense>
+      </Grid>
     </Grid>
   )
 }
