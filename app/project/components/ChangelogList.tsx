@@ -10,7 +10,7 @@ import ChangelogListItem from "./ChangelogListItem"
 
 const getChangelogInput =
   (slug: string) =>
-  (page: Partial<GetChangelogListInput> = { take: 1, skip: 0 }) => ({ ...page, slug })
+  (page: Partial<GetChangelogListInput> = { take: 10, skip: 0 }) => ({ ...page, slug })
 
 const ChangelogList: React.FC<{ slug: string }> = ({ slug }) => {
   const [feedbackPages, { isFetchingNextPage, fetchNextPage, hasNextPage }] = useInfiniteQuery(
