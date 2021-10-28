@@ -63,7 +63,7 @@ const AuthNavigation = () => {
                 Projects
               </RouteLink>
               <RouteLink
-                href="/feedback"
+                href={Routes.AuthUserFeedbackPage()}
                 variant="button"
                 color="#fff"
                 sx={{ marginRight: 3 }}
