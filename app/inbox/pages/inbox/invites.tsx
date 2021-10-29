@@ -48,7 +48,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
   const invites = await db.projectInvite.findMany({
     where: {
-      userId: authUserId,
+      notifications: {
+        user: {
+          id: authUserId,
+        },
+      },
     },
     select: {
       id: true,

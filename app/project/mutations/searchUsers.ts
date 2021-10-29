@@ -31,16 +31,26 @@ export default resolver.pipe(
         },
       },
       select: {
-        user: {
+        notifications: {
           select: {
-            id: true,
+            user: {
+              select: {
+                id: true,
+              },
+            },
           },
         },
       },
     })
 
     const membersUserIds = members.map(({ user: { id } }) => id)
-    const pendingInvitesUsersId = pendingInvites.map(({ user: { id } }) => id)
+    const pendingInvitesUsersId = pendingInvites.map(
+      ({
+        notifications: {
+          user: { id },
+        },
+      }) => id
+    )
 
     let users = await db.user.findMany({
       where: {
@@ -56,7 +66,7 @@ export default resolver.pipe(
           },
           {
             email: {
-              contains: query,
+              equals: query,
               mode: "insensitive",
             },
           },

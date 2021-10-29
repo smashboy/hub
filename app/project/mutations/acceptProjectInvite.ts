@@ -13,14 +13,27 @@ export default resolver.pipe(
       },
       select: {
         projectId: true,
-        userId: true,
+        notifications: {
+          select: {
+            user: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
       },
     })
 
     // TODO: message
     if (!invite) return
 
-    const { projectId, userId } = invite
+    const {
+      projectId,
+      notifications: {
+        user: { id: userId },
+      },
+    } = invite
 
     await db.projectMember.create({
       data: {

@@ -10,9 +10,18 @@ export default resolver.pipe(
     const queries = usersId.map((userId) =>
       db.projectInvite.create({
         data: {
-          user: {
-            connect: {
-              id: userId,
+          notifications: {
+            connectOrCreate: {
+              where: {
+                userId,
+              },
+              create: {
+                user: {
+                  connect: {
+                    id: userId,
+                  },
+                },
+              },
             },
           },
           project: {
@@ -23,12 +32,16 @@ export default resolver.pipe(
         },
         select: {
           id: true,
-          user: {
+          notifications: {
             select: {
-              id: true,
-              username: true,
-              email: true,
-              avatarUrl: true,
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  email: true,
+                  avatarUrl: true,
+                },
+              },
             },
           },
         },
@@ -36,6 +49,6 @@ export default resolver.pipe(
     )
     const newInvites = await db.$transaction(queries)
 
-    return newInvites
+    return newInvites.map(({ notifications: { user }, ...otherProps }) => ({ ...otherProps, user }))
   }
 )
