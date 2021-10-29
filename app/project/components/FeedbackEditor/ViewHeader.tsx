@@ -87,7 +87,7 @@ const FeedbackViewHeader = () => {
                 <Button
                   onClick={() => setReadOnly(false)}
                   variant="contained"
-                  color="inherit"
+                  color="secondary"
                   fullWidth
                 >
                   Edit

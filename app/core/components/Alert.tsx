@@ -6,7 +6,7 @@ export const Alert: React.FC<
 > = ({ children, show, onClose, closable, action, ...otherProps }) => {
   const AlertAction = () =>
     closable ? (
-      <IconButton aria-label="close" color="inherit" size="small" onClick={onClose}>
+      <IconButton aria-label="close" color="secondary" size="small" onClick={onClose}>
         <CloseIcon fontSize="inherit" />
       </IconButton>
     ) : action ? (

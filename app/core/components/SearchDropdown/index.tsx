@@ -135,7 +135,7 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
         <Badge badgeContent={applied.length} color="primary">
           <Button
             variant="contained"
-            color="inherit"
+            color="secondary"
             disableElevation
             {...buttonProps}
             onClick={handleOpenMenu}

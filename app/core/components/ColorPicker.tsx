@@ -58,7 +58,7 @@ const ColorPickerInput: React.FC<{
           <Box display="flex" alignItems="center">
             <Box mr={1}>
               <ArrowTooltip title="Random color">
-                <IconButton onClick={handleRandomColor} size="small" color="inherit">
+                <IconButton onClick={handleRandomColor} size="small" color="secondary">
                   <RandomIcon />
                 </IconButton>
               </ArrowTooltip>

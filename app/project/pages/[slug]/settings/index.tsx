@@ -101,7 +101,7 @@ const SettingsPage: BlitzPage<ProjectPageProps> = ({
                   </Grid>
                 </Grid>
                 <Grid container item xs={12} md={3} alignItems="center">
-                  <Button variant="outlined" color="inherit" fullWidth>
+                  <Button variant="outlined" color="secondary" fullWidth>
                     Delete
                   </Button>
                 </Grid>

@@ -62,7 +62,7 @@ const Editor = () => {
           {editVariant ? (
             <Grid container item xs={12} spacing={1} justifyContent="flex-end">
               <Grid item xs={4} md={2}>
-                <Button onClick={onCancel} variant="contained" color="inherit" fullWidth>
+                <Button onClick={onCancel} variant="contained" color="secondary" fullWidth>
                   Cancel
                 </Button>
               </Grid>
