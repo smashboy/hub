@@ -54,7 +54,7 @@ const LayoutNavigationItem: React.FC<LayoutNavigationItemProps> = ({
                 top: "50%",
                 right: 25,
                 color: isActiveRoute ? "text.primary" : undefined,
-                bgcolor: isActiveRoute ? "background.default" : "primary.main",
+                bgcolor: isActiveRoute ? "background.default" : "secondary.main",
               },
             }}
           />

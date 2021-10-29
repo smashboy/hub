@@ -7,6 +7,7 @@ import { authConfig } from "app/core/configs/authConfig"
 import InboxLayout from "app/inbox/layout/InboxLayout"
 import ProjectInviteItem from "app/inbox/components/ProjectInviteItem"
 import NotificationItemWrapper from "app/inbox/components/NotificationItemWrapper"
+import NotificationsHeader from "app/inbox/components/NotificationsHeader"
 
 type InboxInvitesPageProps = {
   invites: Array<{
@@ -29,14 +30,21 @@ const InboxInvitesPage: BlitzPage<InboxInvitesPageProps> = (props: InboxInvitesP
     setInvites(invites.filter((invite) => invite.id !== id))
 
   return (
-    <Grid container spacing={2}>
-      <Timeline sx={{ paddingRight: 0 }}>
-        {invites.map((invite) => (
-          <NotificationItemWrapper key={invite.id} id={invite.id} createdAt={invite.createdAt}>
-            <ProjectInviteItem key={invite.id} invite={invite} onActionDone={handleFilterInvites} />
-          </NotificationItemWrapper>
-        ))}
-      </Timeline>
+    <Grid container rowSpacing={1}>
+      <NotificationsHeader />
+      <Grid item xs={12}>
+        <Timeline sx={{ paddingX: 0, margin: 0 }}>
+          {invites.map((invite) => (
+            <NotificationItemWrapper key={invite.id} id={invite.id} createdAt={invite.createdAt}>
+              <ProjectInviteItem
+                key={invite.id}
+                invite={invite}
+                onActionDone={handleFilterInvites}
+              />
+            </NotificationItemWrapper>
+          ))}
+        </Timeline>
+      </Grid>
     </Grid>
   )
 }
