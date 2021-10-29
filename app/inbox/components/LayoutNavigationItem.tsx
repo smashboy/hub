@@ -3,6 +3,7 @@ import { SvgIcon, Grid, Box, Badge } from "@mui/material"
 import { ButtonRouteLink } from "app/core/components/links"
 import useNotificationsCounter from "../hooks/useNotificationsCounter"
 import { useMemo } from "react"
+import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 
 type LayoutNavigationItemProps = {
   href: RouteUrlObject | string
@@ -21,6 +22,8 @@ const LayoutNavigationItem: React.FC<LayoutNavigationItemProps> = ({
 }) => {
   const router = useRouter()
 
+  const isSM = useIsSmallDevice()
+
   const isActiveRoute = router.pathname === pathname
 
   const [notifications] = useNotificationsCounter(false)
@@ -35,39 +38,41 @@ const LayoutNavigationItem: React.FC<LayoutNavigationItemProps> = ({
   const Icon = icon
 
   return (
-    <Grid item xs={12}>
+    <Grid item xs={2} md={12}>
       <ButtonRouteLink
         href={href}
         fullWidth
         variant={isActiveRoute ? "contained" : "text"}
         color="primary"
         disableElevation
-        startIcon={<Icon fontSize="large" />}
+        startIcon={isSM ? null : <Icon fontSize="large" />}
         endIcon={
-          <Badge
-            badgeContent={notificationsCounter}
-            color="primary"
-            max={999}
-            sx={{
-              position: "static",
-              ".MuiBadge-badge": {
-                top: "50%",
-                right: 25,
-                color: isActiveRoute ? "text.primary" : undefined,
-                bgcolor: isActiveRoute ? "background.default" : "secondary.main",
-              },
-            }}
-          />
+          isSM ? null : (
+            <Badge
+              badgeContent={notificationsCounter}
+              color="primary"
+              max={999}
+              sx={{
+                position: "static",
+                ".MuiBadge-badge": {
+                  top: "50%",
+                  right: 25,
+                  color: isActiveRoute ? "text.primary" : undefined,
+                  bgcolor: isActiveRoute ? "background.default" : "secondary.main",
+                },
+              }}
+            />
+          )
         }
         sx={{
           textTransform: "none",
-          justifyContent: "flex-start",
+          justifyContent: isSM ? undefined : "flex-start",
           paddingX: 2,
           position: "relative",
         }}
         size="large"
       >
-        {label}
+        {isSM ? <Icon /> : label}
       </ButtonRouteLink>
     </Grid>
   )

@@ -1,5 +1,5 @@
 import { Routes } from "blitz"
-import { Grid, Paper, Fade, Container, Divider } from "@mui/material"
+import { Grid, Paper, Fade, Container, Divider, Hidden } from "@mui/material"
 import InboxIcon from "@mui/icons-material/Inbox"
 import InviteIcon from "@mui/icons-material/PersonAdd"
 import SavedIcon from "@mui/icons-material/BookmarkBorder"
@@ -33,9 +33,11 @@ const InboxLayout: React.FC<LayoutProps> = ({ title, children }) => {
                     pathname="/inbox/changelogs"
                     icon={ChangelogIcon}
                   />
-                  <Grid item xs={12}>
-                    <Divider />
-                  </Grid>
+                  <Hidden smDown>
+                    <Grid item xs={12}>
+                      <Divider />
+                    </Grid>
+                  </Hidden>
                   <LayoutNavigationItem
                     href={Routes.InboxAllPage()}
                     label="All"
@@ -48,9 +50,11 @@ const InboxLayout: React.FC<LayoutProps> = ({ title, children }) => {
                     pathname="/inbox/saved"
                     icon={SavedIcon}
                   />
-                  <Grid item xs={12}>
-                    <Divider />
-                  </Grid>
+                  <Hidden smDown>
+                    <Grid item xs={12}>
+                      <Divider />
+                    </Grid>
+                  </Hidden>
 
                   <LayoutNavigationItem
                     href={Routes.InboxInvitesPage()}
