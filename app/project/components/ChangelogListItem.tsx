@@ -24,7 +24,13 @@ const ChangelogListItem: React.FC<ChangelogListItemProps> = ({
 }) => {
   return (
     <Fade in timeout={500}>
-      <TimelineItem>
+      <TimelineItem
+        sx={{
+          "&:before": {
+            flex: "none!important",
+          },
+        }}
+      >
         <TimelineSeparator>
           <TimelineConnector />
           <TimelineDot />

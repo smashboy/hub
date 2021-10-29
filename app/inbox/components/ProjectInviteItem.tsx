@@ -62,7 +62,7 @@ const ProjectInviteItem: React.FC<ProjectInviteItemProps> = ({
       <Paper sx={{ padding: 1 }}>
         <Grid container spacing={1} alignItems="center">
           <Grid container item xs={12} md={8}>
-            <Grid container item xs={2} justifyContent="center" alignItems="center">
+            <Grid container item xs={2} md={1} justifyContent="center" alignItems="center">
               <Avatar src="broken" alt={name} />
             </Grid>
             <Grid container item xs={10}>

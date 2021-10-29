@@ -8,10 +8,6 @@ const InboxAllPage: BlitzPage = () => {
 
 InboxAllPage.authenticate = authConfig
 
-InboxAllPage.getLayout = (page) => (
-  <InboxLayout title="Inbox" selectedTab="all">
-    {page}
-  </InboxLayout>
-)
+InboxAllPage.getLayout = (page) => <InboxLayout title="Inbox">{page}</InboxLayout>
 
 export default InboxAllPage

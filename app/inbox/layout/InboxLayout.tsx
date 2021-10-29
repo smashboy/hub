@@ -1,61 +1,87 @@
-import { Routes, useRouter } from "blitz"
-import { Grid, Tabs, Tab, Paper, Fade } from "@mui/material"
+import { Routes } from "blitz"
+import { Grid, Paper, Fade, Container, Divider } from "@mui/material"
 import InboxIcon from "@mui/icons-material/Inbox"
 import InviteIcon from "@mui/icons-material/PersonAdd"
-import JobsIcon from "@mui/icons-material/Work"
-import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
+import SavedIcon from "@mui/icons-material/BookmarkBorder"
+import ChangelogIcon from "@mui/icons-material/LibraryBooks"
+import FeedbackIcon from "@mui/icons-material/Feed"
+// import JobsIcon from "@mui/icons-material/Work"
 import Layout, { LayoutProps } from "app/core/layouts/Layout"
-import { TabRouteLink } from "app/core/components/links"
+import LayoutNavigationItem from "../components/LayoutNavigationItem"
 
-type InboxLayoutProps = {
-  selectedTab: "all" | "invites" | "jobs"
-}
+// type InboxTab = "all" | "invites" | "jobs"
 
-const InboxLayout: React.FC<LayoutProps & InboxLayoutProps> = ({
-  title,
-  selectedTab,
-  children,
-}) => {
-  const isSM = useIsSmallDevice()
+// type InboxLayoutProps = {
+//   selectedTab: InboxTab
+// }
 
+const InboxLayout: React.FC<LayoutProps> = ({ title, children }) => {
   return (
-    <Layout title={title}>
-      <Grid container spacing={2} sx={{ marginTop: 2 }}>
-        <Fade in timeout={500}>
-          <Grid item xs={12} md={3}>
-            <Paper variant="outlined" sx={{ bgcolor: "transparent" }}>
-              <Tabs
-                value={selectedTab}
-                orientation={isSM ? "horizontal" : "vertical"}
-                scrollButtons="auto"
-                variant="scrollable"
+    <Layout title={title} disableContainer>
+      <Container maxWidth="xl">
+        <Grid container spacing={2} sx={{ marginTop: 2 }}>
+          <Fade in timeout={500}>
+            <Grid container item xs={12} md={2}>
+              <Paper
+                variant="outlined"
+                sx={{ bgcolor: "transparent", padding: 1, width: "100%", height: "fit-content" }}
               >
-                <TabRouteLink
-                  href={Routes.InboxAllPage()}
-                  value="all"
-                  label="All"
-                  icon={<InboxIcon />}
-                />
-                <TabRouteLink
-                  href={Routes.InboxInvitesPage()}
-                  value="invites"
-                  label="Invites"
-                  icon={<InviteIcon />}
-                />
-                <TabRouteLink
-                  href={Routes.InboxJobsPage()}
-                  value="jobs"
-                  label="Jobs"
-                  icon={<JobsIcon />}
-                />
-              </Tabs>
-            </Paper>
+                <Grid container xs={12} rowSpacing={1}>
+                  <LayoutNavigationItem
+                    href={Routes.InboxAllPage()}
+                    label="Changelogs"
+                    pathname="/inbox/changelogs"
+                    icon={ChangelogIcon}
+                  />
+                  <Grid item xs={12}>
+                    <Divider />
+                  </Grid>
+                  <LayoutNavigationItem
+                    href={Routes.InboxAllPage()}
+                    label="All"
+                    pathname="/inbox"
+                    icon={InboxIcon}
+                  />
+                  <LayoutNavigationItem
+                    href={Routes.InboxAllPage()}
+                    label="Saved"
+                    pathname="/inbox/saved"
+                    icon={SavedIcon}
+                  />
+                  <Grid item xs={12}>
+                    <Divider />
+                  </Grid>
+
+                  <LayoutNavigationItem
+                    href={Routes.InboxInvitesPage()}
+                    label="Invites"
+                    pathname="/inbox/invites"
+                    notificationKey="projectInvites"
+                    icon={InviteIcon}
+                  />
+                  <LayoutNavigationItem
+                    href={Routes.InboxInvitesPage()}
+                    label="Feedback"
+                    pathname="/inbox/feedback"
+                    notificationKey="projectInvites"
+                    icon={FeedbackIcon}
+                  />
+                  {/* <LayoutNavigationItem
+                    href={Routes.InboxJobsPage()}
+                    label="Jobs"
+                    pathname="/inbox/jobs"
+                    icon={JobsIcon}
+                    notificationKey={false}
+                  /> */}
+                </Grid>
+              </Paper>
+            </Grid>
+          </Fade>
+          <Grid item xs={12} md={10}>
+            {children}
           </Grid>
-        </Fade>
-        <Grid item xs={12} md={9}>
-          {children}
         </Grid>
-      </Grid>
+      </Container>
     </Layout>
   )
 }

@@ -1,8 +1,7 @@
 import { forwardRef, useMemo } from "react"
 import { useInfiniteQuery } from "blitz"
 import { Components, Virtuoso } from "react-virtuoso"
-import { Global } from "@emotion/react"
-import { Box, CssBaseline } from "@mui/material"
+import { Box } from "@mui/material"
 import { LoadingButton, Timeline } from "@mui/lab"
 import VirtualListItem from "app/core/components/VirtualListItem"
 import getChangelogList, { GetChangelogListInput } from "../queries/getChangelogList"
@@ -62,14 +61,6 @@ const ChangelogList: React.FC<{ slug: string }> = ({ slug }) => {
         },
       }}
     >
-      <CssBaseline />
-      <Global
-        styles={{
-          ".MuiTimelineItem-root:before": {
-            flex: "none!important",
-          },
-        }}
-      />
       <Virtuoso
         data={changelogs}
         components={Components}

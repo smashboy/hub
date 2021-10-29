@@ -53,6 +53,7 @@ model AssignedToFeedbackNotification {
   id              Int           @id @default(autoincrement())
   createdAt       DateTime      @default(now())
   isRead          Boolean       @default(false)
+  isSaved         Boolean       @default(false)
   notifications   Notifications @relation(fields: [notificationsId], references: [id])
   notificationsId Int
   projectSlug     String
@@ -63,6 +64,7 @@ model FeedbackStatusChangedNotification {
   id              Int           @id @default(autoincrement())
   createdAt       DateTime      @default(now())
   isRead          Boolean       @default(false)
+  isSaved         Boolean       @default(false)
   notifications   Notifications @relation(fields: [notificationsId], references: [id])
   notificationsId Int
   projectSlug     String
@@ -73,6 +75,7 @@ model FeedbackAddedToRoadmapNotification {
   id              Int           @id @default(autoincrement())
   createdAt       DateTime      @default(now())
   isRead          Boolean       @default(false)
+  isSaved         Boolean       @default(false)
   notifications   Notifications @relation(fields: [notificationsId], references: [id])
   notificationsId Int
   projectSlug     String
@@ -83,6 +86,7 @@ model NewFeedbackMessageNotification {
   id              Int           @id @default(autoincrement())
   createdAt       DateTime      @default(now())
   isRead          Boolean       @default(false)
+  isSaved         Boolean       @default(false)
   notifications   Notifications @relation(fields: [notificationsId], references: [id])
   notificationsId Int
   projectSlug     String
@@ -93,6 +97,7 @@ model NewChangelogNotification {
   id              Int           @id @default(autoincrement())
   createdAt       DateTime      @default(now())
   isRead          Boolean       @default(false)
+  isSaved         Boolean       @default(false)
   notifications   Notifications @relation(fields: [notificationsId], references: [id])
   notificationsId Int
   projectSlug     String
@@ -165,6 +170,8 @@ model ProjectMember {
 model ProjectInvite {
   id              Int           @id @default(autoincrement())
   createdAt       DateTime      @default(now())
+  isRead          Boolean       @default(false)
+  isSaved         Boolean       @default(false)
   project         Project       @relation(fields: [projectId], references: [id])
   projectId       Int
   notifications   Notifications @relation(fields: [notificationsId], references: [id])

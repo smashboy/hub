@@ -2,13 +2,16 @@ import db from "db"
 import { useState } from "react"
 import { BlitzPage, GetServerSideProps, getSession } from "blitz"
 import { Grid } from "@mui/material"
+import { Timeline } from "@mui/lab"
 import { authConfig } from "app/core/configs/authConfig"
 import InboxLayout from "app/inbox/layout/InboxLayout"
 import ProjectInviteItem from "app/inbox/components/ProjectInviteItem"
+import NotificationItemWrapper from "app/inbox/components/NotificationItemWrapper"
 
 type InboxInvitesPageProps = {
   invites: Array<{
     id: number
+    createdAt: Date
     project: {
       name: string
       slug: string
@@ -27,20 +30,20 @@ const InboxInvitesPage: BlitzPage<InboxInvitesPageProps> = (props: InboxInvitesP
 
   return (
     <Grid container spacing={2}>
-      {invites.map((invite) => (
-        <ProjectInviteItem key={invite.id} invite={invite} onActionDone={handleFilterInvites} />
-      ))}
+      <Timeline sx={{ paddingRight: 0 }}>
+        {invites.map((invite) => (
+          <NotificationItemWrapper key={invite.id} id={invite.id} createdAt={invite.createdAt}>
+            <ProjectInviteItem key={invite.id} invite={invite} onActionDone={handleFilterInvites} />
+          </NotificationItemWrapper>
+        ))}
+      </Timeline>
     </Grid>
   )
 }
 
 InboxInvitesPage.authenticate = authConfig
 
-InboxInvitesPage.getLayout = (page) => (
-  <InboxLayout title="Inbox" selectedTab="invites">
-    {page}
-  </InboxLayout>
-)
+InboxInvitesPage.getLayout = (page) => <InboxLayout title="Invites">{page}</InboxLayout>
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = await getSession(req, res)
@@ -56,6 +59,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     },
     select: {
       id: true,
+      createdAt: true,
       project: {
         select: {
           name: true,
