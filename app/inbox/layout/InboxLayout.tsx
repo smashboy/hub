@@ -29,7 +29,13 @@ const InboxLayout: React.FC<LayoutProps> = ({ title, children }) => {
                 variant="outlined"
                 sx={{ bgcolor: "transparent", padding: 1, width: "100%", height: "fit-content" }}
               >
-                <Grid container xs={12} rowSpacing={1} justifyContent={isSM ? "center" : undefined}>
+                <Grid
+                  container
+                  item
+                  xs={12}
+                  rowSpacing={1}
+                  justifyContent={isSM ? "center" : undefined}
+                >
                   <LayoutNavigationItem
                     href={Routes.InboxAllPage()}
                     label="Changelogs"

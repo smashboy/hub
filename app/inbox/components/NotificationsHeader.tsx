@@ -1,12 +1,31 @@
 import { Grid, ButtonGroup, Button } from "@mui/material"
+import { NotificationReadStatus } from "../queries/getInvitesNotifications"
 
-const NotificationsHeader = () => {
+const NotificationsHeader: React.FC<{
+  selectedStatus: NotificationReadStatus
+  onStatusChange: (newStatus: NotificationReadStatus) => void
+}> = ({ onStatusChange, selectedStatus }) => {
   return (
     <Grid item xs={12}>
-      <ButtonGroup variant="outlined" color="secondary">
-        <Button variant="contained">All</Button>
-        <Button>Unread</Button>
-        <Button>Read</Button>
+      <ButtonGroup color="secondary">
+        <Button
+          onClick={() => onStatusChange("all")}
+          variant={selectedStatus === "all" ? "contained" : "outlined"}
+        >
+          All
+        </Button>
+        <Button
+          onClick={() => onStatusChange("unread")}
+          variant={selectedStatus === "unread" ? "contained" : "outlined"}
+        >
+          Unread
+        </Button>
+        <Button
+          onClick={() => onStatusChange("read")}
+          variant={selectedStatus === "read" ? "contained" : "outlined"}
+        >
+          Read
+        </Button>
       </ButtonGroup>
     </Grid>
   )

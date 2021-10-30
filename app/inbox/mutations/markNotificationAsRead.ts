@@ -7,6 +7,7 @@ export default resolver.pipe(
   resolver.zod(MarkNotificationAsRead),
   Guard.authorizePipe("update", "user.notifications"),
   async ({ notificationId, notificationsPrismaModelKey }) => {
+    // @ts-ignore
     await db[notificationsPrismaModelKey].update({
       where: {
         id: notificationId,

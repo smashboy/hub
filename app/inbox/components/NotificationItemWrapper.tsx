@@ -72,7 +72,11 @@ const NotificationItemWrapper: React.FC<NotificationItemWrapperProps> = ({
             </Grid>
             <Grid container item xs={6} justifyContent="flex-end">
               <IconButton onClick={handleMarkAsRead} size="small" disabled={isRead}>
-                <MarkAsReadIcon fontSize="small" color={isRead ? "success" : undefined} />
+                <MarkAsReadIcon
+                  fontSize="small"
+                  color={isRead ? "success" : undefined}
+                  sx={{ opacity: isRead ? 0.45 : 1 }}
+                />
               </IconButton>
               <IconButton onClick={handleUpdateSavedStatus} size="small">
                 {isSaved ? <SavedIcon /> : <AddSavedIcon fontSize="small" />}

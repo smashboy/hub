@@ -53,7 +53,7 @@ const _buildSortInput = (key: FeedbackSortKey): Prisma.ProjectFeedbackOrderByWit
 
 const getFeedbackInput =
   (slug: string, filter: FeedbackFilter, sortKey: FeedbackSortKey) =>
-  (newPage: Partial<GetFeedbackListInput> = { take: 10, skip: 0 }): GetFeedbackListInput => {
+  (newPage: Partial<GetFeedbackListInput> = { take: 10, skip: 0 }) => {
     const page: GetFeedbackListInput = {
       ...newPage,
       slug,

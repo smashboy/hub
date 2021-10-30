@@ -6,7 +6,7 @@ import useCustomMutation from "app/core/hooks/useCustomMutation"
 import acceptProjectInvite from "app/project/mutations/acceptProjectInvite"
 import declineProjectInvite from "app/project/mutations/declineProjectInvite"
 
-type ProjectInviteItemProps = {
+export type ProjectInviteItemProps = {
   invite: {
     id: number
     project: {
