@@ -65,7 +65,7 @@ const LayoutNavigationItem: React.FC<LayoutNavigationItemProps> = ({
         href={href}
         fullWidth
         variant={isActiveRoute ? "contained" : "text"}
-        color="primary"
+        color={isActiveRoute ? "primary" : "secondary"}
         disableElevation
         startIcon={isSM ? null : <Icon fontSize="large" />}
         endIcon={
