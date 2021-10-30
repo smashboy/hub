@@ -76,7 +76,7 @@ const InboxLayout: React.FC<LayoutProps> = ({ title, children }) => {
                     icon={InviteIcon}
                   />
                   <LayoutNavigationItem
-                    href={Routes.InboxInvitesPage()}
+                    href={Routes.InboxFeedbackPage()}
                     label="Feedback"
                     pathname="/inbox/feedback"
                     notificationFilter="feedback"

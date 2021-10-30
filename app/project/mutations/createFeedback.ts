@@ -1,5 +1,5 @@
-import db from "db"
-import { resolver } from "blitz"
+import db, { FeedbackNotificationType } from "db"
+import { resolver, NotFoundError } from "blitz"
 import { CreateFeedback } from "../validations"
 import Guard from "app/guard/ability"
 
@@ -10,6 +10,19 @@ export default resolver.pipe(
     const authUserId = ctx.session.userId!
 
     title = title.trim()
+
+    const project = await db.project.findFirst({
+      where: {
+        slug: projectSlug,
+      },
+      select: {
+        name: true,
+      },
+    })
+
+    if (!project) throw new NotFoundError("Project not found.")
+
+    const { name: projectName } = project
 
     const feedbackCount = await db.projectFeedback.findFirst({
       where: {
@@ -32,7 +45,7 @@ export default resolver.pipe(
     const newId = (feedbackCount?.content.id || 0) + 1
 
     const {
-      content: { id },
+      content: { id: feedbackId, title: feedbackTitle },
     } = await db.projectFeedback.create({
       data: {
         content: {
@@ -68,11 +81,57 @@ export default resolver.pipe(
         content: {
           select: {
             id: true,
+            title: true,
           },
         },
       },
     })
 
-    return id
+    const selectedMembers = await db.projectMember.findMany({
+      where: {
+        id: {
+          in: participants,
+        },
+      },
+      select: {
+        user: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    })
+
+    const notifyTransactions = selectedMembers
+      .filter(({ user: { id } }) => id !== authUserId)
+      .map(({ user: { id } }) =>
+        db.feedbackNotification.create({
+          data: {
+            projectSlug,
+            feedbackId,
+            projectName,
+            feedbackTitle,
+            type: FeedbackNotificationType.ASSIGNED,
+            notifications: {
+              connectOrCreate: {
+                where: {
+                  userId: id,
+                },
+                create: {
+                  user: {
+                    connect: {
+                      id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        })
+      )
+
+    await db.$transaction(notifyTransactions)
+
+    return feedbackId
   }
 )

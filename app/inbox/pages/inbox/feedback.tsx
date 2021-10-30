@@ -5,34 +5,19 @@ import { Grid } from "@mui/material"
 import { LoadingButton } from "@mui/lab"
 import { authConfig } from "app/core/configs/authConfig"
 import InboxLayout from "app/inbox/layout/InboxLayout"
-import ProjectInviteItem from "app/inbox/components/ProjectInviteItem"
-import NotificationItemWrapper from "app/inbox/components/NotificationItemWrapper"
-import NotificationsHeader from "app/inbox/components/NotificationsHeader"
-import useNotificationsCounter from "app/inbox/hooks/useNotificationsCounter"
-import getInvitesNotifications, {
+import {
   GetNotificationsInput,
   NotificationReadStatus,
 } from "app/inbox/queries/getInvitesNotifications"
+import NotificationsHeader from "app/inbox/components/NotificationsHeader"
+import FeedbackListPlaceholder from "app/project/components/FeedbackListPlaceholder"
+import getFeedbackNotifications from "app/inbox/queries/getFeedbackNotifications"
+import useNotificationsCounter from "app/inbox/hooks/useNotificationsCounter"
 import NotificationsTimelineContainer from "app/inbox/components/NotificationsTimelineContainer"
 import VirtualListItem from "app/core/components/VirtualListItem"
-import FeedbackListPlaceholder from "app/project/components/FeedbackListPlaceholder"
 import NotificationsTimelineWrapper from "app/inbox/components/NotificationsTimelineWrapper"
-
-// type InboxInvitesPageProps = {
-//   invites: Array<{
-//     id: number
-//     createdAt: Date
-//     isRead: boolean
-//     isSaved: boolean
-//     project: {
-//       name: string
-//       slug: string
-//       isPrivate: boolean
-//       description: string | null
-//       logoUrl: string | null
-//     }
-//   }>
-// }
+import NotificationItemWrapper from "app/inbox/components/NotificationItemWrapper"
+import FeedbackNotificationItem from "app/inbox/components/FeedbackNotificationItem"
 
 const getInput =
   (selectedStatus: NotificationReadStatus) =>
@@ -48,13 +33,13 @@ const getInput =
 const List: React.FC<{ selectedStatus: NotificationReadStatus }> = ({ selectedStatus }) => {
   const { refetch: refetchNotificationsCounter } = useNotificationsCounter()[1]
 
-  const [invitesPages, { isFetchingNextPage, hasNextPage, fetchNextPage, refetch }] =
-    useInfiniteQuery(getInvitesNotifications, getInput(selectedStatus), {
+  const [notificationPages, { isFetchingNextPage, hasNextPage, fetchNextPage, refetch }] =
+    useInfiniteQuery(getFeedbackNotifications, getInput(selectedStatus), {
       getNextPageParam: (lastPage) => lastPage.nextPage,
       refetchOnWindowFocus: false,
     })
 
-  const invites = invitesPages.map(({ items }) => items).flat()
+  const notifications = notificationPages.map(({ items }) => items).flat()
 
   // @ts-ignore TODO fix types
   const Components: Components = useMemo(
@@ -80,23 +65,23 @@ const List: React.FC<{ selectedStatus: NotificationReadStatus }> = ({ selectedSt
   return (
     <NotificationsTimelineWrapper>
       <Virtuoso
-        data={invites}
+        data={notifications}
         components={Components}
         style={{ height: "100%" }}
-        itemContent={(_, invite) => (
+        itemContent={(_, notification) => (
           <NotificationItemWrapper
-            key={invite.id}
-            id={invite.id}
-            createdAt={invite.createdAt}
-            isRead={invite.isRead}
-            modelKey="projectInvite"
+            key={notification.id}
+            id={notification.id}
+            createdAt={notification.createdAt}
+            isRead={notification.isRead}
+            modelKey="feedbackNotification"
             onRefetchCounter={() => {
               refetchNotificationsCounter()
               refetch()
             }}
-            isSaved={invite.isSaved}
+            isSaved={notification.isSaved}
           >
-            <ProjectInviteItem key={invite.id} invite={invite} onActionDone={() => refetch()} />
+            <FeedbackNotificationItem notification={notification} />
           </NotificationItemWrapper>
         )}
       />
@@ -104,7 +89,7 @@ const List: React.FC<{ selectedStatus: NotificationReadStatus }> = ({ selectedSt
   )
 }
 
-const InboxInvitesPage: BlitzPage = () => {
+const InboxFeedbackPage: BlitzPage = () => {
   const [selectedStatus, setSelectedStatus] = useState<NotificationReadStatus>("all")
 
   return (
@@ -122,44 +107,8 @@ const InboxInvitesPage: BlitzPage = () => {
   )
 }
 
-InboxInvitesPage.authenticate = authConfig
+InboxFeedbackPage.authenticate = authConfig
 
-InboxInvitesPage.getLayout = (page) => <InboxLayout title="Invites">{page}</InboxLayout>
+InboxFeedbackPage.getLayout = (page) => <InboxLayout title="Invites">{page}</InboxLayout>
 
-// export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-//   const session = await getSession(req, res)
-//   const authUserId = session.userId!
-
-//   const invites = await db.projectInvite.findMany({
-//     where: {
-//       notifications: {
-//         user: {
-//           id: authUserId,
-//         },
-//       },
-//     },
-//     select: {
-//       id: true,
-//       createdAt: true,
-//       isRead: true,
-//       isSaved: true,
-//       project: {
-//         select: {
-//           name: true,
-//           slug: true,
-//           isPrivate: true,
-//           description: true,
-//           logoUrl: true,
-//         },
-//       },
-//     },
-//   })
-
-//   return {
-//     props: {
-//       invites,
-//     },
-//   }
-// }
-
-export default InboxInvitesPage
+export default InboxFeedbackPage

@@ -2,10 +2,7 @@ import * as z from "zod"
 
 export const notificationsPrismaModelKey = z.enum([
   "projectInvite",
-  "assignedToFeedbackNotification",
-  "feedbackStatusChangedNotification",
-  "feedbackAddedToRoadmapNotification",
-  "newFeedbackMessageNotification",
+  "feedbackNotification",
   "newChangelogNotification",
 ])
 

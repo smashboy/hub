@@ -16,25 +16,7 @@ export default resolver.pipe(Guard.authorizePipe("read", "user.notifications"), 
           isSaved: true,
         },
       },
-      assignedToFeedbackNotifications: {
-        select: {
-          isRead: true,
-          isSaved: true,
-        },
-      },
-      feedbackStatusChangedNotifications: {
-        select: {
-          isRead: true,
-          isSaved: true,
-        },
-      },
-      feedbackAddedToRoadmapNotifications: {
-        select: {
-          isRead: true,
-          isSaved: true,
-        },
-      },
-      newFeedbackMessageNotifications: {
+      feedbackNotifications: {
         select: {
           isRead: true,
           isSaved: true,
