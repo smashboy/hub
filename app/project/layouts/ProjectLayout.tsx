@@ -93,7 +93,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                     <Grid item xs={6} md={2}>
                       <LoadingButton
                         variant="contained"
-                        color="secondary"
+                        sx={{ bgcolor: color }}
                         size="small"
                         loading={isLoadingFollow}
                         onClick={async () => {
@@ -167,7 +167,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                 label="Feedback"
               />
               <TabRouteLink href={Routes.RoadmapsPage({ slug })} value="roadmap" label="Roadmap" />
-              <Tab value="jobs" label="Jobs" />
+              {/* <Tab value="jobs" label="Jobs" /> */}
             </Tabs>
           </Grid>
         </Fade>
