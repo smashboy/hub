@@ -6,7 +6,7 @@ const NotificationsHeader: React.FC<{
   onStatusChange: (newStatus: NotificationReadStatus) => void
 }> = ({ onStatusChange, selectedStatus }) => {
   return (
-    <Grid item xs={12}>
+    <Grid item xs={12} sx={{ paddingLeft: 2 }}>
       <ButtonGroup color="secondary">
         <Button
           onClick={() => onStatusChange("all")}

@@ -49,6 +49,11 @@ const NotificationItemWrapper: React.FC<NotificationItemWrapperProps> = ({
     <Fade in timeout={500}>
       <TimelineItem
         sx={{
+          paddingX: {
+            xs: 1,
+            md: 2,
+          },
+
           "&:before": {
             flex: "none!important",
             padding: 0,
