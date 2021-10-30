@@ -8,6 +8,7 @@ import FeedbackIcon from "@mui/icons-material/Feed"
 // import JobsIcon from "@mui/icons-material/Work"
 import Layout, { LayoutProps } from "app/core/layouts/Layout"
 import LayoutNavigationItem from "../components/LayoutNavigationItem"
+import useIsSmallDevice from "app/core/hooks/useIsSmallDevice"
 
 // type InboxTab = "all" | "invites" | "jobs"
 
@@ -16,6 +17,8 @@ import LayoutNavigationItem from "../components/LayoutNavigationItem"
 // }
 
 const InboxLayout: React.FC<LayoutProps> = ({ title, children }) => {
+  const isSM = useIsSmallDevice()
+
   return (
     <Layout title={title} disableContainer>
       <Container maxWidth="xl">
@@ -26,11 +29,12 @@ const InboxLayout: React.FC<LayoutProps> = ({ title, children }) => {
                 variant="outlined"
                 sx={{ bgcolor: "transparent", padding: 1, width: "100%", height: "fit-content" }}
               >
-                <Grid container xs={12} rowSpacing={1}>
+                <Grid container xs={12} rowSpacing={1} justifyContent={isSM ? "center" : undefined}>
                   <LayoutNavigationItem
                     href={Routes.InboxAllPage()}
                     label="Changelogs"
                     pathname="/inbox/changelogs"
+                    notificationFilter="changelogs"
                     icon={ChangelogIcon}
                   />
                   <Hidden smDown>
@@ -42,12 +46,14 @@ const InboxLayout: React.FC<LayoutProps> = ({ title, children }) => {
                     href={Routes.InboxAllPage()}
                     label="All"
                     pathname="/inbox"
+                    notificationFilter="all"
                     icon={InboxIcon}
                   />
                   <LayoutNavigationItem
                     href={Routes.InboxAllPage()}
                     label="Saved"
                     pathname="/inbox/saved"
+                    notificationFilter="saved"
                     icon={SavedIcon}
                   />
                   <Hidden smDown>
@@ -60,14 +66,14 @@ const InboxLayout: React.FC<LayoutProps> = ({ title, children }) => {
                     href={Routes.InboxInvitesPage()}
                     label="Invites"
                     pathname="/inbox/invites"
-                    notificationKey="projectInvites"
+                    notificationFilter="invites"
                     icon={InviteIcon}
                   />
                   <LayoutNavigationItem
                     href={Routes.InboxInvitesPage()}
                     label="Feedback"
                     pathname="/inbox/feedback"
-                    notificationKey="projectInvites"
+                    notificationFilter="feedback"
                     icon={FeedbackIcon}
                   />
                   {/* <LayoutNavigationItem
@@ -75,7 +81,7 @@ const InboxLayout: React.FC<LayoutProps> = ({ title, children }) => {
                     label="Jobs"
                     pathname="/inbox/jobs"
                     icon={JobsIcon}
-                    notificationKey={false}
+                    notificationFilter={false}
                   /> */}
                 </Grid>
               </Paper>

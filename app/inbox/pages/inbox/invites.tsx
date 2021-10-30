@@ -8,11 +8,14 @@ import InboxLayout from "app/inbox/layout/InboxLayout"
 import ProjectInviteItem from "app/inbox/components/ProjectInviteItem"
 import NotificationItemWrapper from "app/inbox/components/NotificationItemWrapper"
 import NotificationsHeader from "app/inbox/components/NotificationsHeader"
+import useNotificationsCounter from "app/inbox/hooks/useNotificationsCounter"
 
 type InboxInvitesPageProps = {
   invites: Array<{
     id: number
     createdAt: Date
+    isRead: boolean
+    isSaved: boolean
     project: {
       name: string
       slug: string
@@ -26,6 +29,8 @@ type InboxInvitesPageProps = {
 const InboxInvitesPage: BlitzPage<InboxInvitesPageProps> = (props: InboxInvitesPageProps) => {
   const [invites, setInvites] = useState(props.invites)
 
+  const { refetch } = useNotificationsCounter(false)[1]
+
   const handleFilterInvites = (id: number) =>
     setInvites(invites.filter((invite) => invite.id !== id))
 
@@ -35,7 +40,15 @@ const InboxInvitesPage: BlitzPage<InboxInvitesPageProps> = (props: InboxInvitesP
       <Grid item xs={12}>
         <Timeline sx={{ paddingX: 0, margin: 0 }}>
           {invites.map((invite) => (
-            <NotificationItemWrapper key={invite.id} id={invite.id} createdAt={invite.createdAt}>
+            <NotificationItemWrapper
+              key={invite.id}
+              id={invite.id}
+              createdAt={invite.createdAt}
+              isRead={invite.isRead}
+              modelKey="projectInvite"
+              onRefetchCounter={() => refetch()}
+              isSaved={invite.isSaved}
+            >
               <ProjectInviteItem
                 key={invite.id}
                 invite={invite}
@@ -68,6 +81,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     select: {
       id: true,
       createdAt: true,
+      isRead: true,
+      isSaved: true,
       project: {
         select: {
           name: true,

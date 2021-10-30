@@ -13,31 +13,37 @@ export default resolver.pipe(Guard.authorizePipe("read", "user.notifications"), 
       projectInvites: {
         select: {
           isRead: true,
+          isSaved: true,
         },
       },
       assignedToFeedbackNotifications: {
         select: {
           isRead: true,
+          isSaved: true,
         },
       },
       feedbackStatusChangedNotifications: {
         select: {
           isRead: true,
+          isSaved: true,
         },
       },
       feedbackAddedToRoadmapNotifications: {
         select: {
           isRead: true,
+          isSaved: true,
         },
       },
       newFeedbackMessageNotifications: {
         select: {
           isRead: true,
+          isSaved: true,
         },
       },
       newChangelogNotifications: {
         select: {
           isRead: true,
+          isSaved: true,
         },
       },
     },
@@ -48,6 +54,7 @@ export default resolver.pipe(Guard.authorizePipe("read", "user.notifications"), 
   type FilteredNotifications = {
     [key in keyof typeof notifications]: Array<{
       isRead: boolean
+      isSaved: boolean
     }>
   }
 

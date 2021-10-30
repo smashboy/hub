@@ -5,11 +5,13 @@ import useNotificationsCounter from "../hooks/useNotificationsCounter"
 import { useMemo } from "react"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 
+type NotificationFilter = "all" | "invites" | "feedback" | "changelogs" | "saved"
+
 type LayoutNavigationItemProps = {
   href: RouteUrlObject | string
   label: string
   pathname: string
-  notificationKey?: "projectInvites" | false
+  notificationFilter: NotificationFilter
   icon: typeof SvgIcon
 }
 
@@ -18,7 +20,7 @@ const LayoutNavigationItem: React.FC<LayoutNavigationItemProps> = ({
   icon,
   label,
   pathname,
-  notificationKey,
+  notificationFilter,
 }) => {
   const router = useRouter()
 
@@ -29,11 +31,31 @@ const LayoutNavigationItem: React.FC<LayoutNavigationItemProps> = ({
   const [notifications] = useNotificationsCounter(false)
 
   const notificationsCounter = useMemo(() => {
-    if (notificationKey && notifications) return notifications[notificationKey].length
-    if (typeof notificationKey === "undefined" && notifications)
-      return Object.values(notifications).flat().length
-    return 0
-  }, [notifications, notificationKey])
+    if (notifications) {
+      switch (notificationFilter) {
+        case "changelogs": {
+          const { newChangelogNotifications } = notifications
+          return newChangelogNotifications.length
+        }
+        case "feedback": {
+          const { newChangelogNotifications, projectInvites, ...feedbackNotifications } =
+            notifications
+          return Object.values(feedbackNotifications).flat().length
+        }
+        case "invites": {
+          const { projectInvites } = notifications
+          return projectInvites.length
+        }
+        case "saved": {
+          return Object.values(notifications)
+            .flat()
+            .filter(({ isSaved }) => isSaved).length
+        }
+        default:
+          return Object.values(notifications).flat().length
+      }
+    }
+  }, [notifications, notificationFilter])
 
   const Icon = icon
 
