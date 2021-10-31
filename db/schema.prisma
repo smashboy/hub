@@ -155,15 +155,16 @@ model ProjectLanding {
 }
 
 model ProjectChangelog {
-  id        Int                 @id @default(autoincrement())
-  createdAt DateTime            @default(now())
-  updatedAt DateTime            @updatedAt
-  title     String
-  slug      String
-  content   String
-  project   Project             @relation(fields: [projectId], references: [id])
-  projectId Int
-  feedback  ChangelogFeedback[]
+  id              Int                 @id @default(autoincrement())
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  title           String
+  previewImageUrl String?
+  slug            String
+  content         String
+  project         Project             @relation(fields: [projectId], references: [id])
+  projectId       Int
+  feedback        ChangelogFeedback[]
 
   @@unique([projectId, slug])
 }

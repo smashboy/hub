@@ -2,6 +2,7 @@ import { FeedbackCategory, ProjectMemberRole } from "db"
 import { useState } from "react"
 import { Descendant } from "slate"
 import { BlitzPage, GetServerSideProps, getSession } from "blitz"
+import slugify from "slugify"
 import { Typography, Grid, Fade, useTheme, Container, Switch, TextField } from "@mui/material"
 import {
   getProjectInfo,
@@ -15,6 +16,9 @@ import { HeadingElement, ListElement } from "app/core/markdown/types"
 import { capitalizeString } from "app/core/utils/blitz"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import createProjectChangelog from "app/project/mutations/createProjectChangelog"
+import FileInput from "app/core/components/FileInput"
+import superbaseClient from "app/core/superbase/client"
+import useNotifications from "app/core/hooks/useNotifications"
 
 const generateListFromFeedbackArray = (
   category: FeedbackCategory,
@@ -79,11 +83,14 @@ const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
 }: RoadmapPageProps) => {
   const theme = useTheme()
 
+  const { notify } = useNotifications()
+
   const [createProjectChangelogMutation] = useCustomMutation(createProjectChangelog, {
     successNotification: "Changelog is live!",
   })
 
   const [title, setTitle] = useState(name)
+  const [previewImage, setPreviewImage] = useState<File | null>(null)
 
   const [readOnly, setReadOnly] = useState(false)
 
@@ -93,15 +100,50 @@ const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
   const handleTitle = (event: React.ChangeEvent<HTMLInputElement>) => setTitle(event.target.value)
 
   const handleSubmit = async (content: Descendant[]) => {
+    let previewImageUrl: string | null = null
+
+    if (previewImage) {
+      const imageName = previewImage.name
+
+      const titleSlug = slugify(title, {
+        lower: true,
+        strict: true,
+        trim: true,
+      })
+
+      const imagePath = `${titleSlug}-${imageName}`
+
+      const bucket = superbaseClient.storage.from("changelog-previews")
+
+      const { data, error } = await bucket.upload(imagePath, previewImage)
+
+      if (error)
+        return notify(error.message, {
+          variant: "error",
+        })
+
+      const { publicURL, error: publicUrlError } = await bucket.getPublicUrl(imagePath)
+
+      if (publicUrlError)
+        return notify(publicUrlError.message, {
+          variant: "error",
+        })
+
+      previewImageUrl = publicURL
+    }
+
     await createProjectChangelogMutation({
       title,
       content: JSON.stringify({ content }),
+      previewImageUrl,
       projectSlug: slug,
     })
   }
 
+  const handlePreviewImage = (files: File[]) => setPreviewImage(files[0] || null)
+
   return (
-    <Grid container spacing={2} sx={{ marginTop: 1 }}>
+    <Grid container rowSpacing={2} sx={{ marginTop: 1 }}>
       <Grid item xs={12}>
         <Fade in timeout={500}>
           <Typography variant="h4" color="text.primary" align="center">
@@ -125,16 +167,35 @@ const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
         </Grid>
       </Fade>
       <Fade in timeout={900}>
-        <Grid item container xs={12} spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              value={title}
-              onChange={handleTitle}
-              size="small"
-              label="Changelog name"
-              fullWidth
-            />
-          </Grid>
+        <Grid item container xs={12} rowSpacing={2}>
+          {!readOnly && (
+            <>
+              <Grid item xs={12}>
+                <TextField
+                  value={title}
+                  onChange={handleTitle}
+                  size="small"
+                  label="Changelog name"
+                  fullWidth
+                />
+              </Grid>
+              <Grid container item xs={12} rowSpacing={1}>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle1" component="div" color="text.primary">
+                    Preview image (optional):
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <FileInput
+                    label="Drag and drop image or click to upload"
+                    maxSize={20}
+                    allowedFileTypes={["image/jpeg", "image/png", "image/webp"]}
+                    onChange={handlePreviewImage}
+                  />
+                </Grid>
+              </Grid>
+            </>
+          )}
           <Grid item xs={12}>
             <Container maxWidth="lg" disableGutters>
               <MarkdownEditor

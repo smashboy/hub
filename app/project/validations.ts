@@ -177,6 +177,7 @@ export const CreateChangelog = z.object({
   projectSlug: z.string(),
   title: z.string(),
   content: z.string(),
+  previewImageUrl: z.string().nullable(),
 })
 
 export const UpdateChangelog = CreateChangelog.merge(

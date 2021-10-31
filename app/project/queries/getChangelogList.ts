@@ -39,6 +39,7 @@ export default resolver.pipe(async ({ skip = 0, take = 10, slug }: GetChangelogL
           slug: true,
           createdAt: true,
           title: true,
+          previewImageUrl: true,
         },
       }),
   })

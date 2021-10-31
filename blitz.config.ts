@@ -2,6 +2,11 @@ import { BlitzConfig, sessionMiddleware, simpleRolesIsAuthorized } from "blitz"
 import { BlitzGuardMiddleware } from "@blitz-guard/core/dist/middleware"
 
 const config: BlitzConfig = {
+  images: {
+    domains: ["lwctufdkptquolgqlmoa.supabase.co"],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+  },
   middleware: [
     sessionMiddleware({
       cookiePrefix: "projecthub",

@@ -3,7 +3,7 @@ import { Typography, Grid } from "@mui/material"
 import { getProjectInfo, ProjectPageProps } from "app/project/helpers"
 import ProjectLayout from "app/project/layouts/ProjectLayout"
 
-const ProjectLandingPage: BlitzPage<ProjectPageProps> = ({ project }) => {
+const ProjectLandingPage: BlitzPage<ProjectPageProps> = () => {
   return (
     <Grid container sx={{ marginTop: 2 }}>
       <Grid container item xs={12} justifyContent="center">

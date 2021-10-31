@@ -7,7 +7,7 @@ import { authorizePipe } from "app/guard/helpers"
 export default resolver.pipe(
   resolver.zod(CreateChangelog),
   authorizePipe("create", "project.roadmap", ({ projectSlug }) => projectSlug),
-  async ({ title, content, projectSlug }) => {
+  async ({ title, content, projectSlug, previewImageUrl }) => {
     title = title.trim()
 
     const slug = slugify(title, {
@@ -20,6 +20,7 @@ export default resolver.pipe(
       data: {
         title,
         content,
+        previewImageUrl,
         slug,
         project: {
           connect: {
