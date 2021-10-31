@@ -1,6 +1,6 @@
 import { FeedbackNotification, FeedbackNotificationType } from "db"
 import { Routes } from "blitz"
-import { Paper, ListItem, ListItemText } from "@mui/material"
+import { Paper, ListItem, ListItemText, Chip } from "@mui/material"
 import { RouteLink } from "app/core/components/links"
 
 const _messageSelector = ({
@@ -29,31 +29,35 @@ const _messageSelector = ({
     case FeedbackNotificationType.STATUS_CHANGED:
       return (
         <>
-          <b>New status:</b> Status of the feedback{" "}
+          <b>New status:</b> Status of the{" "}
           <RouteLink href={Routes.SelectedFeedbackPage({ slug: projectSlug, id: feedbackId })}>
-            {`(${feedbackTitle})`}
+            {`${feedbackTitle}`}
           </RouteLink>{" "}
-          has been changed to ${newStatus}.
+          feedback in{" "}
+          <RouteLink href={Routes.ProjectLandingPage({ slug: projectSlug })}>
+            {projectName}
+          </RouteLink>{" "}
+          project has been changed to <Chip label={newStatus?.replace("_", " ")} size="small" />
         </>
       ) // TODO label selector
     case FeedbackNotificationType.NEW_PUBLIC_MESSAGE:
       return (
         <>
-          <b> New message:</b> New public message in the feedback{" "}
+          <b> New message:</b> New public message in the{" "}
           <RouteLink href={Routes.SelectedFeedbackPage({ slug: projectSlug, id: feedbackId })}>
-            {`(${feedbackTitle})`}
-          </RouteLink>
-          .
+            {`${feedbackTitle}`}
+          </RouteLink>{" "}
+          feedback.
         </>
       )
     case FeedbackNotificationType.NEW_PRIVATE_MESSAGE:
       return (
         <>
-          <b>New message:</b> New private message in the feedback{" "}
+          <b>New message:</b> New private message in the{" "}
           <RouteLink href={Routes.SelectedFeedbackPage({ slug: projectSlug, id: feedbackId })}>
-            {`(${feedbackTitle})`}
-          </RouteLink>
-          .
+            {`${feedbackTitle}`}
+          </RouteLink>{" "}
+          feedback.
         </>
       )
     case FeedbackNotificationType.NEW_INTERNAL_MESSAGE:

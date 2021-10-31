@@ -1,12 +1,50 @@
-import db from "db"
-import { resolver } from "blitz"
+import db, { FeedbackNotificationType } from "db"
+import { resolver, NotFoundError } from "blitz"
 import { UpdateFeedbackStatus } from "../validations"
-import Guard from "app/guard/ability"
+import { authorizePipe } from "app/guard/helpers"
 
 export default resolver.pipe(
   resolver.zod(UpdateFeedbackStatus),
-  Guard.authorizePipe("update", "feedback"),
-  async ({ feedbackId, status }) => {
+  authorizePipe("update", "feedback.settings", ({ projectSlug }) => projectSlug),
+  async ({ feedbackId, status, projectSlug }, ctx) => {
+    const authUserId = ctx.session.userId!
+
+    const feedback = await db.projectFeedback.findFirst({
+      where: {
+        id: feedbackId,
+      },
+      select: {
+        content: {
+          select: {
+            title: true,
+            id: true,
+          },
+        },
+        project: {
+          select: {
+            slug: true,
+            name: true,
+          },
+        },
+        participants: {
+          select: {
+            user: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+        upvotedBy: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    })
+
+    if (!feedback) throw new NotFoundError("Feedback not found.")
+
     await db.projectFeedback.update({
       where: {
         id: feedbackId,
@@ -19,5 +57,47 @@ export default resolver.pipe(
         },
       },
     })
+
+    const {
+      participants,
+      upvotedBy,
+      project: { name: projectName },
+      content: { id: feedbackContentId, title },
+    } = feedback
+
+    const userIds = [
+      ...Array.from(
+        new Set([...participants.map(({ user: { id } }) => id), ...upvotedBy.map(({ id }) => id)])
+      ),
+    ].filter((id) => id !== authUserId)
+
+    const notifyTransactions = userIds.map((userId) =>
+      db.feedbackNotification.create({
+        data: {
+          projectSlug,
+          feedbackId: feedbackContentId,
+          projectName,
+          feedbackTitle: title,
+          newStatus: status,
+          type: FeedbackNotificationType.STATUS_CHANGED,
+          notifications: {
+            connectOrCreate: {
+              where: {
+                userId,
+              },
+              create: {
+                user: {
+                  connect: {
+                    id: userId,
+                  },
+                },
+              },
+            },
+          },
+        },
+      })
+    )
+
+    await db.$transaction(notifyTransactions)
   }
 )

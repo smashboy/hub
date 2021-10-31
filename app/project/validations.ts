@@ -76,6 +76,7 @@ export const UpdateFeedbackRoadmaps = z.object({
 
 export const UpdateFeedbackStatus = z.object({
   feedbackId: z.number(),
+  projectSlug: z.string(),
   status: z.enum([
     FeedbackStatus.BLOCKED,
     FeedbackStatus.CANCELED,
