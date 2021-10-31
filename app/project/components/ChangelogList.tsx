@@ -6,15 +6,12 @@ import { LoadingButton, Timeline } from "@mui/lab"
 import VirtualListItem from "app/core/components/VirtualListItem"
 import getChangelogList, { GetChangelogListInput } from "../queries/getChangelogList"
 import ChangelogListItem from "./ChangelogListItem"
-import useIsSmallDevice from "app/core/hooks/useIsSmallDevice"
 
 const getChangelogInput =
   (slug: string) =>
   (page: Partial<GetChangelogListInput> = { take: 10, skip: 0 }) => ({ ...page, slug })
 
 const ChangelogList: React.FC<{ slug: string }> = ({ slug }) => {
-  const isSM = useIsSmallDevice()
-
   const [changelogPages, { isFetchingNextPage, fetchNextPage, hasNextPage }] = useInfiniteQuery(
     getChangelogList,
     getChangelogInput(slug),
@@ -56,7 +53,7 @@ const ChangelogList: React.FC<{ slug: string }> = ({ slug }) => {
   return (
     <Box
       sx={{
-        height: isSM ? undefined : "calc(100vh - 260px)",
+        // height: isSM ? undefined : "calc(100vh - 260px)",
         margin: "0 auto",
         // bgcolor: "red",
         width: {
@@ -66,7 +63,7 @@ const ChangelogList: React.FC<{ slug: string }> = ({ slug }) => {
       }}
     >
       <Virtuoso
-        useWindowScroll={isSM}
+        useWindowScroll
         data={changelogs}
         components={Components}
         style={{ height: "100%" }}
