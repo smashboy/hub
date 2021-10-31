@@ -49,11 +49,30 @@ export const CreateFeedback = z.object({
   labels: z.array(z.string()),
 })
 
-export const UpdateFeedback = CreateFeedback.omit({ projectSlug: true }).merge(
-  z.object({
-    feedbackId: z.number(),
-  })
-)
+export const UpdateFeedback = z.object({
+  feedbackId: z.number(),
+  title: z.string().min(1).max(75),
+  category: z.enum([FeedbackCategory.BUG, FeedbackCategory.FEATURE, FeedbackCategory.IMPROVEMENT]),
+  content: z.string(),
+})
+
+export const UpdateFeedbackParticipants = z.object({
+  feedbackId: z.number(),
+  participants: z.array(z.number()),
+  projectSlug: z.string(),
+})
+
+export const UpdateFeedbackLabels = z.object({
+  feedbackId: z.number(),
+  labels: z.array(z.string()),
+  projectSlug: z.string(),
+})
+
+export const UpdateFeedbackRoadmaps = z.object({
+  feedbackId: z.number(),
+  roadmaps: z.array(z.number()),
+  projectSlug: z.string(),
+})
 
 export const UpdateFeedbackStatus = z.object({
   feedbackId: z.number(),
