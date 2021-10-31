@@ -52,10 +52,10 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
 }) => {
   const router = useRouter()
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialContent = useMemo(
     // @ts-ignore
     () => JSON.parse(initialValues?.feedback.content || null) as { content: Descendant[] } | null,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
 
