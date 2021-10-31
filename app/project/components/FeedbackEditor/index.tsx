@@ -1,6 +1,7 @@
+import { ProjectMemberRole } from "db"
 import { Suspense } from "react"
 import { useQuery } from "blitz"
-import { Container, Grid, Hidden } from "@mui/material"
+import { Container, Grid } from "@mui/material"
 import getAbility from "app/guard/queries/getAbility"
 import {
   FeedbackEditorProps,
@@ -11,17 +12,12 @@ import Header from "./Header"
 import Editor from "./Editor"
 import FeedbackOptions from "./FeedbackOptions"
 
-const FeedbackEditor: React.FC<FeedbackEditorProps> = ({ slug, initialValues }) => {
+const FeedbackEditor: React.FC<FeedbackEditorProps & { role: ProjectMemberRole | null }> = ({
+  slug,
+  initialValues,
+  role,
+}) => {
   const isSM = useIsSmallDevice()
-
-  const [res] = useQuery(getAbility, [["update", "feedback.settings", slug]], {
-    suspense: false,
-    refetchOnWindowFocus: false,
-  })
-
-  const canManageSettings = res?.[0]?.can || false
-
-  const showSettings = canManageSettings
 
   return (
     <FeedbackEditorProvider slug={slug} initialValues={initialValues}>
@@ -31,13 +27,13 @@ const FeedbackEditor: React.FC<FeedbackEditorProps> = ({ slug, initialValues }) 
             container
             item
             rowSpacing={2}
-            xs={showSettings && !isSM ? 9 : 12}
+            xs={role && !isSM ? 9 : 12}
             sx={{ height: "fit-content" }}
           >
             <Header />
             <Editor />
           </Grid>
-          {showSettings && (
+          {role && (
             <Suspense fallback={<div />}>
               <FeedbackOptions />
             </Suspense>
