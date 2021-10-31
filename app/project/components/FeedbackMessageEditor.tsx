@@ -6,11 +6,13 @@ import { FeedbackMessagesListProps } from "./FeedbackMessagesList"
 
 interface FeedbackMessageEditor extends FeedbackMessagesListProps {
   refetch: () => void
+  slug: string
 }
 
 const FeedbackMessageEditor: React.FC<FeedbackMessageEditor> = ({
   feedbackId,
   category,
+  slug,
   refetch,
 }) => {
   const [createFeedbackMessageMutation] = useCustomMutation(createFeedbackMessage, {})
@@ -19,6 +21,7 @@ const FeedbackMessageEditor: React.FC<FeedbackMessageEditor> = ({
     await createFeedbackMessageMutation({
       feedbackId,
       category,
+      projectSlug: slug,
       content: JSON.stringify({ content }),
     })
     refetch()

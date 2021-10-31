@@ -5,7 +5,6 @@ import { RouteLink } from "app/core/components/links"
 
 const _messageSelector = ({
   type,
-  projectName,
   feedbackTitle,
   projectSlug,
   feedbackId,
@@ -19,11 +18,7 @@ const _messageSelector = ({
           <RouteLink href={Routes.SelectedFeedbackPage({ slug: projectSlug, id: feedbackId })}>
             {feedbackTitle}
           </RouteLink>{" "}
-          feedback in{" "}
-          <RouteLink href={Routes.ProjectLandingPage({ slug: projectSlug })}>
-            {projectName}
-          </RouteLink>{" "}
-          project.
+          feedback.
         </>
       )
     case FeedbackNotificationType.STATUS_CHANGED:
@@ -33,11 +28,7 @@ const _messageSelector = ({
           <RouteLink href={Routes.SelectedFeedbackPage({ slug: projectSlug, id: feedbackId })}>
             {`${feedbackTitle}`}
           </RouteLink>{" "}
-          feedback in{" "}
-          <RouteLink href={Routes.ProjectLandingPage({ slug: projectSlug })}>
-            {projectName}
-          </RouteLink>{" "}
-          project has been changed to <Chip label={newStatus?.replace("_", " ")} size="small" />
+          feedback has been changed to <Chip label={newStatus?.replace("_", " ")} size="small" />
         </>
       ) // TODO label selector
     case FeedbackNotificationType.NEW_PUBLIC_MESSAGE:
@@ -65,7 +56,7 @@ const _messageSelector = ({
         <>
           <b>New message:</b> New internal message in the feedback{" "}
           <RouteLink href={Routes.SelectedFeedbackPage({ slug: projectSlug, id: feedbackId })}>
-            {`(${feedbackTitle})`}
+            {`${feedbackTitle}`}
           </RouteLink>
           .
         </>

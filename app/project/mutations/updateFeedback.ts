@@ -21,12 +21,6 @@ export default resolver.pipe(
             content,
           },
         },
-        // labels: {
-        //   set: labels.map((id) => ({ id })),
-        // },
-        // roadmaps: {
-        //   set: roadmaps.map((id) => ({ id })),
-        // },
       },
     })
   }

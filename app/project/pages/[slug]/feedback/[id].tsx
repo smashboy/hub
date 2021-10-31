@@ -4,7 +4,6 @@ import { Grid, Divider, Tabs, Tab, Container } from "@mui/material"
 import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
 import FeedbackEditor from "app/project/components/FeedbackEditor"
 import { getProjectInfo, getFeedback, FeedbackPageProps } from "app/project/helpers"
-import getAbility from "app/guard/queries/getAbility"
 import { Suspense } from "react"
 import FeedbackMessagesList from "app/project/components/FeedbackMessagesList"
 import { FeedbackMessageCategory } from "db"
@@ -40,7 +39,11 @@ const SelectedFeedbackPage: BlitzPage<FeedbackPageProps> = ({
             </Grid>
           )}
           <Suspense fallback={null}>
-            <FeedbackMessagesList feedbackId={feedback.id} category={selectedMessagesCategory} />
+            <FeedbackMessagesList
+              feedbackId={feedback.id}
+              category={selectedMessagesCategory}
+              slug={slug}
+            />
           </Suspense>
         </Grid>
       </Grid>

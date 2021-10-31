@@ -13,6 +13,7 @@ import { FeedbackMessageCategory } from "db"
 export interface FeedbackMessagesListProps {
   feedbackId: number
   category: FeedbackMessageCategory
+  slug: string
 }
 
 // const getMessagesInput =
@@ -20,7 +21,11 @@ export interface FeedbackMessagesListProps {
 //   (page: GetFeedbackMessagesInput = { take: 10, skip: 0, feedbackId, isPublic }) =>
 //     page
 
-const FeedbackMessagesList: React.FC<FeedbackMessagesListProps> = ({ feedbackId, category }) => {
+const FeedbackMessagesList: React.FC<FeedbackMessagesListProps> = ({
+  feedbackId,
+  category,
+  slug,
+}) => {
   const user = useCurrentUser()
 
   const [updateFeedbackMessageMutation] = useCustomMutation(updateFeedbackMessage, {
@@ -78,7 +83,12 @@ const FeedbackMessagesList: React.FC<FeedbackMessagesListProps> = ({ feedbackId,
       )}
       {user && (
         <Grid item xs={12}>
-          <FeedbackMessageEditor feedbackId={feedbackId} category={category} refetch={refetch} />
+          <FeedbackMessageEditor
+            feedbackId={feedbackId}
+            category={category}
+            refetch={refetch}
+            slug={slug}
+          />
         </Grid>
       )}
     </Grid>

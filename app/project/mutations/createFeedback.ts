@@ -1,5 +1,5 @@
 import db, { FeedbackNotificationType } from "db"
-import { resolver, NotFoundError } from "blitz"
+import { resolver } from "blitz"
 import { CreateFeedback } from "../validations"
 import Guard from "app/guard/ability"
 
@@ -10,19 +10,6 @@ export default resolver.pipe(
     const authUserId = ctx.session.userId!
 
     title = title.trim()
-
-    const project = await db.project.findFirst({
-      where: {
-        slug: projectSlug,
-      },
-      select: {
-        name: true,
-      },
-    })
-
-    if (!project) throw new NotFoundError("Project not found.")
-
-    const { name: projectName } = project
 
     const feedbackCount = await db.projectFeedback.findFirst({
       where: {
@@ -109,7 +96,6 @@ export default resolver.pipe(
           data: {
             projectSlug,
             feedbackId,
-            projectName,
             feedbackTitle,
             type: FeedbackNotificationType.ASSIGNED,
             notifications: {

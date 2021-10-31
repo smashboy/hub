@@ -55,7 +55,6 @@ model FeedbackNotification {
   notifications   Notifications            @relation(fields: [notificationsId], references: [id])
   notificationsId Int
   projectSlug     String
-  projectName     String
   feedbackTitle   String
   newStatus       FeedbackStatus?
   feedbackId      Int
@@ -191,6 +190,7 @@ model ProjectRoadmap {
   name        String
   dueTo       DateTime?
   description String?
+  isArchived  Boolean           @default(false)
   project     Project           @relation(fields: [projectId], references: [id])
   projectId   Int
   feedback    ProjectFeedback[]

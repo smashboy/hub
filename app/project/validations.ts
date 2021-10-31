@@ -99,6 +99,7 @@ export const CreateFeedbackMessage = z.object({
   feedbackId: z.number(),
   content: z.string(),
   category: feedbackMessageCategory,
+  projectSlug: z.string(),
 })
 
 export const UpdateFeedbackMessage = z.object({

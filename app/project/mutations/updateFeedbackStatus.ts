@@ -20,12 +20,7 @@ export default resolver.pipe(
             id: true,
           },
         },
-        project: {
-          select: {
-            slug: true,
-            name: true,
-          },
-        },
+
         participants: {
           select: {
             user: {
@@ -61,7 +56,6 @@ export default resolver.pipe(
     const {
       participants,
       upvotedBy,
-      project: { name: projectName },
       content: { id: feedbackContentId, title },
     } = feedback
 
@@ -76,7 +70,6 @@ export default resolver.pipe(
         data: {
           projectSlug,
           feedbackId: feedbackContentId,
-          projectName,
           feedbackTitle: title,
           newStatus: status,
           type: FeedbackNotificationType.STATUS_CHANGED,

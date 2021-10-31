@@ -20,11 +20,6 @@ export default resolver.pipe(
             id: true,
           },
         },
-        project: {
-          select: {
-            name: true,
-          },
-        },
         participants: {
           select: {
             user: {
@@ -41,7 +36,6 @@ export default resolver.pipe(
 
     const {
       participants: selectedMembers,
-      project: { name: projectName },
       content: { id: feedbackContentId, title },
     } = feedback
 
@@ -63,7 +57,6 @@ export default resolver.pipe(
           data: {
             projectSlug,
             feedbackId: feedbackContentId,
-            projectName,
             feedbackTitle: title,
             type: FeedbackNotificationType.ASSIGNED,
             notifications: {
