@@ -15,7 +15,7 @@ const ProjectsPage: BlitzPage = () => {
 
   return (
     <Container maxWidth="md" disableGutters>
-      <Grid container spacing={2} sx={{ marginTop: 3 }}>
+      <Grid container spacing={2} sx={{ marginTop: 1 }}>
         <ProjectsPageHeader onSearch={handleChange} />
         <Grid item xs={12}>
           <Suspense fallback={<ProjectsListPlaceholder />}>

@@ -8,6 +8,7 @@ import getFeedbackList, { GetFeedbackListInput } from "../queries/getFeedbackLis
 import FeedbackListItem from "./FeedbackListItem"
 import { FeedbackFilter, FeedbackSortKey } from "../pages/[slug]/feedback"
 import { LoadingButton } from "@mui/lab"
+import useIsSmallDevice from "app/core/hooks/useIsSmallDevice"
 
 type FeedbackListProps = {
   slug: string
@@ -65,6 +66,8 @@ const getFeedbackInput =
   }
 
 const FeedbackList: React.FC<FeedbackListProps> = ({ slug, role, filter, sortBy }) => {
+  const isSM = useIsSmallDevice()
+
   const [feedbackPages, { isFetchingNextPage, fetchNextPage, hasNextPage }] = useInfiniteQuery(
     getFeedbackList,
     getFeedbackInput(slug, filter, sortBy),
@@ -107,11 +110,12 @@ const FeedbackList: React.FC<FeedbackListProps> = ({ slug, role, filter, sortBy 
   return (
     <Box
       sx={{
-        height: "calc(100vh - 360px)",
+        height: isSM ? undefined : "calc(100vh - 360px)",
         // bgcolor: "red",
       }}
     >
       <Virtuoso
+        useWindowScroll={isSM}
         data={feedback}
         components={Components}
         style={{ height: "100%" }}

@@ -54,12 +54,15 @@ const FeedbackList = () => {
 
   return (
     <Box
-      sx={{
-        height: "calc(100vh - 70px)",
-        // bgcolor: "red",
-      }}
+      sx={
+        {
+          // height: "calc(100vh - 70px)",
+          // bgcolor: "red",
+        }
+      }
     >
       <Virtuoso
+        useWindowScroll
         data={feedback}
         components={Components}
         style={{ height: "100%" }}
