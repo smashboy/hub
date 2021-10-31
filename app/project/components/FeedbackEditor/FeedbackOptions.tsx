@@ -1,3 +1,4 @@
+import { ProjectMemberRole } from "db"
 import { useState } from "react"
 import { useQuery } from "blitz"
 import { Global } from "@emotion/react"
@@ -51,7 +52,7 @@ const generateNewLabelValues = () => ({
 })
 
 const Options = () => {
-  const { slug, setMembers, setLabels, setRoadmaps, labelIds, memberIds, roadmapIds } =
+  const { slug, setMembers, setLabels, setRoadmaps, labelIds, memberIds, roadmapIds, role } =
     useFeedbackEditor()
 
   const [project, { refetch }] = useQuery(
@@ -63,6 +64,8 @@ const Options = () => {
       refetchOnWindowFocus: false,
     }
   )
+
+  const disableActions = !role || role === ProjectMemberRole.MEMBER
 
   const projectLabels = project.settings?.labels || []
   const projectRoadmaps = project.roadmaps
@@ -88,6 +91,7 @@ const Options = () => {
             fullWidth
             freeSolo
             multiple
+            disabled={disableActions}
             onChange={(event, value) => {
               // @ts-ignore
               setMembers(value.map(({ id }) => id))
@@ -130,6 +134,7 @@ const Options = () => {
             freeSolo
             disablePortal
             multiple
+            disabled={disableActions}
             onChange={(event, value) => {
               // @ts-ignore
               setLabels(value.map(({ id }) => id))
@@ -165,6 +170,7 @@ const Options = () => {
             size="small"
             endIcon={<AddIcon />}
             fullWidth
+            disabled={disableActions}
           >
             New Label
           </Button>
@@ -182,6 +188,7 @@ const Options = () => {
             freeSolo
             disablePortal
             multiple
+            disabled={disableActions}
             onChange={(event, value) => {
               // @ts-ignore
               setRoadmaps(value.map(({ id }) => id))

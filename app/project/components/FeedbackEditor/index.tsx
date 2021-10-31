@@ -12,15 +12,11 @@ import Header from "./Header"
 import Editor from "./Editor"
 import FeedbackOptions from "./FeedbackOptions"
 
-const FeedbackEditor: React.FC<FeedbackEditorProps & { role: ProjectMemberRole | null }> = ({
-  slug,
-  initialValues,
-  role,
-}) => {
+const FeedbackEditor: React.FC<FeedbackEditorProps> = ({ slug, initialValues, role }) => {
   const isSM = useIsSmallDevice()
 
   return (
-    <FeedbackEditorProvider slug={slug} initialValues={initialValues}>
+    <FeedbackEditorProvider slug={slug} initialValues={initialValues} role={role}>
       <Container maxWidth="lg" disableGutters sx={{ marginTop: 3 }}>
         <Grid container spacing={2} sx={{ height: "fit-content" }}>
           <Grid

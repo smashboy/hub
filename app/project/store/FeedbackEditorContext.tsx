@@ -1,4 +1,4 @@
-import { FeedbackCategory } from "db"
+import { FeedbackCategory, ProjectMemberRole } from "db"
 import { createContext, useContext, useState, useEffect, useMemo } from "react"
 import { Routes, useRouter } from "blitz"
 import { useDebouncedCallback } from "use-debounce"
@@ -15,6 +15,7 @@ export type CategoryType = FeedbackCategory | "none"
 
 export type FeedbackEditorProps = {
   slug: string
+  role: ProjectMemberRole | null
   initialValues?: Omit<FeedbackPageProps, "project">
   // readOnly?: boolean
 }
@@ -30,6 +31,7 @@ export type FeedbackEditorStore = {
   initialContent?: Descendant[]
   initialValues?: Omit<FeedbackPageProps, "project">
   readOnly: boolean
+  role: ProjectMemberRole | null
   setTitle: (newTitle: string) => void
   setCategory: (newCategory: CategoryType) => void
   setMembers: (members: number[]) => void
@@ -46,6 +48,7 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
   children,
   slug,
   initialValues,
+  role,
 }) => {
   const router = useRouter()
 
@@ -180,6 +183,7 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
         readOnly,
         initialValues: { feedback: feedback! },
         initialContent: initialContent?.content || undefined,
+        role,
         setTitle: handleSetTitle,
         setCategory: handleSetCategory,
         setMembers: handleSetMemberIds,
