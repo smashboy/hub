@@ -42,6 +42,7 @@ export default resolver.pipe(
                 id: true,
                 title: true,
                 category: true,
+                status: true,
               },
             },
             createdAt: true,

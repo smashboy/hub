@@ -1,4 +1,4 @@
-import { FeedbackCategory, ProjectMemberRole } from "db"
+import { FeedbackCategory, FeedbackStatus, ProjectMemberRole } from "db"
 import { Link, Routes } from "blitz"
 import UpvoteIcon from "@mui/icons-material/ArrowDropUp"
 import {
@@ -20,6 +20,7 @@ type FeedbackListItemProps = {
     id: number
     title: string
     category: FeedbackCategory
+    status: FeedbackStatus
     createdAt: Date
     author: {
       username: string
@@ -39,6 +40,7 @@ const FeedbackListItem: React.FC<FeedbackListItemProps> = ({
   slug,
   role,
   feedback: {
+    status,
     title,
     id,
     createdAt,
@@ -66,6 +68,9 @@ const FeedbackListItem: React.FC<FeedbackListItemProps> = ({
                     createdAt,
                     new Date()
                   )} by ${username}`}</Grid>
+                  <Grid item xs={12}>
+                    <Chip label={status.replace("_", " ")} size="small" />
+                  </Grid>
                   {role && (
                     <Grid container item xs={12} spacing={1}>
                       {labels.map(({ id, name, color }) => (

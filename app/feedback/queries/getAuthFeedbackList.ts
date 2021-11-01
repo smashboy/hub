@@ -45,6 +45,7 @@ export default resolver.pipe(async ({ skip = 0, take = 10 }: GetAuthFeedbackList
               id: true,
               title: true,
               category: true,
+              status: true,
             },
           },
           createdAt: true,
