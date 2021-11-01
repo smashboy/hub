@@ -58,26 +58,6 @@ const ChangelogListItem: React.FC<ChangelogListItemProps> = ({
         </TimelineSeparator>
         <TimelineContent sx={{ py: "12px", px: 2 }}>
           <Grid container rowSpacing={1}>
-            {/* {previewImageUrl && (
-              <Grid
-                item
-                xs={12}
-                sx={{
-                  "& .changelog-preview": {
-                    borderRadius: 1,
-                  },
-                }}
-              >
-                <Image
-                  src={previewImageUrl}
-                  alt={title}
-                  layout="responsive"
-                  width={320}
-                  height={180}
-                  className="changelog-preview"
-                />
-              </Grid>
-            )} */}
             <Grid item xs={12}>
               <Card variant="elevation">
                 <Link

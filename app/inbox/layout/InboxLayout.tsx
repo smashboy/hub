@@ -21,7 +21,7 @@ const InboxLayout: React.FC<LayoutProps> = ({ title, children }) => {
 
   return (
     <Layout title={title} disableContainer>
-      <Grid container rowSpacing={2} sx={{ marginTop: 2 }}>
+      <Grid container rowSpacing={2} sx={{ marginTop: 1 }}>
         <Fade in timeout={500}>
           <Grid container item xs={12} md={2} sx={{ paddingLeft: 2 }}>
             <Paper
@@ -36,7 +36,7 @@ const InboxLayout: React.FC<LayoutProps> = ({ title, children }) => {
                 justifyContent={isSM ? "center" : undefined}
               >
                 <LayoutNavigationItem
-                  href={Routes.InboxAllPage()}
+                  href={Routes.InboxChangelogPage()}
                   label="Changelogs"
                   pathname="/inbox/changelogs"
                   notificationFilter="changelogs"

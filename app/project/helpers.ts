@@ -103,6 +103,7 @@ export interface RoadmapPageProps extends ProjectPageProps {
     id: number
     slug: string
     name: string
+    isArchived: boolean
     description: string | null
     dueTo: Date | null
     progress: number
@@ -332,6 +333,7 @@ export const getProjectRoadmaps = async (
       project: {
         slug,
       },
+      isArchived: false,
     },
     orderBy: {
       createdAt: "desc",
@@ -389,6 +391,7 @@ export const getProjectRoadmap = async (
       name: true,
       description: true,
       dueTo: true,
+      isArchived: true,
       feedback: {
         orderBy: {
           upvotedBy: {

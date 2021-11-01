@@ -67,8 +67,11 @@ model NewChangelogNotification {
   isSaved         Boolean       @default(false)
   notifications   Notifications @relation(fields: [notificationsId], references: [id])
   notificationsId Int
+  title           String
   projectSlug     String
-  changelogSlug   Int
+  projectName     String
+  previewImageUrl String?
+  changelogSlug   String
 }
 
 model Session {

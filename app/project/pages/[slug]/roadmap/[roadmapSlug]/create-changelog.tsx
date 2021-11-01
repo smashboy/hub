@@ -78,7 +78,7 @@ const generateChangelog = (
 }
 
 const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
-  roadmap: { name, description, feedback },
+  roadmap: { name, description, feedback, id: roadmapId },
   project: { slug },
 }: RoadmapPageProps) => {
   const theme = useTheme()
@@ -115,7 +115,7 @@ const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
 
       const bucket = superbaseClient.storage.from("changelog-previews")
 
-      const { data, error } = await bucket.upload(imagePath, previewImage)
+      const { error } = await bucket.upload(imagePath, previewImage)
 
       if (error)
         return notify(error.message, {
@@ -136,6 +136,7 @@ const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
       title,
       content: JSON.stringify({ content }),
       previewImageUrl,
+      roadmapId,
       projectSlug: slug,
     })
   }
@@ -245,7 +246,7 @@ export const getServerSideProps: GetServerSideProps<RoadmapPageProps> = async ({
       notFound: true,
     }
 
-  if (roadmap.roadmap.progress < 100)
+  if (roadmap.roadmap.progress < 100 || roadmap.roadmap.isArchived)
     return {
       notFound: true,
     }

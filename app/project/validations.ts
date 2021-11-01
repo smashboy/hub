@@ -178,6 +178,7 @@ export const CreateChangelog = z.object({
   title: z.string(),
   content: z.string(),
   previewImageUrl: z.string().nullable(),
+  roadmapId: z.number(),
 })
 
 export const UpdateChangelog = CreateChangelog.merge(

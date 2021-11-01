@@ -52,7 +52,7 @@ export const getServerSideProps: GetServerSideProps<RoadmapPageProps> = async ({
 
   const roadmap = await getProjectRoadmap(slug!, roadmapSlug)
 
-  if (!roadmap)
+  if (!roadmap || roadmap.roadmap.isArchived)
     return {
       notFound: true,
     }

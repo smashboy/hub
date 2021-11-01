@@ -38,7 +38,7 @@ const RoadmapsPage: BlitzPage<RoadmapsPageProps> = ({
 }
 
 RoadmapsPage.getLayout = (page, props: RoadmapsPageProps) => (
-  <ProjectLayout title={props.project.name} selectedTab="roadmap" {...props}>
+  <ProjectLayout title={props.project.name} selectedTab="roadmaps" {...props}>
     {page}
   </ProjectLayout>
 )

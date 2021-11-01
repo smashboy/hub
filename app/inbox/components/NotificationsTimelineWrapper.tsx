@@ -8,6 +8,11 @@ const NotificationsTimelineWrapper: React.FC = ({ children }) => {
     <Box
       sx={{
         height: isSM ? "calc(100vh - 210px)" : "calc(100vh - 145px)",
+        // width: {
+        //   sm: "100%",
+        //   md: "60%",
+        //   margin: "0 auto",
+        // },
         // bgcolor: "red"
       }}
     >
