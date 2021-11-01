@@ -1,8 +1,8 @@
-import { useState, Suspense, useMemo } from "react"
+import { useState, Suspense, useMemo, forwardRef } from "react"
 import { Components, Virtuoso } from "react-virtuoso"
 import { BlitzPage, useInfiniteQuery } from "blitz"
 import { Grid } from "@mui/material"
-import { LoadingButton } from "@mui/lab"
+import { LoadingButton, Timeline } from "@mui/lab"
 import { authConfig } from "app/core/configs/authConfig"
 import InboxLayout from "app/inbox/layout/InboxLayout"
 import ProjectInviteItem from "app/inbox/components/ProjectInviteItem"
@@ -13,7 +13,6 @@ import getInvitesNotifications, {
   GetNotificationsInput,
   NotificationReadStatus,
 } from "app/inbox/queries/getInvitesNotifications"
-import NotificationsTimelineContainer from "app/inbox/components/NotificationsTimelineContainer"
 import VirtualListItem from "app/core/components/VirtualListItem"
 import FeedbackListPlaceholder from "app/project/components/FeedbackListPlaceholder"
 import NotificationsTimelineWrapper from "app/inbox/components/NotificationsTimelineWrapper"
@@ -59,7 +58,12 @@ const List: React.FC<{ selectedStatus: NotificationReadStatus }> = ({ selectedSt
   // @ts-ignore TODO fix types
   const Components: Components = useMemo(
     () => ({
-      List: NotificationsTimelineContainer,
+      List: forwardRef(({ style, children }, listRef) => (
+        // @ts-ignore
+        <Timeline style={{ padding: 0, margin: 0, ...style }} ref={listRef}>
+          {children}
+        </Timeline>
+      )),
       item: VirtualListItem,
       Footer: () =>
         hasNextPage ? (

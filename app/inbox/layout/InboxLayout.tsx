@@ -55,7 +55,7 @@ const InboxLayout: React.FC<LayoutProps> = ({ title, children }) => {
                   icon={InboxIcon}
                 />
                 <LayoutNavigationItem
-                  href={Routes.InboxAllPage()}
+                  href={Routes.InboxSaved()}
                   label="Saved"
                   pathname="/inbox/saved"
                   notificationFilter="saved"

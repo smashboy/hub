@@ -8,7 +8,7 @@ export interface GetNotificationsInput {
   notificationStatus: NotificationReadStatus
   take?: number
   skip?: number
-  savedOnly?: boolean
+  savedOnly?: true
 }
 
 const orderBy: Prisma.ProjectInviteOrderByWithRelationInput = {
@@ -17,7 +17,7 @@ const orderBy: Prisma.ProjectInviteOrderByWithRelationInput = {
 
 export default resolver.pipe(
   Guard.authorizePipe("read", "user.notifications"),
-  async ({ notificationStatus, take = 10, skip = 0 }: GetNotificationsInput, ctx) => {
+  async ({ notificationStatus, savedOnly, take = 10, skip = 0 }: GetNotificationsInput, ctx) => {
     const authUserId = ctx.session.userId!
 
     const where: Prisma.ProjectInviteWhereInput =
@@ -26,12 +26,14 @@ export default resolver.pipe(
             notifications: {
               userId: authUserId,
             },
+            isSaved: savedOnly,
           }
         : {
             notifications: {
               userId: authUserId,
             },
             isRead: notificationStatus === "read" ? true : false,
+            isSaved: savedOnly,
           }
 
     const { items, hasMore, nextPage, count } = await paginate({

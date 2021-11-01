@@ -1,9 +1,11 @@
 import db from "db"
 import { resolver } from "blitz"
-import Guard from "app/guard/ability"
+// import Guard from "app/guard/ability"
 
-export default resolver.pipe(Guard.authorizePipe("read", "user.notifications"), async (_, ctx) => {
-  const authUserId = ctx.session.userId!
+export default resolver.pipe(async (_, ctx) => {
+  const authUserId = ctx.session.userId
+
+  if (!authUserId) return null
 
   const notifications = await db.notifications.findFirst({
     where: {
