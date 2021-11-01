@@ -27,6 +27,7 @@ import LogoutIcon from "@mui/icons-material/Logout"
 // import InboxIcon from "@mui/icons-material/Inbox"
 // import SettingsIcon from "@mui/icons-material/Settings"
 import AddIcon from "@mui/icons-material/Add"
+import FeedbackIcon from "@mui/icons-material/Feed"
 import { useCurrentUser } from "../hooks/useCurrentUser"
 import { ButtonRouteLink, RouteLink } from "../components/links"
 import logout from "app/auth/mutations/logout"
@@ -119,6 +120,9 @@ const AuthNavigation = () => {
           </Link>
           <Link href={Routes.AuthUserFeedbackPage()} passHref>
             <MenuItem onClick={handleCloseMenu}>
+              <ListItemIcon>
+                <FeedbackIcon color="primary" />
+              </ListItemIcon>
               <ListItemText primary="Your feedback" />
             </MenuItem>
           </Link>

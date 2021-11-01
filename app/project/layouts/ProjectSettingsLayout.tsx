@@ -35,7 +35,7 @@ const ProjectSettingsLayout: React.FC<LayoutProps & ProjectPageProps & ProjectSe
                     value="general"
                     label="General"
                   />
-                  <Tab value="features" label="Features" />
+                  {/* <Tab value="features" label="Features" /> */}
                   <TabRouteLink
                     href={Routes.MembersSettingPage({ slug })}
                     value="members"
