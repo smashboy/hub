@@ -53,7 +53,7 @@ const getInput =
 
 export const AllNoficationsList: React.FC<{
   selectedStatus: NotificationReadStatus
-  savedOnly?: boolean
+  savedOnly?: true
 }> = ({ selectedStatus, savedOnly }) => {
   const { refetch: refetchNotificationsCounter } = useNotificationsCounter()[1]
 
