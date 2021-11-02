@@ -72,20 +72,19 @@ const List: React.FC<{ selectedStatus: NotificationReadStatus }> = ({ selectedSt
         data={notifications}
         components={Components}
         style={{ height: "100%" }}
-        itemContent={(_, notification) => (
+        itemContent={(_, { id, createdAt, isRead, isSaved, newChangelogNotification }) => (
           <NotificationItemWrapper
-            key={notification.id}
-            id={notification.id}
-            createdAt={notification.createdAt}
-            isRead={notification.isRead}
-            modelKey="newChangelogNotification"
+            key={id}
+            id={id}
+            createdAt={createdAt}
+            isRead={isRead}
             onRefetchCounter={() => {
               refetchNotificationsCounter()
               refetch()
             }}
-            isSaved={notification.isSaved}
+            isSaved={isSaved}
           >
-            <ChangelogNotificationItem notification={notification} />
+            <ChangelogNotificationItem notification={newChangelogNotification!} />
           </NotificationItemWrapper>
         )}
       />

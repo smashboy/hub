@@ -11,7 +11,7 @@ export interface GetNotificationsInput {
   savedOnly?: true
 }
 
-const orderBy: Prisma.ProjectInviteOrderByWithRelationInput = {
+const orderBy: Prisma.NotificationOrderByWithRelationInput = {
   createdAt: "desc",
 }
 
@@ -20,47 +20,42 @@ export default resolver.pipe(
   async ({ notificationStatus, savedOnly, take = 10, skip = 0 }: GetNotificationsInput, ctx) => {
     const authUserId = ctx.session.userId!
 
-    const where: Prisma.ProjectInviteWhereInput =
-      notificationStatus === "all"
-        ? {
-            notifications: {
-              userId: authUserId,
-            },
-            isSaved: savedOnly,
-          }
-        : {
-            notifications: {
-              userId: authUserId,
-            },
-            isRead: notificationStatus === "read" ? true : false,
-            isSaved: savedOnly,
-          }
+    const where: Prisma.NotificationWhereInput = {
+      userId: authUserId,
+      isRead:
+        notificationStatus === "all" ? undefined : notificationStatus === "read" ? true : false,
+      projectInvite: {
+        is: {},
+      },
+      isSaved: savedOnly,
+    }
 
     const { items, hasMore, nextPage, count } = await paginate({
       skip,
       take,
       count: () =>
-        db.projectInvite.count({
+        db.notification.count({
           where,
           orderBy,
         }),
       query: (paginateArgs) =>
-        db.projectInvite.findMany({
+        db.notification.findMany({
           ...paginateArgs,
           where,
           orderBy,
-          select: {
-            id: true,
-            createdAt: true,
-            isRead: true,
-            isSaved: true,
-            project: {
+          include: {
+            projectInvite: {
               select: {
-                name: true,
-                slug: true,
-                isPrivate: true,
-                description: true,
-                logoUrl: true,
+                id: true,
+                project: {
+                  select: {
+                    name: true,
+                    slug: true,
+                    isPrivate: true,
+                    description: true,
+                    logoUrl: true,
+                  },
+                },
               },
             },
           },

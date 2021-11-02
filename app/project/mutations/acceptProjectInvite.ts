@@ -1,5 +1,5 @@
-import db, { ProjectMemberRole } from "db"
-import { resolver } from "blitz"
+import db from "db"
+import { resolver, NotFoundError } from "blitz"
 import { ManageProjectInvite } from "../validations"
 import Guard from "app/guard/ability"
 
@@ -13,7 +13,8 @@ export default resolver.pipe(
       },
       select: {
         projectId: true,
-        notifications: {
+        notificationId: true,
+        notification: {
           select: {
             user: {
               select: {
@@ -25,12 +26,12 @@ export default resolver.pipe(
       },
     })
 
-    // TODO: message
-    if (!invite) return
+    if (!invite) throw new NotFoundError("Invite not found.")
 
     const {
       projectId,
-      notifications: {
+      notificationId,
+      notification: {
         user: { id: userId },
       },
     } = invite
@@ -50,10 +51,17 @@ export default resolver.pipe(
       },
     })
 
-    await db.projectInvite.delete({
-      where: {
-        id: inviteId,
-      },
-    })
+    await db.$transaction([
+      db.projectInvite.delete({
+        where: {
+          id: inviteId,
+        },
+      }),
+      db.notification.delete({
+        where: {
+          id: notificationId,
+        },
+      }),
+    ])
   }
 )

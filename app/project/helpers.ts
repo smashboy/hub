@@ -300,7 +300,7 @@ export const getProjectMembersSettings = async (
       invites: {
         select: {
           id: true,
-          notifications: {
+          notification: {
             select: {
               user: {
                 select: {
@@ -320,7 +320,7 @@ export const getProjectMembersSettings = async (
   return {
     memberSettings: {
       members: project!.members,
-      invites: project!.invites.map(({ notifications: { user }, ...otherProps }) => ({
+      invites: project!.invites.map(({ notification: { user }, ...otherProps }) => ({
         ...otherProps,
         user,
       })),

@@ -6,9 +6,8 @@ import { UpdateNotificationSavedFlag } from "../validations"
 export default resolver.pipe(
   resolver.zod(UpdateNotificationSavedFlag),
   Guard.authorizePipe("update", "user.notifications"),
-  async ({ notificationId, notificationsPrismaModelKey, isSaved }) => {
-    // @ts-ignore
-    await db[notificationsPrismaModelKey].update({
+  async ({ notificationId, isSaved }) => {
+    await db.notification.update({
       where: {
         id: notificationId,
       },

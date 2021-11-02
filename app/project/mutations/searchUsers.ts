@@ -31,7 +31,7 @@ export default resolver.pipe(
         },
       },
       select: {
-        notifications: {
+        notification: {
           select: {
             user: {
               select: {
@@ -46,7 +46,7 @@ export default resolver.pipe(
     const membersUserIds = members.map(({ user: { id } }) => id)
     const pendingInvitesUsersId = pendingInvites.map(
       ({
-        notifications: {
+        notification: {
           user: { id },
         },
       }) => id

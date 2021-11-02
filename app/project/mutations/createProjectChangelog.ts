@@ -75,25 +75,20 @@ export default resolver.pipe(
     ].filter((id) => id !== authUserId)
 
     const notifyTransactions = userIds.map((userId) =>
-      db.newChangelogNotification.create({
+      db.notification.create({
         data: {
-          projectSlug,
-          projectName: name,
-          changelogSlug: slug,
-          title,
-          previewImageUrl,
-          notifications: {
-            connectOrCreate: {
-              where: {
-                userId,
-              },
-              create: {
-                user: {
-                  connect: {
-                    id: userId,
-                  },
-                },
-              },
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+          newChangelogNotification: {
+            create: {
+              projectSlug,
+              projectName: name,
+              changelogSlug: slug,
+              title,
+              previewImageUrl,
             },
           },
         },

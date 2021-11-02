@@ -66,25 +66,20 @@ export default resolver.pipe(
     ].filter((id) => id !== authUserId)
 
     const notifyTransactions = userIds.map((userId) =>
-      db.feedbackNotification.create({
+      db.notification.create({
         data: {
-          projectSlug,
-          feedbackId: feedbackContentId,
-          feedbackTitle: title,
-          newStatus: status,
-          type: FeedbackNotificationType.STATUS_CHANGED,
-          notifications: {
-            connectOrCreate: {
-              where: {
-                userId,
-              },
-              create: {
-                user: {
-                  connect: {
-                    id: userId,
-                  },
-                },
-              },
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+          feedbackNotification: {
+            create: {
+              projectSlug,
+              feedbackId: feedbackContentId,
+              feedbackTitle: title,
+              newStatus: status,
+              type: FeedbackNotificationType.STATUS_CHANGED,
             },
           },
         },

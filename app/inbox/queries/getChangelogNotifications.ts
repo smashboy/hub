@@ -3,7 +3,7 @@ import { resolver, paginate } from "blitz"
 import Guard from "app/guard/ability"
 import { GetNotificationsInput } from "./getInvitesNotifications"
 
-const orderBy: Prisma.NewChangelogNotificationOrderByWithRelationInput = {
+const orderBy: Prisma.NotificationOrderByWithRelationInput = {
   createdAt: "desc",
 }
 
@@ -12,35 +12,32 @@ export default resolver.pipe(
   async ({ notificationStatus, savedOnly, take = 10, skip = 0 }: GetNotificationsInput, ctx) => {
     const authUserId = ctx.session.userId!
 
-    const where: Prisma.NewChangelogNotificationWhereInput =
-      notificationStatus === "all"
-        ? {
-            notifications: {
-              userId: authUserId,
-            },
-            isSaved: savedOnly,
-          }
-        : {
-            notifications: {
-              userId: authUserId,
-            },
-            isRead: notificationStatus === "read" ? true : false,
-            isSaved: savedOnly,
-          }
+    const where: Prisma.NotificationWhereInput = {
+      userId: authUserId,
+      isRead:
+        notificationStatus === "all" ? undefined : notificationStatus === "read" ? true : false,
+      newChangelogNotification: {
+        is: {},
+      },
+      isSaved: savedOnly,
+    }
 
     const { items, hasMore, nextPage, count } = await paginate({
       skip,
       take,
       count: () =>
-        db.newChangelogNotification.count({
+        db.notification.count({
           where,
           orderBy,
         }),
       query: (paginateArgs) =>
-        db.newChangelogNotification.findMany({
+        db.notification.findMany({
           ...paginateArgs,
           where,
           orderBy,
+          include: {
+            newChangelogNotification: true,
+          },
         }),
     })
 

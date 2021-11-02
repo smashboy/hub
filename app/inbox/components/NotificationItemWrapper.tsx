@@ -10,16 +10,13 @@ import {
   TimelineContent,
   TimelineDot,
 } from "@mui/lab"
-import useNotificationsManager, {
-  NotificationsPrismaModelKey,
-} from "../hooks/useNotificationsManager"
+import useNotificationsManager from "../hooks/useNotificationsManager"
 
 type NotificationItemWrapperProps = {
   id: number
   createdAt: Date
   isRead: boolean
   isSaved: boolean
-  modelKey: NotificationsPrismaModelKey
   children: React.ReactNode
   onRefetchCounter: () => void
 }
@@ -30,18 +27,17 @@ const NotificationItemWrapper: React.FC<NotificationItemWrapperProps> = ({
   children,
   isRead,
   isSaved,
-  modelKey,
   onRefetchCounter,
 }) => {
   const { markAsRead, updateSavedStatus } = useNotificationsManager()
 
   const handleMarkAsRead = async () => {
-    await markAsRead(id, modelKey)
+    await markAsRead(id)
     onRefetchCounter()
   }
 
   const handleUpdateSavedStatus = async () => {
-    await updateSavedStatus(id, modelKey, !isSaved)
+    await updateSavedStatus(id, !isSaved)
     onRefetchCounter()
   }
 

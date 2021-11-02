@@ -87,20 +87,19 @@ const List: React.FC<{ selectedStatus: NotificationReadStatus }> = ({ selectedSt
         data={invites}
         components={Components}
         style={{ height: "100%" }}
-        itemContent={(_, invite) => (
+        itemContent={(_, { id, createdAt, isRead, isSaved, projectInvite }) => (
           <NotificationItemWrapper
-            key={invite.id}
-            id={invite.id}
-            createdAt={invite.createdAt}
-            isRead={invite.isRead}
-            modelKey="projectInvite"
+            key={id}
+            id={id}
+            createdAt={createdAt}
+            isRead={isRead}
             onRefetchCounter={() => {
               refetchNotificationsCounter()
               refetch()
             }}
-            isSaved={invite.isSaved}
+            isSaved={isSaved}
           >
-            <ProjectInviteItem key={invite.id} invite={invite} onActionDone={() => refetch()} />
+            <ProjectInviteItem invite={projectInvite!} onActionDone={() => refetch()} />
           </NotificationItemWrapper>
         )}
       />

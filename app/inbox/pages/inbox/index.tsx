@@ -15,40 +15,20 @@ import VirtualListItem from "app/core/components/VirtualListItem"
 import NotificationsTimelineWrapper from "app/inbox/components/NotificationsTimelineWrapper"
 import NotificationItemWrapper from "app/inbox/components/NotificationItemWrapper"
 import FeedbackListPlaceholder from "app/project/components/FeedbackListPlaceholder"
-import getAllNotifications, {
-  GetAllNotificationsInput,
-} from "app/inbox/queries/getAllNotifications"
-import { NotificationsPrismaModelKey } from "app/inbox/hooks/useNotificationsManager"
+import getAllNotifications from "app/inbox/queries/getAllNotifications"
 import NotificationSelector from "app/inbox/components/NotificationSelector"
 import { Timeline } from "@mui/lab"
 
 const getInput =
   (selectedStatus: NotificationReadStatus, savedOnly?: true) =>
-  (
-    nextPages: Array<{ take: number; skip: number } | null> | undefined
-  ): GetAllNotificationsInput => {
-    let page: GetNotificationsInput = {
+  (newPage: Partial<GetNotificationsInput> = { take: 10, skip: 0 }) => {
+    const page: GetNotificationsInput = {
+      ...newPage,
       savedOnly,
       notificationStatus: selectedStatus,
     }
 
-    if (!nextPages) {
-      const pagination = { take: 3, skip: 0 }
-      page = { ...page, ...pagination }
-      return {
-        changelogInput: page,
-        feedbackInput: page,
-        invitesInput: page,
-      }
-    }
-
-    const next = nextPages.map((next) => next ?? { take: 0, skip: 0 })
-
-    return {
-      changelogInput: { ...page, ...next[0] },
-      feedbackInput: { ...page, ...next[2] },
-      invitesInput: { ...page, ...next[1] },
-    }
+    return page
   }
 
 export const AllNoficationsList: React.FC<{
@@ -57,20 +37,11 @@ export const AllNoficationsList: React.FC<{
 }> = ({ selectedStatus, savedOnly }) => {
   const { refetch: refetchNotificationsCounter } = useNotificationsCounter()[1]
 
-  const [pages, { hasNextPage, isFetchingNextPage, fetchNextPage, refetch }] = useInfiniteQuery(
-    getAllNotifications,
-    getInput(selectedStatus, savedOnly),
-    {
-      getNextPageParam: (lastPage) => {
-        const nextPages = Object.values(lastPage).map((page) => page.nextPage)
-        // @ts-ignore
-        const hasMorePages = nextPages.filter((nextPage) => nextPage?.take > 0 || false).length > 0
-        if (hasMorePages) return nextPages
-        return null
-      },
+  const [notificationPages, { hasNextPage, isFetchingNextPage, fetchNextPage, refetch }] =
+    useInfiniteQuery(getAllNotifications, getInput(selectedStatus, savedOnly), {
+      getNextPageParam: (lastPage) => lastPage.nextPage,
       refetchOnWindowFocus: false,
-    }
-  )
+    })
 
   const Components: Components = useMemo(
     () => ({
@@ -97,16 +68,7 @@ export const AllNoficationsList: React.FC<{
     [isFetchingNextPage, hasNextPage, fetchNextPage]
   )
 
-  const notifications = pages
-    .map((page) =>
-      Object.entries(page).map(([key, content]) =>
-        content.items.map((item) => ({
-          notification: item,
-          key: key.replace("s", "") as NotificationsPrismaModelKey,
-        }))
-      )
-    )
-    .flat(3)
+  const notifications = notificationPages.map(({ items }) => items).flat()
 
   return (
     <NotificationsTimelineWrapper>
@@ -114,20 +76,36 @@ export const AllNoficationsList: React.FC<{
         data={notifications}
         components={Components}
         style={{ height: "100%" }}
-        itemContent={(_, { key, notification }) => (
+        itemContent={(
+          _,
+          {
+            id,
+            createdAt,
+            isRead,
+            isSaved,
+            feedbackNotification,
+            newChangelogNotification,
+            projectInvite,
+          }
+        ) => (
           <NotificationItemWrapper
-            key={notification.id}
-            id={notification.id}
-            createdAt={notification.createdAt}
-            isRead={notification.isRead}
-            modelKey={key}
+            key={id}
+            id={id}
+            createdAt={createdAt}
+            isRead={isRead}
             onRefetchCounter={() => {
               refetchNotificationsCounter()
               refetch()
             }}
-            isSaved={notification.isSaved}
+            isSaved={isSaved}
           >
-            <NotificationSelector modelKey={key} props={notification} />
+            <NotificationSelector
+              notification={{ feedbackNotification, newChangelogNotification, projectInvite }}
+              onInviteActionDone={() => {
+                refetchNotificationsCounter()
+                refetch()
+              }}
+            />
           </NotificationItemWrapper>
         )}
       />
