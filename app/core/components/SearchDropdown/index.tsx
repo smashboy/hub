@@ -3,7 +3,7 @@ import { SvgIcon, Button, ButtonProps, Grid, Badge } from "@mui/material"
 import { useDebounce } from "use-debounce"
 import { ArrayElement, ReturnAsync } from "../../utils/common"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
-import SearchDropdownDialogList from "./DialogList"
+import SearchDropdownDrawerList from "./DrawerList"
 import SearchDropdownMenuList from "./MenuList"
 
 export interface Option {
@@ -164,7 +164,7 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
         />
       )}
       {isSM && (
-        <SearchDropdownDialogList
+        <SearchDropdownDrawerList
           open={open}
           title={title}
           onSearch={handleSearchInput}

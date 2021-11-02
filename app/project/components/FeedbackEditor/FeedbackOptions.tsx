@@ -1,8 +1,6 @@
 import { ProjectMemberRole } from "db"
 import { useState } from "react"
 import { useQuery } from "blitz"
-import { Global } from "@emotion/react"
-import { styled } from "@mui/material/styles"
 import {
   Paper,
   Grid,
@@ -18,10 +16,7 @@ import {
   Container,
   ListItemText,
   Box,
-  CssBaseline,
-  SwipeableDrawer,
 } from "@mui/material"
-import { grey } from "@mui/material/colors"
 import AddIcon from "@mui/icons-material/Add"
 import DialogForm from "app/core/components/DialogForm"
 import getFeedbackOptions from "../../queries/getFeedbackOptions"
@@ -34,16 +29,7 @@ import createLabel from "../../mutations/createLabel"
 import { FORM_ERROR } from "app/core/components/Form"
 import { useFeedbackEditor } from "app/project/store/FeedbackEditorContext"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
-
-const Puller = styled(Box)(({ theme }) => ({
-  width: 30,
-  height: 6,
-  backgroundColor: theme.palette.mode === "light" ? grey[300] : grey[700],
-  borderRadius: 3,
-  position: "absolute",
-  top: 8,
-  left: "calc(50% - 15px)",
-}))
+import SwipeableDrawer from "app/core/components/SwipeableDrawer"
 
 const generateNewLabelValues = () => ({
   name: "",
@@ -248,57 +234,19 @@ const FeedbackOptions = () => {
 
   const toggleDrawer = (newOpen: boolean) => () => setOpen(newOpen)
 
-  // This is used only for the example
-  const container = window !== undefined ? () => window.document.body : undefined
-
   return (
     <>
       {isSM ? (
-        <>
-          <CssBaseline />
-          <Global
-            styles={{
-              ".MuiDrawer-root > .MuiPaper-root": {
-                height: `calc(80% - ${feedbackOptionsDrawerBleeding}px)`,
-                overflow: "visible",
-                background: "#212121",
-              },
-            }}
-          />
-
-          <SwipeableDrawer
-            container={container}
-            anchor="bottom"
-            open={open}
-            onClose={toggleDrawer(false)}
-            onOpen={toggleDrawer(true)}
-            swipeAreaWidth={feedbackOptionsDrawerBleeding}
-            disableSwipeToOpen={false}
-            ModalProps={{
-              keepMounted: true,
-            }}
-          >
-            <Box
-              sx={{
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-                top: -feedbackOptionsDrawerBleeding,
-                borderTopLeftRadius: 8,
-                borderTopRightRadius: 8,
-                visibility: "visible",
-                bgcolor: "#212121",
-                right: 0,
-                left: 0,
-              }}
-            >
-              <Puller />
-            </Box>
-            <Container>
-              <Options />
-            </Container>
-          </SwipeableDrawer>
-        </>
+        <SwipeableDrawer
+          open={open}
+          onOpen={toggleDrawer(true)}
+          onClose={toggleDrawer(false)}
+          drawerBleeding={feedbackOptionsDrawerBleeding}
+        >
+          <Container>
+            <Options />
+          </Container>
+        </SwipeableDrawer>
       ) : (
         <Grid item xs={3}>
           <Fade in timeout={500}>
