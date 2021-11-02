@@ -1,16 +1,21 @@
-import { FeedbackCategory } from "db"
+import { FeedbackCategory, ProjectMemberRole } from "db"
 import { createContext, useContext, useState, useEffect, useMemo } from "react"
 import { Routes, useRouter } from "blitz"
+import { useDebouncedCallback } from "use-debounce"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import { Descendant } from "slate"
 import createFeedback from "../mutations/createFeedback"
 import { FeedbackPageProps } from "../helpers"
 import updateFeedback from "../mutations/updateFeedback"
+import updateFeedbackParticipants from "../mutations/updateFeedbackParticipants"
+import updateFeedbackLabels from "../mutations/updateFeedbackLabels"
+import updateFeedbackRoadmaps from "../mutations/updateFeedbackRoadmaps"
 
 export type CategoryType = FeedbackCategory | "none"
 
 export type FeedbackEditorProps = {
   slug: string
+  role: ProjectMemberRole | null
   initialValues?: Omit<FeedbackPageProps, "project">
   // readOnly?: boolean
 }
@@ -26,6 +31,7 @@ export type FeedbackEditorStore = {
   initialContent?: Descendant[]
   initialValues?: Omit<FeedbackPageProps, "project">
   readOnly: boolean
+  role: ProjectMemberRole | null
   setTitle: (newTitle: string) => void
   setCategory: (newCategory: CategoryType) => void
   setMembers: (members: number[]) => void
@@ -42,13 +48,14 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
   children,
   slug,
   initialValues,
+  role,
 }) => {
   const router = useRouter()
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialContent = useMemo(
     // @ts-ignore
     () => JSON.parse(initialValues?.feedback.content || null) as { content: Descendant[] } | null,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
 
@@ -59,6 +66,10 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
   const [updateFeedbackMutation] = useCustomMutation(updateFeedback, {
     successNotification: "Feedback has been updated successfully!",
   })
+
+  const [updateFeedbackLabelsMutation] = useCustomMutation(updateFeedbackLabels, {})
+  const [updateFeedbackRoadmapsMutation] = useCustomMutation(updateFeedbackRoadmaps, {})
+  const [updateFeedbackParticipantsMutation] = useCustomMutation(updateFeedbackParticipants, {})
 
   const feedback = initialValues?.feedback
 
@@ -73,7 +84,6 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
   const [roadmapIds, setRoadmapIds] = useState<number[]>(
     initialValues?.feedback.roadmaps.map(({ id }) => id) || []
   )
-
   const [readOnly, setReadOnly] = useState(Boolean(initialValues))
   const [disableSubmit, setDisableSubmit] = useState(false)
 
@@ -82,11 +92,50 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
     setDisableSubmit(false)
   }, [title, category, memberIds])
 
+  const handleUpdateParticipants = useDebouncedCallback(async (members: number[]) => {
+    if (initialValues) {
+      await updateFeedbackParticipantsMutation({
+        feedbackId: initialValues.feedback.id,
+        participants: members,
+        projectSlug: slug,
+      })
+    }
+  }, 2000)
+
+  const handleUpdateLabels = useDebouncedCallback(async (labels: string[]) => {
+    if (initialValues) {
+      await updateFeedbackLabelsMutation({
+        feedbackId: initialValues.feedback.id,
+        labels,
+        projectSlug: slug,
+      })
+    }
+  }, 2000)
+
+  const handleUpdateRoadmaps = useDebouncedCallback(async (roadmaps: number[]) => {
+    if (initialValues) {
+      await updateFeedbackRoadmapsMutation({
+        feedbackId: initialValues.feedback.id,
+        roadmaps,
+        projectSlug: slug,
+      })
+    }
+  }, 2000)
+
   const handleSetTitle = (newTitle: string) => setTitle(newTitle)
   const handleSetCategory = (newCategory: CategoryType) => setCategory(newCategory)
-  const handleSetMemberIds = (members: number[]) => setMembers(members)
-  const handleSetRoadmapIds = (ids: number[]) => setRoadmapIds(ids)
-  const handleSetLabelIds = (labels: string[]) => setLabelIds(labels)
+  const handleSetMemberIds = async (members: number[]) => {
+    await handleUpdateParticipants(members)
+    setMembers(members)
+  }
+  const handleSetRoadmapIds = async (ids: number[]) => {
+    await handleUpdateRoadmaps(ids)
+    setRoadmapIds(ids)
+  }
+  const handleSetLabelIds = async (labels: string[]) => {
+    await handleUpdateLabels(labels)
+    setLabelIds(labels)
+  }
   const handleSetReadOnly = (newValue: boolean) => setReadOnly(newValue)
 
   const handleSubmit = async (content: Descendant[]) => {
@@ -96,9 +145,6 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
         title,
         category: category as FeedbackCategory,
         content: JSON.stringify({ content }),
-        participants: memberIds,
-        labels: labelIds,
-        roadmaps: roadmapIds,
       })
 
       setReadOnly(true)
@@ -137,6 +183,7 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
         readOnly,
         initialValues: { feedback: feedback! },
         initialContent: initialContent?.content || undefined,
+        role,
         setTitle: handleSetTitle,
         setCategory: handleSetCategory,
         setMembers: handleSetMemberIds,

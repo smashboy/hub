@@ -14,6 +14,9 @@ export default resolver.pipe(
       },
       select: {
         roadmaps: {
+          where: {
+            isArchived: false,
+          },
           select: {
             id: true,
             name: true,

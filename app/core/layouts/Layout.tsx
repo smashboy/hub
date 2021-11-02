@@ -13,21 +13,26 @@ import {
   ListItemText,
   useScrollTrigger,
   useTheme,
-  Divider,
+  Badge,
   Fade,
   Container,
   Box,
   Hidden,
+  IconButton,
 } from "@mui/material"
+import NotificationsIcon from "@mui/icons-material/Notifications"
 import { alpha } from "@mui/material/styles"
 import { isSSR } from "../utils/blitz"
 import LogoutIcon from "@mui/icons-material/Logout"
-import InboxIcon from "@mui/icons-material/Inbox"
-import SettingsIcon from "@mui/icons-material/Settings"
+// import InboxIcon from "@mui/icons-material/Inbox"
+// import SettingsIcon from "@mui/icons-material/Settings"
 import AddIcon from "@mui/icons-material/Add"
+import FeedbackIcon from "@mui/icons-material/Feed"
 import { useCurrentUser } from "../hooks/useCurrentUser"
 import { ButtonRouteLink, RouteLink } from "../components/links"
 import logout from "app/auth/mutations/logout"
+
+import useNotificationsCounter from "app/inbox/hooks/useNotificationsCounter"
 
 export interface LayoutProps {
   title?: string
@@ -38,6 +43,10 @@ export interface LayoutProps {
 
 const AuthNavigation = () => {
   const user = useCurrentUser()
+
+  const [notifications] = useNotificationsCounter()
+
+  const notificationsCounter = notifications ? Object.values(notifications).flat().length : 0
 
   const [menuEl, setMenuEl] = useState<null | HTMLElement>(null)
 
@@ -63,7 +72,7 @@ const AuthNavigation = () => {
                 Projects
               </RouteLink>
               <RouteLink
-                href="/feedback"
+                href={Routes.AuthUserFeedbackPage()}
                 variant="button"
                 color="#fff"
                 sx={{ marginRight: 3 }}
@@ -72,6 +81,21 @@ const AuthNavigation = () => {
                 Feedback
               </RouteLink>
             </Hidden>
+            <Link href={Routes.InboxAllPage()} passHref>
+              <IconButton sx={{ marginRight: 2 }} size="small" component="a">
+                <Badge
+                  badgeContent={notificationsCounter ?? 0}
+                  color="primary"
+                  max={99}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                >
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+            </Link>
             <Avatar
               onClick={handleOpenMenu}
               src="broken"
@@ -81,14 +105,14 @@ const AuthNavigation = () => {
           </Box>
         </Fade>
         <Menu anchorEl={menuEl} open={Boolean(menuEl)} onClose={handleCloseMenu}>
-          <Link href={Routes.InboxAllPage()} passHref>
+          {/* <Link href={Routes.InboxAllPage()} passHref>
             <MenuItem onClick={handleCloseMenu} component="a">
               <ListItemIcon>
                 <InboxIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Inbox" />
             </MenuItem>
-          </Link>
+          </Link> */}
           <Link href={Routes.ProjectsPage()} passHref>
             <MenuItem onClick={handleCloseMenu} component="a">
               <ListItemText primary="Your projects" />
@@ -96,6 +120,9 @@ const AuthNavigation = () => {
           </Link>
           <Link href={Routes.AuthUserFeedbackPage()} passHref>
             <MenuItem onClick={handleCloseMenu}>
+              <ListItemIcon>
+                <FeedbackIcon color="primary" />
+              </ListItemIcon>
               <ListItemText primary="Your feedback" />
             </MenuItem>
           </Link>
@@ -139,8 +166,11 @@ const AuthNavigation = () => {
 
 const AuthNavigationPlaceholder = () => (
   <>
-    <Skeleton variant="text" sx={{ marginRight: 3, width: 40 }} />
-    <Skeleton variant="text" sx={{ marginRight: 3, width: 40 }} />
+    <Hidden smDown>
+      <Skeleton variant="text" sx={{ marginRight: 3, width: 40 }} />
+      <Skeleton variant="text" sx={{ marginRight: 3, width: 40 }} />
+    </Hidden>
+    <Skeleton variant="circular" width={20} height={20} sx={{ marginRight: 3 }} />
     <Skeleton variant="circular" width={40} height={40} />
   </>
 )

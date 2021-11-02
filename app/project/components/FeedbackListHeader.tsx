@@ -102,7 +102,7 @@ const FeedbackListHeader: React.FC<{
             <Button
               onClick={handleOpenMenu}
               variant="contained"
-              color="inherit"
+              color="secondary"
               endIcon={<SortIcon />}
             >
               Sort

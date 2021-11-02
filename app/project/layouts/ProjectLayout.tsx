@@ -16,7 +16,7 @@ import { ProjectMemberRole } from "db"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 
 type ProjectLayoutProps = {
-  selectedTab: "landing" | "changelog" | "roadmap" | "jobs" | "feedback"
+  selectedTab: "landing" | "changelogs" | "roadmaps" | "jobs" | "feedback"
 }
 
 const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProps> = ({
@@ -93,7 +93,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                     <Grid item xs={6} md={2}>
                       <LoadingButton
                         variant="contained"
-                        color="secondary"
+                        sx={{ bgcolor: color }}
                         size="small"
                         loading={isLoadingFollow}
                         onClick={async () => {
@@ -158,16 +158,20 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
               />
               <TabRouteLink
                 href={Routes.ChangelogListPage({ slug })}
-                value="changelog"
-                label="Changelog"
+                value="changelogs"
+                label="Changelogs"
               />
               <TabRouteLink
                 href={Routes.FeedbackPage({ slug })}
                 value="feedback"
                 label="Feedback"
               />
-              <TabRouteLink href={Routes.RoadmapsPage({ slug })} value="roadmap" label="Roadmap" />
-              <Tab value="jobs" label="Jobs" />
+              <TabRouteLink
+                href={Routes.RoadmapsPage({ slug })}
+                value="roadmaps"
+                label="Roadmaps"
+              />
+              {/* <Tab value="jobs" label="Jobs" /> */}
             </Tabs>
           </Grid>
         </Fade>

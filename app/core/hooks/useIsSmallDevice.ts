@@ -6,3 +6,5 @@ export const useIsSmallDevice = () => {
 
   return isSM
 }
+
+export default useIsSmallDevice

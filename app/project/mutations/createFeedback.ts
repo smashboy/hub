@@ -1,4 +1,4 @@
-import db from "db"
+import db, { FeedbackNotificationType } from "db"
 import { resolver } from "blitz"
 import { CreateFeedback } from "../validations"
 import Guard from "app/guard/ability"
@@ -32,7 +32,7 @@ export default resolver.pipe(
     const newId = (feedbackCount?.content.id || 0) + 1
 
     const {
-      content: { id },
+      content: { id: feedbackId, title: feedbackTitle },
     } = await db.projectFeedback.create({
       data: {
         content: {
@@ -68,11 +68,51 @@ export default resolver.pipe(
         content: {
           select: {
             id: true,
+            title: true,
           },
         },
       },
     })
 
-    return id
+    const selectedMembers = await db.projectMember.findMany({
+      where: {
+        id: {
+          in: participants,
+        },
+      },
+      select: {
+        user: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    })
+
+    const notifyTransactions = selectedMembers
+      .filter(({ user: { id } }) => id !== authUserId)
+      .map(({ user: { id } }) =>
+        db.notification.create({
+          data: {
+            user: {
+              connect: {
+                id,
+              },
+            },
+            feedbackNotification: {
+              create: {
+                projectSlug,
+                feedbackId,
+                feedbackTitle,
+                type: FeedbackNotificationType.ASSIGNED,
+              },
+            },
+          },
+        })
+      )
+
+    await db.$transaction(notifyTransactions)
+
+    return feedbackId
   }
 )

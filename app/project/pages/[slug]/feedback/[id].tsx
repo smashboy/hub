@@ -4,33 +4,17 @@ import { Grid, Divider, Tabs, Tab, Container } from "@mui/material"
 import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
 import FeedbackEditor from "app/project/components/FeedbackEditor"
 import { getProjectInfo, getFeedback, FeedbackPageProps } from "app/project/helpers"
-import getAbility from "app/guard/queries/getAbility"
 import { Suspense } from "react"
 import FeedbackMessagesList from "app/project/components/FeedbackMessagesList"
 import { FeedbackMessageCategory } from "db"
 
 const SelectedFeedbackPage: BlitzPage<FeedbackPageProps> = ({
-  project: { slug },
+  project: { slug, role },
   feedback,
 }: FeedbackPageProps) => {
-  const [res] = useQuery(
-    getAbility,
-    [
-      ["read", "feedback.messages.private", slug],
-      ["update", "feedback.settings", slug],
-    ],
-    {
-      suspense: false,
-      refetchOnWindowFocus: false,
-    }
-  )
-
   const [selectedMessagesCategory, setSelectedMessagesCategory] = useState<FeedbackMessageCategory>(
     FeedbackMessageCategory.PUBLIC
   )
-
-  const canReadPrivateMessages = res?.[0]?.can || false
-  const canManageSettings = res?.[1]?.can || false
 
   const handleSelectMessagesCategory = (
     event: React.SyntheticEvent,
@@ -40,13 +24,13 @@ const SelectedFeedbackPage: BlitzPage<FeedbackPageProps> = ({
   }
 
   return (
-    <Container maxWidth={canManageSettings ? "xl" : "md"} disableGutters>
+    <Container maxWidth={role ? "xl" : "md"} disableGutters>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <FeedbackEditor slug={slug} initialValues={{ feedback }} />
+          <FeedbackEditor slug={slug} initialValues={{ feedback }} role={role} />
         </Grid>
-        <Grid container item xs={12} md={canManageSettings ? 9 : 12} spacing={2}>
-          {canReadPrivateMessages && (
+        <Grid container item xs={12} md={role ? 9 : 12} spacing={2}>
+          {role && (
             <Grid item xs={12}>
               <Tabs value={selectedMessagesCategory} onChange={handleSelectMessagesCategory}>
                 <Tab value={FeedbackMessageCategory.PUBLIC} label="Public" />
@@ -55,7 +39,11 @@ const SelectedFeedbackPage: BlitzPage<FeedbackPageProps> = ({
             </Grid>
           )}
           <Suspense fallback={null}>
-            <FeedbackMessagesList feedbackId={feedback.id} category={selectedMessagesCategory} />
+            <FeedbackMessagesList
+              feedbackId={feedback.id}
+              category={selectedMessagesCategory}
+              slug={slug}
+            />
           </Suspense>
         </Grid>
       </Grid>

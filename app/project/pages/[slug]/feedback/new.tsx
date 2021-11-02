@@ -5,9 +5,9 @@ import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
 import FeedbackEditor from "app/project/components/FeedbackEditor"
 
 const CreateFeedbackPage: BlitzPage<ProjectPageProps> = ({
-  project: { slug },
+  project: { slug, role },
 }: ProjectPageProps) => {
-  return <FeedbackEditor slug={slug} />
+  return <FeedbackEditor slug={slug} role={role} />
 }
 
 CreateFeedbackPage.authenticate = authConfig

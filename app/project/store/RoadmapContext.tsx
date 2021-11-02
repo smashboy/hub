@@ -115,6 +115,7 @@ export const RoadmapProvider: React.FC<RoadmapStoreProps> = ({
 
       await updateFeedbackStatusMutation({
         feedbackId,
+        projectSlug,
         status: newStatus,
       })
     } catch (error) {

@@ -20,7 +20,7 @@ const ChangelogListPage: BlitzPage<ProjectPageProps> = ({
 }
 
 ChangelogListPage.getLayout = (page, props: ProjectPageProps) => (
-  <ProjectLayout title={props.project.name} selectedTab="changelog" {...props}>
+  <ProjectLayout title={props.project.name} selectedTab="changelogs" {...props}>
     {page}
   </ProjectLayout>
 )

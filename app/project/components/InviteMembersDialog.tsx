@@ -144,7 +144,7 @@ const InviteMembersDialog: React.FC<InviteMembersDialog> = ({
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button color="inherit" onClick={onClose}>
+        <Button color="secondary" onClick={onClose}>
           Cancel
         </Button>
         <LoadingButton

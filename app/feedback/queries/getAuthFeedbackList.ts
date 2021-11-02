@@ -45,19 +45,13 @@ export default resolver.pipe(async ({ skip = 0, take = 10 }: GetAuthFeedbackList
               id: true,
               title: true,
               category: true,
+              status: true,
             },
           },
           createdAt: true,
           author: {
             select: {
               username: true,
-            },
-          },
-          labels: {
-            select: {
-              id: true,
-              name: true,
-              color: true,
             },
           },
         },

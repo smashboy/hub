@@ -61,8 +61,18 @@ const NewProjectPage: BlitzPage = () => {
                 }
               }}
             >
-              <LabeledTextField label="Project name *" name="name" size="small" />
-              <LabeledTextField label="Website url" name="websiteUrl" size="small" />
+              <LabeledTextField
+                label="Project name *"
+                name="name"
+                size="small"
+                autoComplete="off"
+              />
+              <LabeledTextField
+                label="Website url"
+                name="websiteUrl"
+                size="small"
+                autoComplete="off"
+              />
               <ColorPicker label="Brand color" name="color" />
               <LabeledTextField
                 label="Description"

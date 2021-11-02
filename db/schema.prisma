@@ -31,8 +31,44 @@ model User {
   changelogFeedback ChangelogFeedback[]
   upvoted           ProjectFeedback[]
   messages          ProjectFeedbackMessage[]
-  projectInvites    ProjectInvite[]
   project           Project[]
+  notifications     Notification[]
+}
+
+model Notification {
+  id                       Int                       @id @default(autoincrement())
+  createdAt                DateTime                  @default(now())
+  isRead                   Boolean                   @default(false)
+  isSaved                  Boolean                   @default(false)
+  user                     User                      @relation(fields: [userId], references: [id])
+  userId                   Int
+  feedbackNotification     FeedbackNotification?
+  newChangelogNotification NewChangelogNotification?
+  projectInvite            ProjectInvite?
+}
+
+model FeedbackNotification {
+  id             Int                      @id @default(autoincrement())
+  createdAt      DateTime                 @default(now())
+  type           FeedbackNotificationType
+  projectSlug    String
+  feedbackTitle  String
+  newStatus      FeedbackStatus?
+  feedbackId     Int
+  notification   Notification             @relation(fields: [notificationId], references: [id])
+  notificationId Int                      @unique
+}
+
+model NewChangelogNotification {
+  id              Int          @id @default(autoincrement())
+  createdAt       DateTime     @default(now())
+  title           String
+  projectSlug     String
+  projectName     String
+  previewImageUrl String?
+  changelogSlug   String
+  notification    Notification @relation(fields: [notificationId], references: [id])
+  notificationId  Int          @unique
 }
 
 model Session {
@@ -99,12 +135,12 @@ model ProjectMember {
 }
 
 model ProjectInvite {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-  project   Project  @relation(fields: [projectId], references: [id])
-  projectId Int
-  userId    Int
+  id             Int          @id @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  project        Project      @relation(fields: [projectId], references: [id])
+  projectId      Int
+  notification   Notification @relation(fields: [notificationId], references: [id])
+  notificationId Int          @unique
 }
 
 model ProjectLanding {
@@ -117,15 +153,16 @@ model ProjectLanding {
 }
 
 model ProjectChangelog {
-  id        Int                 @id @default(autoincrement())
-  createdAt DateTime            @default(now())
-  updatedAt DateTime            @updatedAt
-  title     String
-  slug      String
-  content   String
-  project   Project             @relation(fields: [projectId], references: [id])
-  projectId Int
-  feedback  ChangelogFeedback[]
+  id              Int                 @id @default(autoincrement())
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  title           String
+  previewImageUrl String?
+  slug            String
+  content         String
+  project         Project             @relation(fields: [projectId], references: [id])
+  projectId       Int
+  feedback        ChangelogFeedback[]
 
   @@unique([projectId, slug])
 }
@@ -152,6 +189,7 @@ model ProjectRoadmap {
   name        String
   dueTo       DateTime?
   description String?
+  isArchived  Boolean           @default(false)
   project     Project           @relation(fields: [projectId], references: [id])
   projectId   Int
   feedback    ProjectFeedback[]
@@ -261,4 +299,13 @@ enum ProjectMemberRole {
   ADMIN
   MODERATOR
   MEMBER
+}
+
+enum FeedbackNotificationType {
+  ASSIGNED
+  STATUS_CHANGED
+  ADDED_TO_ROADMAP
+  NEW_PUBLIC_MESSAGE
+  NEW_PRIVATE_MESSAGE
+  NEW_INTERNAL_MESSAGE
 }

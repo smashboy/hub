@@ -1,12 +1,12 @@
 import { Suspense } from "react"
 import { Menu, Button, TextField, Grid, Divider } from "@mui/material"
 import { QueryFunc } from "./index"
-import { SearchDropdownDialogListProps } from "./DialogList"
+import { SearchDropdownDrawerListProps } from "./DrawerList"
 import LoadingAnimation from "../LoadingAnimation"
 import SearchDropdownList from "./List"
 
 interface SearchDropdownMenuListProps<I extends Object, F extends QueryFunc<I>>
-  extends SearchDropdownDialogListProps<I, F> {
+  extends SearchDropdownDrawerListProps<I, F> {
   anchorEl: Element | null
 }
 

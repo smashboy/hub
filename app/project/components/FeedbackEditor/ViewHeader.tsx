@@ -21,6 +21,7 @@ const FeedbackViewHeader = () => {
     if (user) {
       if (initialValues!.feedback.upvotedBy.includes(user.id)) setUpvotedByUser(true)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   const showEditButton = user?.id === initialValues!.feedback.author.id
@@ -87,7 +88,7 @@ const FeedbackViewHeader = () => {
                 <Button
                   onClick={() => setReadOnly(false)}
                   variant="contained"
-                  color="inherit"
+                  color="secondary"
                   fullWidth
                 >
                   Edit

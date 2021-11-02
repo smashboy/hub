@@ -6,7 +6,7 @@ import Guard from "app/guard/ability"
 export default resolver.pipe(
   resolver.zod(UpdateFeedback),
   Guard.authorizePipe("update", "feedback"),
-  async ({ title, category, content, participants, roadmaps, labels, feedbackId }) => {
+  async ({ title, category, content, feedbackId }) => {
     title = title.trim()
 
     await db.projectFeedback.update({
@@ -20,15 +20,6 @@ export default resolver.pipe(
             category,
             content,
           },
-        },
-        labels: {
-          set: labels.map((id) => ({ id })),
-        },
-        participants: {
-          set: participants.map((id) => ({ id })),
-        },
-        roadmaps: {
-          set: roadmaps.map((id) => ({ id })),
         },
       },
     })

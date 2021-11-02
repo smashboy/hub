@@ -1,8 +1,7 @@
 import { forwardRef, useMemo } from "react"
 import { useInfiniteQuery } from "blitz"
 import { Components, Virtuoso } from "react-virtuoso"
-import { Global } from "@emotion/react"
-import { Box, CssBaseline } from "@mui/material"
+import { Box } from "@mui/material"
 import { LoadingButton, Timeline } from "@mui/lab"
 import VirtualListItem from "app/core/components/VirtualListItem"
 import getChangelogList, { GetChangelogListInput } from "../queries/getChangelogList"
@@ -13,7 +12,7 @@ const getChangelogInput =
   (page: Partial<GetChangelogListInput> = { take: 10, skip: 0 }) => ({ ...page, slug })
 
 const ChangelogList: React.FC<{ slug: string }> = ({ slug }) => {
-  const [feedbackPages, { isFetchingNextPage, fetchNextPage, hasNextPage }] = useInfiniteQuery(
+  const [changelogPages, { isFetchingNextPage, fetchNextPage, hasNextPage }] = useInfiniteQuery(
     getChangelogList,
     getChangelogInput(slug),
     {
@@ -22,7 +21,7 @@ const ChangelogList: React.FC<{ slug: string }> = ({ slug }) => {
     }
   )
 
-  const changelogs = feedbackPages
+  const changelogs = changelogPages
     .map(({ changelog: changelogList }) => changelogList.map((changelog) => changelog))
     .flat()
 
@@ -54,23 +53,17 @@ const ChangelogList: React.FC<{ slug: string }> = ({ slug }) => {
   return (
     <Box
       sx={{
-        height: "calc(100vh - 400px)",
+        // height: isSM ? undefined : "calc(100vh - 260px)",
         margin: "0 auto",
+        // bgcolor: "red",
         width: {
           xs: "100%",
           md: "75%",
         },
       }}
     >
-      <CssBaseline />
-      <Global
-        styles={{
-          ".MuiTimelineItem-root:before": {
-            flex: "none!important",
-          },
-        }}
-      />
       <Virtuoso
+        useWindowScroll
         data={changelogs}
         components={Components}
         style={{ height: "100%" }}

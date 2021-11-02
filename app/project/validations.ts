@@ -49,14 +49,34 @@ export const CreateFeedback = z.object({
   labels: z.array(z.string()),
 })
 
-export const UpdateFeedback = CreateFeedback.omit({ projectSlug: true }).merge(
-  z.object({
-    feedbackId: z.number(),
-  })
-)
+export const UpdateFeedback = z.object({
+  feedbackId: z.number(),
+  title: z.string().min(1).max(75),
+  category: z.enum([FeedbackCategory.BUG, FeedbackCategory.FEATURE, FeedbackCategory.IMPROVEMENT]),
+  content: z.string(),
+})
+
+export const UpdateFeedbackParticipants = z.object({
+  feedbackId: z.number(),
+  participants: z.array(z.number()),
+  projectSlug: z.string(),
+})
+
+export const UpdateFeedbackLabels = z.object({
+  feedbackId: z.number(),
+  labels: z.array(z.string()),
+  projectSlug: z.string(),
+})
+
+export const UpdateFeedbackRoadmaps = z.object({
+  feedbackId: z.number(),
+  roadmaps: z.array(z.number()),
+  projectSlug: z.string(),
+})
 
 export const UpdateFeedbackStatus = z.object({
   feedbackId: z.number(),
+  projectSlug: z.string(),
   status: z.enum([
     FeedbackStatus.BLOCKED,
     FeedbackStatus.CANCELED,
@@ -79,6 +99,7 @@ export const CreateFeedbackMessage = z.object({
   feedbackId: z.number(),
   content: z.string(),
   category: feedbackMessageCategory,
+  projectSlug: z.string(),
 })
 
 export const UpdateFeedbackMessage = z.object({
@@ -156,6 +177,8 @@ export const CreateChangelog = z.object({
   projectSlug: z.string(),
   title: z.string(),
   content: z.string(),
+  previewImageUrl: z.string().nullable(),
+  roadmapId: z.number(),
 })
 
 export const UpdateChangelog = CreateChangelog.merge(

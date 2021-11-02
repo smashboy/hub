@@ -3,6 +3,7 @@ import { checkModeratorPersmissions, checkAdminPersmissions } from "./helpers"
 
 export type ExtendedResourceTypes =
   | "user"
+  | "user.notifications"
   | "feedback"
   | "feedback.settings"
   | "feedback.messages"
@@ -34,6 +35,7 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
 
     if (authUserId) {
       can("manage", "user")
+      can("manage", "user.notifications")
 
       can("create", "project")
       // TODO: maybe additional check for private project

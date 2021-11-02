@@ -42,12 +42,23 @@ export default resolver.pipe(
                 id: true,
                 title: true,
                 category: true,
+                status: true,
               },
             },
             createdAt: true,
             author: {
               select: {
                 username: true,
+              },
+            },
+            participants: {
+              select: {
+                user: {
+                  select: {
+                    username: true,
+                    avatarUrl: true,
+                  },
+                },
               },
             },
             labels: {

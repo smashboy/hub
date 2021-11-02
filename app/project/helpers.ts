@@ -103,6 +103,7 @@ export interface RoadmapPageProps extends ProjectPageProps {
     id: number
     slug: string
     name: string
+    isArchived: boolean
     description: string | null
     dueTo: Date | null
     progress: number
@@ -169,6 +170,9 @@ export const getFeedback = async (
         },
       },
       roadmaps: {
+        // where: {
+        //   isArchived: false,
+        // },
         select: {
           id: true,
           name: true,
@@ -296,12 +300,16 @@ export const getProjectMembersSettings = async (
       invites: {
         select: {
           id: true,
-          user: {
+          notification: {
             select: {
-              id: true,
-              username: true,
-              email: true,
-              avatarUrl: true,
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  email: true,
+                  avatarUrl: true,
+                },
+              },
             },
           },
         },
@@ -312,7 +320,10 @@ export const getProjectMembersSettings = async (
   return {
     memberSettings: {
       members: project!.members,
-      invites: project!.invites,
+      invites: project!.invites.map(({ notification: { user }, ...otherProps }) => ({
+        ...otherProps,
+        user,
+      })),
     },
   }
 }
@@ -325,6 +336,7 @@ export const getProjectRoadmaps = async (
       project: {
         slug,
       },
+      isArchived: false,
     },
     orderBy: {
       createdAt: "desc",
@@ -382,6 +394,7 @@ export const getProjectRoadmap = async (
       name: true,
       description: true,
       dueTo: true,
+      isArchived: true,
       feedback: {
         orderBy: {
           upvotedBy: {

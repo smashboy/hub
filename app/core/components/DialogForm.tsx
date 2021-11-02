@@ -91,7 +91,7 @@ function DialogForm<S extends z.ZodType<any, any>>({
             </Grid>
           </DialogContent>
           <DialogActions>
-            <Button color="inherit" onClick={handleCloseDialog}>
+            <Button color="secondary" onClick={handleCloseDialog}>
               Cancel
             </Button>
             <LoadingButton

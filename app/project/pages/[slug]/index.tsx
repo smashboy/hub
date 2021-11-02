@@ -1,10 +1,18 @@
 import { BlitzPage, GetServerSideProps, getSession } from "blitz"
-import Layout from "app/core/layouts/Layout"
+import { Typography, Grid } from "@mui/material"
 import { getProjectInfo, ProjectPageProps } from "app/project/helpers"
 import ProjectLayout from "app/project/layouts/ProjectLayout"
 
-const ProjectLandingPage: BlitzPage<ProjectPageProps> = ({ project }) => {
-  return <div />
+const ProjectLandingPage: BlitzPage<ProjectPageProps> = () => {
+  return (
+    <Grid container sx={{ marginTop: 2 }}>
+      <Grid container item xs={12} justifyContent="center">
+        <Typography variant="overline" textAlign="center" color="text.primary">
+          Coming Soon
+        </Typography>
+      </Grid>
+    </Grid>
+  )
 }
 
 ProjectLandingPage.getLayout = (page, props: ProjectPageProps) => (

@@ -3,12 +3,15 @@ import { Typography, Grid, Fade } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
 import { ButtonRouteLink } from "app/core/components/links"
 import SearchField from "app/core/components/SearchField"
+import useIsSmallDevice from "app/core/hooks/useIsSmallDevice"
 
 const ProjectsPageHeader: React.FC<{
   onSearch: (event: React.ChangeEvent<HTMLInputElement>) => void
 }> = ({ onSearch }) => {
+  const isSM = useIsSmallDevice()
+
   return (
-    <Grid item container xs={12} spacing={4}>
+    <Grid item container xs={12} rowSpacing={isSM ? 2 : 4}>
       <Grid item xs={12}>
         <Fade in timeout={500}>
           <Typography variant="h4" color="text.primary" align="center">
