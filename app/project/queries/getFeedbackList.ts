@@ -51,6 +51,16 @@ export default resolver.pipe(
                 username: true,
               },
             },
+            participants: {
+              select: {
+                user: {
+                  select: {
+                    username: true,
+                    avatarUrl: true,
+                  },
+                },
+              },
+            },
             labels: {
               select: {
                 id: true,

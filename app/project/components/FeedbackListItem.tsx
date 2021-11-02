@@ -10,6 +10,8 @@ import {
   Box,
   ListItemIcon,
   Typography,
+  Avatar,
+  AvatarGroup,
 } from "@mui/material"
 import { formatRelative } from "date-fns"
 
@@ -28,11 +30,12 @@ type FeedbackListItemProps = {
     _count: {
       upvotedBy: number
     } | null
-    labels: {
+    participants?: Array<{ user: { avatarUrl: string | null; username: string } }>
+    labels?: Array<{
       id: string
       name: string
       color: string
-    }[]
+    }>
   }
 }
 
@@ -47,6 +50,7 @@ const FeedbackListItem: React.FC<FeedbackListItemProps> = ({
     labels,
     _count,
     author: { username },
+    participants,
   },
 }) => {
   return (
@@ -71,13 +75,23 @@ const FeedbackListItem: React.FC<FeedbackListItemProps> = ({
                   <Grid item xs={12}>
                     <Chip label={status.replace("_", " ")} size="small" />
                   </Grid>
-                  {role && (
+
+                  {role && labels && labels.length > 0 && (
                     <Grid container item xs={12} spacing={1}>
                       {labels.map(({ id, name, color }) => (
                         <Grid key={id} item xs="auto">
                           <Chip label={name} key={name} sx={{ bgcolor: color }} size="small" />
                         </Grid>
                       ))}
+                    </Grid>
+                  )}
+                  {participants && (
+                    <Grid item xs={12} sx={{ ".MuiAvatarGroup-avatar": { width: 30, height: 30 } }}>
+                      <AvatarGroup max={4}>
+                        {participants.map(({ user: { avatarUrl, username } }) => (
+                          <Avatar key={username} src="broken" alt={username} />
+                        ))}
+                      </AvatarGroup>
                     </Grid>
                   )}
                 </Grid>
