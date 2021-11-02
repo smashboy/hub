@@ -181,7 +181,10 @@ export const CreateChangelog = z.object({
   roadmapId: z.number(),
 })
 
-export const UpdateChangelog = CreateChangelog.merge(
+export const UpdateChangelog = CreateChangelog.omit({
+  previewImageUrl: true,
+  roadmapId: true,
+}).merge(
   z.object({
     changelogId: z.number(),
   })
