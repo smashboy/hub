@@ -7,7 +7,6 @@ import StrikeIcon from "@mui/icons-material/StrikethroughS"
 import CodeIcon from "@mui/icons-material/Code"
 import BulListIcon from "@mui/icons-material/FormatListBulleted"
 import NumListIcon from "@mui/icons-material/FormatListNumbered"
-import ImageIcon from "@mui/icons-material/Image"
 import BlockIcon from "@mui/icons-material/FormatQuote"
 import { MarkButtonProps, BlockButtonProps } from "../types"
 import { BlockButton, MarkButton } from "./buttons"
@@ -15,6 +14,7 @@ import HeadingSelector from "./HeadingSelector"
 import { useEditor } from "../EditorContext"
 import LinkSelector from "./LinkSelector"
 import ReactVisibilitySensor from "react-visibility-sensor"
+import ImageUploader from "./ImageUploader"
 
 // export type EditorMode = "editor" | "preview"
 
@@ -45,10 +45,6 @@ const blockButtons: BlockButtonProps[] = [
   {
     format: "block",
     icon: BlockIcon,
-  },
-  {
-    format: "image",
-    icon: ImageIcon,
   },
   {
     format: "bul-list",
@@ -92,6 +88,7 @@ const Toolbar = () => {
                   <MarkButton key={format} icon={icon} format={format} />
                 ))}
                 <LinkSelector />
+                <ImageUploader />
                 {blockButtons.map(({ icon, format }) => (
                   <BlockButton key={format} icon={icon} format={format} />
                 ))}
@@ -116,6 +113,7 @@ const Toolbar = () => {
                     <MarkButton key={format} icon={icon} format={format} />
                   ))}
                   <LinkSelector />
+                  <ImageUploader />
                   {blockButtons.map(({ icon, format }) => (
                     <BlockButton key={format} icon={icon} format={format} />
                   ))}
@@ -146,6 +144,7 @@ const Toolbar = () => {
                 <MarkButton key={format} icon={icon} format={format} isMobile />
               ))}
               <LinkSelector isMobile />
+              <ImageUploader />
               {blockButtons.map(({ icon, format }) => (
                 <BlockButton key={format} icon={icon} format={format} isMobile />
               ))}

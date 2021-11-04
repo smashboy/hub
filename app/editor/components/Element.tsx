@@ -2,7 +2,13 @@ import { useMutation } from "blitz"
 import { useEffect, useState } from "react"
 import { CircularProgress, Paper, Skeleton, Typography } from "@mui/material"
 import { styled } from "@mui/material/styles"
-import { ReactEditor, RenderElementProps, useSlateStatic } from "slate-react"
+import {
+  ReactEditor,
+  RenderElementProps,
+  useFocused,
+  useSelected,
+  useSlateStatic,
+} from "slate-react"
 import { Link } from "@mui/material"
 import { HeadingElement, LinkElement, ImageElement } from "../types"
 import { Transforms } from "slate"
@@ -12,6 +18,7 @@ import { useEditor } from "../EditorContext"
 
 const ImageContainer = styled("div")({
   position: "relative",
+  marginLeft: 5,
 })
 
 const StyledImage = styled("img")({
@@ -128,8 +135,8 @@ const EditorImage: React.FC<{ element: ImageElement; attributes: any }> = ({
     }
   }, [error])
 
-  // const selected = useSelected()
-  // const focused = useFocused()
+  const selected = useSelected()
+  const focused = useFocused()
   return (
     <div {...attributes}>
       <ImageContainer contentEditable={false}>
@@ -138,7 +145,11 @@ const EditorImage: React.FC<{ element: ImageElement; attributes: any }> = ({
             Uploading image <CircularProgress sx={{ marginLeft: 1 }} size={16} />
           </Typography>
         ) : (
-          <StyledImage src={url} alt="" />
+          <StyledImage
+            src={url}
+            alt=""
+            sx={{ boxShadow: selected && focused ? "0 0 0 3px #B4D5FF" : "none" }}
+          />
         )}
         {/* <Button
           active
