@@ -68,7 +68,7 @@ const NotificationItemWrapper: React.FC<NotificationItemWrapperProps> = ({
             </Grid>
             <Grid item xs={6} sx={{ paddingLeft: 0.5 }}>
               <Typography color="text.secondary" variant="overline">
-                {format(createdAt, "dd MMMM, yyyy")}
+                {format(createdAt, "d MMMM, yyyy")}
               </Typography>
             </Grid>
             <Grid container item xs={6} justifyContent="flex-end">
