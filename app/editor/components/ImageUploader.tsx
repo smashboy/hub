@@ -1,15 +1,9 @@
 import {
   Button,
-  Hidden,
   BottomNavigationAction,
-  RadioGroup,
   DialogTitle,
   DialogContent,
   DialogActions,
-  Paper,
-  FormControlLabel,
-  Radio,
-  Grid,
 } from "@mui/material"
 import ImageIcon from "@mui/icons-material/Image"
 import { useState } from "react"
@@ -46,6 +40,7 @@ const ImageUploader: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
     reader.addEventListener("load", () => {
       const url = reader.result as string
       const fileType = image!.type
+
       insertImage(editor, url, fileType as AllowedFileType)
       setIsLoading(false)
       handleClose()
