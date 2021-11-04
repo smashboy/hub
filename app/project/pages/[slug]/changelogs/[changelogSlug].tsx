@@ -5,7 +5,7 @@ import { LoadingButton } from "@mui/lab"
 import { format } from "date-fns"
 import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
 import { ChangelogPageProps, getChangelog, getProjectInfo } from "app/project/helpers"
-import MarkdownEditor from "app/core/markdown/Editor"
+import Editor from "app/editor/Editor"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import updateProjectChangelog from "app/project/mutations/updateProjectChangelog"
 import { Descendant } from "slate"
@@ -112,11 +112,12 @@ const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
           <Fade in timeout={750}>
             <Grid container item spacing={2}>
               <Grid item xs={12}>
-                <MarkdownEditor
+                <Editor
                   initialContent={JSON.parse(content)?.content || undefined}
                   onCancel={handleCancelEditChangelog}
                   onSubmit={handleUpdateChangelog}
                   editVariant
+                  bucketId="changelogs"
                   closeOnSubmit
                   readOnly={!editMode}
                 />

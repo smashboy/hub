@@ -1,6 +1,6 @@
 import { Descendant } from "slate"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
-import MarkdownEditor from "app/core/markdown/Editor"
+import Editor from "app/editor/Editor"
 import createFeedbackMessage from "app/project/mutations/createFeedbackMessage"
 import { FeedbackMessagesListProps } from "./FeedbackMessagesList"
 
@@ -27,7 +27,14 @@ const FeedbackMessageEditor: React.FC<FeedbackMessageEditor> = ({
     refetch()
   }
 
-  return <MarkdownEditor submitText="Comment" height={100} onSubmit={handleCreateNewMessage} />
+  return (
+    <Editor
+      submitText="Comment"
+      height={100}
+      bucketId="feedback-messages"
+      onSubmit={handleCreateNewMessage}
+    />
+  )
 }
 
 export default FeedbackMessageEditor

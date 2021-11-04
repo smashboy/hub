@@ -14,7 +14,7 @@ import HeadingSelector from "./HeadingSelector"
 import { useEditor } from "../EditorContext"
 import LinkSelector from "./LinkSelector"
 
-// export type MarkdownEditorMode = "editor" | "preview"
+// export type EditorMode = "editor" | "preview"
 
 const markButtons: MarkButtonProps[] = [
   {

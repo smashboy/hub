@@ -1,4 +1,3 @@
-import { useMemo } from "react"
 import { useSlate } from "slate-react"
 import { Button, BottomNavigationAction } from "@mui/material"
 import { MarkButtonProps, BlockButtonProps } from "../types"

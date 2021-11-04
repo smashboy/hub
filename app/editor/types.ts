@@ -1,4 +1,5 @@
 import { SvgIconComponent } from "@mui/icons-material"
+import { AllowedFileType, ContentBacketName } from "app/core/superbase/config"
 import { BaseEditor, Descendant } from "slate"
 import { ReactEditor } from "slate-react"
 
@@ -20,6 +21,11 @@ export type FormattedTextOptions = { [key in ElementLeafType]?: boolean }
 
 export interface FormattedText extends FormattedTextOptions {
   text: string
+}
+
+export interface ImageElement {
+  type: "image"
+  url: string
 }
 
 export interface CustomElementBase {
@@ -51,6 +57,7 @@ export interface LinkElement extends CustomElementBase {
 
 export interface ImageElement extends CustomElementBase {
   type: "image"
+  imageType?: AllowedFileType
   url: string
 }
 
@@ -73,6 +80,7 @@ export type EditorStore = {
   editVariant: boolean
   height: number
   disablePadding: boolean
+  bucketId: ContentBacketName
   setIsFocused: (newValue: boolean) => void
   setContent: (newContent: Descendant[]) => void
   setDisableSubmit: (newValue: boolean) => void
@@ -83,16 +91,17 @@ export type EditorStore = {
 
 export type EditorProps = Partial<
   Pick<EditorStore, "disableSubmit" | "onCancel" | "height" | "disablePadding">
-> & {
-  initialContent?: Descendant[]
-  onSubmit?: (content: Descendant[]) => void
-  submitText?: string
-  readOnly?: boolean
-  updateOnRerender?: boolean
-  editVariant?: boolean
-  disableReset?: boolean
-  closeOnSubmit?: boolean
-}
+> &
+  Pick<EditorStore, "bucketId"> & {
+    initialContent?: Descendant[]
+    onSubmit?: (content: Descendant[]) => void
+    submitText?: string
+    readOnly?: boolean
+    updateOnRerender?: boolean
+    editVariant?: boolean
+    disableReset?: boolean
+    closeOnSubmit?: boolean
+  }
 
 declare module "slate" {
   interface CustomTypes {

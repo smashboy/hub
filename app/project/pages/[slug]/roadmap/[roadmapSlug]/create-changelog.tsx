@@ -11,8 +11,8 @@ import {
   RoadmapPageProps,
 } from "app/project/helpers"
 import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
-import MarkdownEditor from "app/core/markdown/Editor"
-import { HeadingElement, ListElement } from "app/core/markdown/types"
+import Editor from "app/editor/Editor"
+import { HeadingElement, ListElement } from "app/editor/types"
 import { capitalizeString } from "app/core/utils/blitz"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import createProjectChangelog from "app/project/mutations/createProjectChangelog"
@@ -199,9 +199,10 @@ const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
           )}
           <Grid item xs={12}>
             <Container maxWidth="lg" disableGutters>
-              <MarkdownEditor
+              <Editor
                 initialContent={generateChangelog(description, feedback)}
                 readOnly={readOnly}
+                bucketId="changelogs"
                 disableReset
                 onSubmit={handleSubmit}
               />

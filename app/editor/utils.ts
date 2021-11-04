@@ -1,6 +1,7 @@
 import { Editor, Element, Transforms, Range } from "slate"
 import { isUrl } from "app/core/utils/common"
-import { ElementLeafType, ElementType, LinkElement } from "./types"
+import { ElementLeafType, ElementType, ImageElement, LinkElement } from "./types"
+import { AllowedFileType, allowedImageTypes } from "app/core/superbase/config"
 
 const LIST_TYPES: ElementType[] = ["num-list", "bul-list"]
 
@@ -122,4 +123,55 @@ export const wrapLink = (editor: Editor, url: string) => {
 
 export const insertLink = (editor: Editor, url: string) => {
   if (editor.selection) wrapLink(editor, url)
+}
+
+export const isImageUrl = (url: any) => {
+  if (!url) return false
+  if (!isUrl(url)) return false
+  const ext = new URL(url).pathname.split(".").pop()
+  if (!ext) return false
+  return allowedImageTypes.map((type) => type.split("/").pop()).includes(ext)
+}
+
+export const insertImage = (editor: Editor, url: string, type?: AllowedFileType) => {
+  const image: ImageElement = { type: "image", imageType: type, url, children: [{ text: "" }] }
+  Transforms.insertNodes(editor, image)
+  Transforms.insertNodes(editor, { type: "paragraph", children: [{ text: "" }] })
+}
+
+export const withImages = (editor: Editor) => {
+  const { insertData, isVoid } = editor
+
+  editor.isVoid = (element) => {
+    return element.type === "image" ? true : isVoid(element)
+  }
+
+  editor.insertData = (data) => {
+    const text = data.getData("text/plain")
+    const { files } = data
+
+    const filesArray = Array.from(files)
+
+    if (files && files.length > 0) {
+      for (const file of filesArray) {
+        const reader = new FileReader()
+        const fileType = file.type
+
+        if (allowedImageTypes.includes(fileType)) {
+          reader.addEventListener("load", () => {
+            const url = reader.result as string
+            insertImage(editor, url, fileType as AllowedFileType)
+          })
+
+          reader.readAsDataURL(file)
+        }
+      }
+    } else if (isImageUrl(text)) {
+      insertImage(editor, text)
+    } else {
+      insertData(data)
+    }
+  }
+
+  return editor
 }

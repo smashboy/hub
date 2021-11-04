@@ -36,11 +36,13 @@
     "@mui/x-data-grid": "5.0.0-beta.3",
     "@prisma/client": "3.x",
     "@supabase/supabase-js": "1.25.2",
+    "base64-arraybuffer": "1.0.1",
     "blitz": "0.40.0",
     "bytes": "3.1.0",
     "date-fns": "2.25.0",
     "jotai": "1.3.7",
     "markdown-it": "12.2.0",
+    "node-fetch": "3.0.0",
     "notistack": "2.0.2",
     "randomcolor": "0.6.2",
     "react": "alpha",
@@ -56,6 +58,7 @@
     "slate-react": "0.66.4",
     "slugify": "1.6.0",
     "use-debounce": "7.0.0",
+    "uuid": "8.3.2",
     "zod": "3.9.5"
   },
   "devDependencies": {
