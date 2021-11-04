@@ -32,7 +32,7 @@ const RoadmapListItem: React.FC<RoadmapListItemProps> = ({
                     </Grid>
                   )}
                   <Grid item xs={12}>
-                    {dueTo ? `Due by ${format(dueTo, "d MMMM, yyyy")}` : "No due date"}
+                    {dueTo ? `Due by ${format(dueTo, "do MMMM, yyyy")}` : "No due date"}
                   </Grid>
                   <Grid container item xs={12} md={3} spacing={1} sx={{ paddingTop: 1 }}>
                     <Grid item xs={12}>

@@ -85,7 +85,7 @@ const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="subtitle1" color="text.secondary">
-                  {format(createdAt, "d MMMM, yyyy")}
+                  {format(createdAt, "do MMMM, yyyy")}
                 </Typography>
               </Grid>
             </Grid>

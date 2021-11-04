@@ -109,7 +109,7 @@ const ChangelogListItem: React.FC<ChangelogListItemProps> = ({
             </Grid>
             <Grid item xs={12} sx={{ paddingLeft: 0.5 }}>
               <Typography color="text.secondary" variant="overline">
-                {format(createdAt, "d MMMM, yyyy")}
+                {format(createdAt, "do MMMM, yyyy")}
               </Typography>
             </Grid>
           </Grid>
