@@ -81,6 +81,7 @@ export type EditorStore = {
   height: number
   disablePadding: boolean
   bucketId: ContentBacketName
+  cleanVariant: boolean
   setIsFocused: (newValue: boolean) => void
   setContent: (newContent: Descendant[]) => void
   setDisableSubmit: (newValue: boolean) => void
@@ -90,15 +91,22 @@ export type EditorStore = {
 }
 
 export type EditorProps = Partial<
-  Pick<EditorStore, "disableSubmit" | "onCancel" | "height" | "disablePadding">
+  Pick<
+    EditorStore,
+    | "disableSubmit"
+    | "onCancel"
+    | "height"
+    | "disablePadding"
+    | "submitText"
+    | "editVariant"
+    | "readOnly"
+    | "cleanVariant"
+  >
 > &
   Pick<EditorStore, "bucketId"> & {
     initialContent?: Descendant[]
     onSubmit?: (content: Descendant[]) => void
-    submitText?: string
-    readOnly?: boolean
     updateOnRerender?: boolean
-    editVariant?: boolean
     disableReset?: boolean
     closeOnSubmit?: boolean
   }

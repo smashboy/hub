@@ -1,4 +1,5 @@
-import { Grid, ButtonGroup, Hidden, BottomNavigation, Paper, Slide, useTheme } from "@mui/material"
+import { useState } from "react"
+import { Grid, Hidden, BottomNavigation, Paper, Slide, useTheme, Container } from "@mui/material"
 import BoldIcon from "@mui/icons-material/FormatBold"
 import ItalicIcon from "@mui/icons-material/FormatItalic"
 import UnderlinedIcon from "@mui/icons-material/FormatUnderlined"
@@ -13,6 +14,7 @@ import { BlockButton, MarkButton } from "./buttons"
 import HeadingSelector from "./HeadingSelector"
 import { useEditor } from "../EditorContext"
 import LinkSelector from "./LinkSelector"
+import ReactVisibilitySensor from "react-visibility-sensor"
 
 // export type EditorMode = "editor" | "preview"
 
@@ -63,7 +65,9 @@ const optionsCount = [...markButtons, ...blockButtons].length + 3
 const Toolbar = () => {
   const theme = useTheme()
 
-  const { isFocused, readOnly } = useEditor()
+  const { isFocused, readOnly, cleanVariant } = useEditor()
+
+  const [isToolbarVisible, setIsToolbarVisible] = useState(true)
 
   if (readOnly) return null
 
@@ -77,10 +81,12 @@ const Toolbar = () => {
             <Tab value="preview" label="Preview" />
           </Tabs>
         </Grid> */}
-
           <Grid container item xs={12} alignItems="center">
-            <Paper variant="outlined" sx={{ width: "100%" }}>
-              <ButtonGroup>
+            <ReactVisibilitySensor
+              onChange={(isVisible) => setIsToolbarVisible(isVisible)}
+              active={cleanVariant}
+            >
+              <Paper variant="outlined" sx={{ width: "100%" }}>
                 <HeadingSelector />
                 {markButtons.map(({ icon, format }) => (
                   <MarkButton key={format} icon={icon} format={format} />
@@ -89,8 +95,33 @@ const Toolbar = () => {
                 {blockButtons.map(({ icon, format }) => (
                   <BlockButton key={format} icon={icon} format={format} />
                 ))}
-              </ButtonGroup>
-            </Paper>
+              </Paper>
+            </ReactVisibilitySensor>
+            <Slide in={!isToolbarVisible} direction="up" timeout={350}>
+              <Container
+                maxWidth="md"
+                disableGutters
+                sx={{
+                  position: "fixed",
+                  bottom: 10,
+                  // right: 10,
+                  // left: "50%",
+                  // transform: "translateX(-50%)",
+                  zIndex: theme.zIndex.modal,
+                }}
+              >
+                <Paper variant="outlined">
+                  <HeadingSelector />
+                  {markButtons.map(({ icon, format }) => (
+                    <MarkButton key={format} icon={icon} format={format} />
+                  ))}
+                  <LinkSelector />
+                  {blockButtons.map(({ icon, format }) => (
+                    <BlockButton key={format} icon={icon} format={format} />
+                  ))}
+                </Paper>
+              </Container>
+            </Slide>
           </Grid>
         </Grid>
       </Hidden>

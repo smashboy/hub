@@ -21,6 +21,7 @@ export const EditorProvider: React.FC<EditorProps> = ({
   height,
   closeOnSubmit,
   bucketId,
+  cleanVariant,
   onSubmit,
   onCancel,
 }) => {
@@ -39,8 +40,9 @@ export const EditorProvider: React.FC<EditorProps> = ({
     ]
   )
 
-  height = height || 350
-  disablePadding = disablePadding || false
+  height = height ?? 350
+  disablePadding = disablePadding ?? false
+  cleanVariant = cleanVariant ?? false
 
   const [isFocused, setisFocused] = useState(false)
   const [disableSubmit, setDisableSubmit] = useState(disableSubmitProp || false)
@@ -119,6 +121,7 @@ export const EditorProvider: React.FC<EditorProps> = ({
         height,
         disablePadding,
         bucketId,
+        cleanVariant,
         setIsFocused: handleSetIsFocused,
         setDisableSubmit: handleSetDisableSubmit,
         setContent: handleSetContent,

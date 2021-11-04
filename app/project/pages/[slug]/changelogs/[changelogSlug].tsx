@@ -117,12 +117,13 @@ const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
                   onCancel={handleCancelEditChangelog}
                   onSubmit={handleUpdateChangelog}
                   editVariant
+                  cleanVariant
                   bucketId="changelogs"
                   closeOnSubmit
                   readOnly={!editMode}
                 />
               </Grid>
-              {user && (
+              {user && !editMode && (
                 <Grid container item xs={12} spacing={2} justifyContent="center">
                   <Grid container item xs={12} justifyContent="center">
                     <Typography variant="h6" color="text.primary">

@@ -204,6 +204,7 @@ const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
                 readOnly={readOnly}
                 bucketId="changelogs"
                 disableReset
+                cleanVariant
                 onSubmit={handleSubmit}
               />
             </Container>
