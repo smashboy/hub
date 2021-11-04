@@ -1,8 +1,8 @@
 import { FeedbackCategory, ProjectMemberRole } from "db"
 import { useState } from "react"
 import { Descendant } from "slate"
+import { v4 as uuid } from "uuid"
 import { BlitzPage, GetServerSideProps, getSession } from "blitz"
-import slugify from "slugify"
 import { Typography, Grid, Fade, useTheme, Container, Switch, TextField } from "@mui/material"
 import {
   getProjectInfo,
@@ -103,15 +103,7 @@ const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
     let previewImageUrl: string | null = null
 
     if (previewImage) {
-      const imageName = previewImage.name
-
-      const titleSlug = slugify(title, {
-        lower: true,
-        strict: true,
-        trim: true,
-      })
-
-      const imagePath = `${titleSlug}-${imageName}`
+      const imagePath = `${uuid()}`
 
       const bucket = superbaseClient.storage.from("changelog-previews")
 
