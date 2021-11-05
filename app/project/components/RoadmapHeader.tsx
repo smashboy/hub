@@ -94,7 +94,7 @@ const RoadmapHeader: React.FC<{ projectName: string; brandColor: string }> = ({
             )}
             <Grid item xs={12}>
               <Typography variant="subtitle2" color="text.secondary" component="div">
-                {dueTo ? `Due by ${format(dueTo, "dd MMMM, yyyy")}` : "No due date"}
+                {dueTo ? `Due by ${format(dueTo, "do MMMM, yyyy")}` : "No due date"}
               </Typography>
             </Grid>
             <Grid container item xs={12} md={6} spacing={1} sx={{ paddingTop: 1 }}>

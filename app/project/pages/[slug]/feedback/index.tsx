@@ -120,7 +120,7 @@ const FeedbackPage: BlitzPage<ProjectPageProps> = ({
 }
 
 FeedbackPage.getLayout = (page, props: ProjectPageProps) => (
-  <ProjectLayout title={props.project.name} selectedTab="feedback" {...props}>
+  <ProjectLayout title={`Feedback | ${props.project.name}`} selectedTab="feedback" {...props}>
     {page}
   </ProjectLayout>
 )

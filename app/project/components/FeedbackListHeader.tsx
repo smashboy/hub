@@ -103,9 +103,9 @@ const FeedbackListHeader: React.FC<{
               onClick={handleOpenMenu}
               variant="contained"
               color="secondary"
-              endIcon={<SortIcon />}
+              endIcon={isSM ? undefined : <SortIcon />}
             >
-              Sort
+              {isSM ? <SortIcon /> : "Sort"}
             </Button>
           </Grid>
         </Grid>

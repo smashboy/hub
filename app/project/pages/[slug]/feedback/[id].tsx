@@ -52,7 +52,7 @@ const SelectedFeedbackPage: BlitzPage<FeedbackPageProps> = ({
 }
 
 SelectedFeedbackPage.getLayout = (page, props: FeedbackPageProps) => (
-  <ProjectMiniLayout title={props.project.name} {...props}>
+  <ProjectMiniLayout title={`${props.feedback.title} feedback | ${props.project.name}`} {...props}>
     {page}
   </ProjectMiniLayout>
 )

@@ -44,3 +44,5 @@ export type PickSingleKeyValue<O, K extends keyof O> = Pick<O, K>[K]
 export const assert = (condition: any, message: string) => {
   if (!condition) throw new Error(message)
 }
+
+export const timeout = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))

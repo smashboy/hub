@@ -14,7 +14,7 @@ import {
   MenuItem,
 } from "@mui/material"
 import MoreIcon from "@mui/icons-material/MoreVert"
-import MarkdownEditor from "../markdown/Editor"
+import Editor from "app/editor/Editor"
 import { useCurrentUser } from "../hooks/useCurrentUser"
 import { Descendant } from "slate"
 
@@ -103,9 +103,10 @@ const MessageItem: React.FC<MessageItemProps> = ({
           }
           secondary={
             <Box marginTop={readOnly ? 0 : 2}>
-              <MarkdownEditor
+              <Editor
                 editVariant
                 readOnly={readOnly}
+                bucketId="feedback-messages"
                 height={100}
                 disablePadding
                 onSubmit={handleUpdateMessage}

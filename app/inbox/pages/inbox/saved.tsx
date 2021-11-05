@@ -28,6 +28,6 @@ const InboxSaved: BlitzPage = () => {
 
 InboxSaved.authenticate = authConfig
 
-InboxSaved.getLayout = (page) => <InboxLayout title="Inbox">{page}</InboxLayout>
+InboxSaved.getLayout = (page) => <InboxLayout title="Saved inbox">{page}</InboxLayout>
 
 export default InboxSaved

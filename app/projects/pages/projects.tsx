@@ -28,6 +28,6 @@ const ProjectsPage: BlitzPage = () => {
 }
 
 ProjectsPage.authenticate = authConfig
-ProjectsPage.getLayout = (page) => <Layout title="Projects">{page}</Layout>
+ProjectsPage.getLayout = (page) => <Layout title="Your projects">{page}</Layout>
 
 export default ProjectsPage

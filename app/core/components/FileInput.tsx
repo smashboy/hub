@@ -6,8 +6,7 @@ import ImageIcon from "@mui/icons-material/Image"
 import { styled } from "@mui/system"
 import useNotifications from "../hooks/useNotifications"
 import format2Bytes from "bytes"
-
-type AllowedFileType = "image/jpeg" | "image/png" | "image/webp"
+import { AllowedFileType } from "../superbase/config"
 
 interface CustomFile {
   file: File

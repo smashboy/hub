@@ -1,5 +1,5 @@
 import { Grid, Fade } from "@mui/material"
-import MarkdownEditor from "app/core/markdown/Editor"
+import Editor from "app/editor/Editor"
 import { useFeedbackEditor } from "app/project/store/FeedbackEditorContext"
 
 const FeedbackEditor = () => {
@@ -9,8 +9,9 @@ const FeedbackEditor = () => {
   return (
     <Fade in timeout={750}>
       <Grid item xs={12}>
-        <MarkdownEditor
+        <Editor
           initialContent={initialContent}
+          bucketId="feedback"
           submitText="Submit feedback"
           readOnly={readOnly}
           onSubmit={submit}

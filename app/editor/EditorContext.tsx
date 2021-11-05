@@ -4,7 +4,7 @@ import { createEditor } from "slate"
 import { withReact } from "slate-react"
 import { withHistory } from "slate-history"
 import { EditorProps, EditorStore } from "./types"
-import { withLinks } from "./utils"
+import { withImages, withLinks } from "./utils"
 
 const EditorContext = createContext<EditorStore | null>(null)
 
@@ -20,11 +20,13 @@ export const EditorProvider: React.FC<EditorProps> = ({
   disableReset,
   height,
   closeOnSubmit,
+  bucketId,
+  cleanVariant,
   onSubmit,
   onCancel,
 }) => {
   // @ts-ignore
-  const editor = useMemo(() => withHistory(withLinks(withReact(createEditor()))), [])
+  const editor = useMemo(() => withImages(withHistory(withLinks(withReact(createEditor())))), [])
 
   initialContent = useMemo(() => initialContent, [initialContent])
 
@@ -38,8 +40,9 @@ export const EditorProvider: React.FC<EditorProps> = ({
     ]
   )
 
-  height = height || 350
-  disablePadding = disablePadding || false
+  height = height ?? 350
+  disablePadding = disablePadding ?? false
+  cleanVariant = cleanVariant ?? false
 
   const [isFocused, setisFocused] = useState(false)
   const [disableSubmit, setDisableSubmit] = useState(disableSubmitProp || false)
@@ -117,6 +120,8 @@ export const EditorProvider: React.FC<EditorProps> = ({
         editVariant,
         height,
         disablePadding,
+        bucketId,
+        cleanVariant,
         setIsFocused: handleSetIsFocused,
         setDisableSubmit: handleSetDisableSubmit,
         setContent: handleSetContent,

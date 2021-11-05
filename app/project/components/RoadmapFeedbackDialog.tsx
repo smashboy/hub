@@ -17,7 +17,7 @@ import Dialog from "app/core/components/Dialog"
 import { useRoadmap } from "../store/RoadmapContext"
 import { LoadingButton } from "@mui/lab"
 import { ButtonRouteLink } from "app/core/components/links"
-import Editor from "app/core/markdown/Editor"
+import Editor from "app/editor/Editor"
 import getFeedbackContent from "../queries/getFeedbackContent"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
@@ -34,7 +34,13 @@ const Content: React.FC<{ projectSlug: string; feedbackId: number }> = ({
     feedbackId,
   })
 
-  return <Editor initialContent={JSON.parse(content)?.content || undefined} readOnly />
+  return (
+    <Editor
+      initialContent={JSON.parse(content)?.content || undefined}
+      bucketId="feedback"
+      readOnly
+    />
+  )
 }
 
 const RoadmapFeedbackDialog = ({}) => {

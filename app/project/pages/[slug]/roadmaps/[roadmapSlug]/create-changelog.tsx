@@ -1,8 +1,8 @@
 import { FeedbackCategory, ProjectMemberRole } from "db"
 import { useState } from "react"
 import { Descendant } from "slate"
+import { v4 as uuid } from "uuid"
 import { BlitzPage, GetServerSideProps, getSession } from "blitz"
-import slugify from "slugify"
 import { Typography, Grid, Fade, useTheme, Container, Switch, TextField } from "@mui/material"
 import {
   getProjectInfo,
@@ -11,8 +11,8 @@ import {
   RoadmapPageProps,
 } from "app/project/helpers"
 import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
-import MarkdownEditor from "app/core/markdown/Editor"
-import { HeadingElement, ListElement } from "app/core/markdown/types"
+import Editor from "app/editor/Editor"
+import { HeadingElement, ListElement } from "app/editor/types"
 import { capitalizeString } from "app/core/utils/blitz"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import createProjectChangelog from "app/project/mutations/createProjectChangelog"
@@ -103,15 +103,7 @@ const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
     let previewImageUrl: string | null = null
 
     if (previewImage) {
-      const imageName = previewImage.name
-
-      const titleSlug = slugify(title, {
-        lower: true,
-        strict: true,
-        trim: true,
-      })
-
-      const imagePath = `${titleSlug}-${imageName}`
+      const imagePath = `${uuid()}`
 
       const bucket = superbaseClient.storage.from("changelog-previews")
 
@@ -199,10 +191,12 @@ const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
           )}
           <Grid item xs={12}>
             <Container maxWidth="lg" disableGutters>
-              <MarkdownEditor
+              <Editor
                 initialContent={generateChangelog(description, feedback)}
                 readOnly={readOnly}
+                bucketId="changelogs"
                 disableReset
+                cleanVariant
                 onSubmit={handleSubmit}
               />
             </Container>
@@ -214,7 +208,10 @@ const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
 }
 
 CreateChangelog.getLayout = (page, props: RoadmapPageProps) => (
-  <ProjectMiniLayout title={props.project.name} {...props}>
+  <ProjectMiniLayout
+    title={`Create changelog ${props.roadmap.name} | ${props.project.name}`}
+    {...props}
+  >
     {page}
   </ProjectMiniLayout>
 )

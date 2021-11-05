@@ -127,7 +127,7 @@ const InboxInvitesPage: BlitzPage = () => {
 
 InboxInvitesPage.authenticate = authConfig
 
-InboxInvitesPage.getLayout = (page) => <InboxLayout title="Invites">{page}</InboxLayout>
+InboxInvitesPage.getLayout = (page) => <InboxLayout title="Invites inbox">{page}</InboxLayout>
 
 // export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 //   const session = await getSession(req, res)

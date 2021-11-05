@@ -112,6 +112,6 @@ const InboxFeedbackPage: BlitzPage = () => {
 
 InboxFeedbackPage.authenticate = authConfig
 
-InboxFeedbackPage.getLayout = (page) => <InboxLayout title="Invites">{page}</InboxLayout>
+InboxFeedbackPage.getLayout = (page) => <InboxLayout title="Feedback inbox">{page}</InboxLayout>
 
 export default InboxFeedbackPage

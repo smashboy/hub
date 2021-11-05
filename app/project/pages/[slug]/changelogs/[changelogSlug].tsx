@@ -5,7 +5,7 @@ import { LoadingButton } from "@mui/lab"
 import { format } from "date-fns"
 import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
 import { ChangelogPageProps, getChangelog, getProjectInfo } from "app/project/helpers"
-import MarkdownEditor from "app/core/markdown/Editor"
+import Editor from "app/editor/Editor"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import updateProjectChangelog from "app/project/mutations/updateProjectChangelog"
 import { Descendant } from "slate"
@@ -85,7 +85,7 @@ const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="subtitle1" color="text.secondary">
-                  {format(createdAt, "dd MMMM, yyyy")}
+                  {format(createdAt, "do MMMM, yyyy")}
                 </Typography>
               </Grid>
             </Grid>
@@ -112,16 +112,18 @@ const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
           <Fade in timeout={750}>
             <Grid container item spacing={2}>
               <Grid item xs={12}>
-                <MarkdownEditor
+                <Editor
                   initialContent={JSON.parse(content)?.content || undefined}
                   onCancel={handleCancelEditChangelog}
                   onSubmit={handleUpdateChangelog}
                   editVariant
+                  cleanVariant
+                  bucketId="changelogs"
                   closeOnSubmit
                   readOnly={!editMode}
                 />
               </Grid>
-              {user && (
+              {user && !editMode && (
                 <Grid container item xs={12} spacing={2} justifyContent="center">
                   <Grid container item xs={12} justifyContent="center">
                     <Typography variant="h6" color="text.primary">
@@ -184,7 +186,10 @@ const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
 }
 
 ChangelogPage.getLayout = (page, props: ChangelogPageProps) => (
-  <ProjectMiniLayout title={props.project.name} {...props}>
+  <ProjectMiniLayout
+    title={`${props.changelog.title} changelog | ${props.project.name}`}
+    {...props}
+  >
     {page}
   </ProjectMiniLayout>
 )

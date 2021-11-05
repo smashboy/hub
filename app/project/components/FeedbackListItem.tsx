@@ -85,7 +85,7 @@ const FeedbackListItem: React.FC<FeedbackListItemProps> = ({
                       ))}
                     </Grid>
                   )}
-                  {participants && (
+                  {participants && participants.length > 0 && (
                     <Grid item xs={12} sx={{ ".MuiAvatarGroup-avatar": { width: 30, height: 30 } }}>
                       <AvatarGroup max={4}>
                         {participants.map(({ user: { avatarUrl, username } }) => (
