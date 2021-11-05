@@ -13,6 +13,6 @@ const HomePage: BlitzPage = () => {
 }
 
 // Home.suppressFirstRenderFlicker = true
-HomePage.getLayout = (page) => <Layout title="Home">{page}</Layout>
+HomePage.getLayout = (page) => <Layout>{page}</Layout>
 
 export default HomePage

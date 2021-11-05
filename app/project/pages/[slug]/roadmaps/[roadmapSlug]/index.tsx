@@ -29,7 +29,7 @@ const RoadmapPage: BlitzPage<RoadmapPageProps> = ({
 }
 
 RoadmapPage.getLayout = (page, props: RoadmapPageProps) => (
-  <Layout title={props.project.name} disableContainer>
+  <Layout title={`${props.roadmap.name} roadmap | ${props.project.name}`} disableContainer>
     {page}
   </Layout>
 )

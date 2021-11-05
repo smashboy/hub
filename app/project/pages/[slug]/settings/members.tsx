@@ -39,7 +39,7 @@ MembersSettingPage.authenticate = authConfig
 
 MembersSettingPage.getLayout = (page, props: MembersSettingsPageProps) => (
   <ProjectSettingsLayout
-    title={`${props.project.name} Members settings`}
+    title={`${props.project.name} members settings`}
     {...props}
     selectedTab="members"
   >

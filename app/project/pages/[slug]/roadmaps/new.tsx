@@ -74,7 +74,7 @@ const NewRoadmapPage: BlitzPage = ({ project: { slug } }: ProjectPageProps) => {
 }
 
 NewRoadmapPage.getLayout = (page, props: ProjectPageProps) => (
-  <ProjectMiniLayout title={props.project.name} {...props}>
+  <ProjectMiniLayout title={`New roadmap ${props.project.name}`} {...props}>
     {page}
   </ProjectMiniLayout>
 )

@@ -1,4 +1,5 @@
 import { ReactNode, Suspense, useState } from "react"
+import { NextSeo } from "next-seo"
 import { Head, Routes, useMutation, Link } from "blitz"
 import LogoIcon from "@mui/icons-material/DeviceHub"
 import {
@@ -37,6 +38,7 @@ import useNotificationsCounter from "app/inbox/hooks/useNotificationsCounter"
 
 export interface LayoutProps {
   title?: string
+  noIndex?: boolean
   disableNavigation?: boolean
   disableContainer?: boolean
   children: ReactNode
@@ -179,7 +181,7 @@ const AuthNavigationPlaceholder = () => (
   </>
 )
 
-const Layout = ({ title, disableContainer, disableNavigation, children }: LayoutProps) => {
+const Layout = ({ title, disableContainer, disableNavigation, children, noIndex }: LayoutProps) => {
   const theme = useTheme()
 
   const scrollTrigger = useScrollTrigger({
@@ -190,10 +192,19 @@ const Layout = ({ title, disableContainer, disableNavigation, children }: Layout
 
   return (
     <>
-      <Head>
-        <title>{`${title} | Project Hub` || "Project Hub"}</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <NextSeo
+        title={title ? `${title} | Project Hub` : "Project Hub"}
+        description="Project Hub is all in one place for developers and customers, collect feedback, create roadmaps, and publish change logs with other useful tools."
+        noindex={noIndex}
+        nofollow={noIndex}
+        additionalLinkTags={[
+          {
+            rel: "icon",
+            href: "/favicon.ico",
+          },
+        ]}
+      />
+
       {!disableNavigation && (
         <AppBar
           position="sticky"

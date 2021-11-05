@@ -186,7 +186,10 @@ const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
 }
 
 ChangelogPage.getLayout = (page, props: ChangelogPageProps) => (
-  <ProjectMiniLayout title={props.project.name} {...props}>
+  <ProjectMiniLayout
+    title={`${props.changelog.title} changelog | ${props.project.name}`}
+    {...props}
+  >
     {page}
   </ProjectMiniLayout>
 )

@@ -208,7 +208,10 @@ const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
 }
 
 CreateChangelog.getLayout = (page, props: RoadmapPageProps) => (
-  <ProjectMiniLayout title={props.project.name} {...props}>
+  <ProjectMiniLayout
+    title={`Create changelog ${props.roadmap.name} | ${props.project.name}`}
+    {...props}
+  >
     {page}
   </ProjectMiniLayout>
 )

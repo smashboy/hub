@@ -112,6 +112,6 @@ const InboxChangelogPage: BlitzPage = () => {
 
 InboxChangelogPage.authenticate = authConfig
 
-InboxChangelogPage.getLayout = (page) => <InboxLayout title="Invites">{page}</InboxLayout>
+InboxChangelogPage.getLayout = (page) => <InboxLayout title="Changelogs inbox">{page}</InboxLayout>
 
 export default InboxChangelogPage

@@ -13,7 +13,7 @@ const CreateFeedbackPage: BlitzPage<ProjectPageProps> = ({
 CreateFeedbackPage.authenticate = authConfig
 
 CreateFeedbackPage.getLayout = (page, props: ProjectPageProps) => (
-  <ProjectMiniLayout title={`${props.project.name} Feedback`} {...props}>
+  <ProjectMiniLayout title={`New feedback ${props.project.name}`} {...props}>
     {page}
   </ProjectMiniLayout>
 )
