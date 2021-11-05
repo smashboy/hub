@@ -1,124 +1,79 @@
-import { useState } from "react"
-import {
-  Button,
-  Menu,
-  MenuItem,
-  Hidden,
-  BottomNavigationAction,
-  RadioGroup,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Paper,
-  FormControlLabel,
-  Radio,
-  Grid,
-} from "@mui/material"
-import HeadingSize from "@mui/icons-material/FormatSize"
-import Dialog from "app/core/components/Dialog"
+import { Button, BottomNavigationAction } from "@mui/material"
 import { HeadingLevel } from "../types"
+import { PickSingleKeyValue } from "app/core/utils/common"
+import { useSlate } from "slate-react"
+import { handleToolbarOptionClick, isHeadingBlockActive, toggleHeadingBlock } from "../utils"
 
-type HeadingOptionsItemProps = { label: string; value: HeadingLevel | null }
+type HeadingOptionsItemProps = { label: string; level: HeadingLevel }
 
 const options: Array<HeadingOptionsItemProps> = [
+  // {
+  //   label: "H1",
+  //   level: 1,
+  // },
+  // {
+  //   label: "H2",
+  //   level: 2,
+  // },
+  // {
+  //   label: "H3",
+  //   level: 3,
+  // },
   {
-    label: "Heading 1",
-    value: 1,
+    label: "H1",
+    level: 4,
   },
   {
-    label: "Heading 2",
-    value: 2,
+    label: "H2",
+    level: 5,
   },
   {
-    label: "Heading 3",
-    value: 3,
-  },
-  {
-    label: "Heading 4",
-    value: 4,
-  },
-  {
-    label: "Heading 5",
-    value: 5,
-  },
-  {
-    label: "Heading 6",
-    value: 6,
-  },
-  {
-    label: "None",
-    value: null,
+    label: "H3",
+    level: 6,
   },
 ]
 
-const HeadingOptionItem: React.FC<HeadingOptionsItemProps> = ({ label, value }) => (
-  <Grid item xs={12}>
-    <Paper variant="outlined" sx={{ padding: 2, bgcolor: "transparent" }}>
-      <FormControlLabel
-        value={value}
-        control={<Radio />}
-        label={
-          label
-          // value ? (
-          //   <Typography variant={`h${value}`} noWrap component="div">
-          //     {label}
-          //   </Typography>
-          // ) : (
-          //   label
-          // )
-        }
-        // disableTypography={Boolean(value)}
-      />
-    </Paper>
-  </Grid>
-)
+const Item: React.FC<{
+  isMobile?: boolean
+  label: PickSingleKeyValue<HeadingOptionsItemProps, "label">
+  level: HeadingLevel
+}> = ({ isMobile, label, level }) => {
+  const editor = useSlate()
 
-const HeadingSelector: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-
-  const open = Boolean(anchorEl)
-
-  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) =>
-    setAnchorEl(event.currentTarget)
-
-  const handleClose = () => setAnchorEl(null)
+  const color = isHeadingBlockActive(editor, level) ? "primary" : "secondary"
+  const handleToggle = () => toggleHeadingBlock(editor, level)
 
   if (isMobile)
     return (
       <>
-        <BottomNavigationAction onMouseDown={handleOpen} icon={<HeadingSize color="action" />} />
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Select heading</DialogTitle>
-          <DialogContent>
-            <RadioGroup>
-              <Grid container spacing={1}>
-                {options.map((option) => (
-                  <HeadingOptionItem key={option.label} {...option} />
-                ))}
-              </Grid>
-            </RadioGroup>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Close</Button>
-          </DialogActions>
-        </Dialog>
+        <BottomNavigationAction
+          onMouseDown={(e) => handleToolbarOptionClick(e, handleToggle)}
+          sx={{
+            "&.MuiBottomNavigationAction-iconOnly": {
+              color: `${color}.main`,
+              fontWeight: "bold",
+            },
+          }}
+          icon={label}
+        />
       </>
     )
 
   return (
     <>
-      <Button onClick={handleOpen}>
-        <HeadingSize color="action" />
+      <Button color={color} onMouseDown={(e) => handleToolbarOptionClick(e, handleToggle)}>
+        {label}
       </Button>
-      <Hidden smDown>
-        <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-          {options.map(({ label }) => (
-            <MenuItem key={label} onClick={handleClose}>
-              {label}
-            </MenuItem>
-          ))}
-        </Menu>
-      </Hidden>
+    </>
+  )
+}
+
+const HeadingSelector: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
+  return (
+    <>
+      {options.map((option) => (
+        <Item key={option.label} isMobile={isMobile} {...option} />
+      ))}
     </>
   )
 }

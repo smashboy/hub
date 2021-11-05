@@ -56,7 +56,7 @@ const blockButtons: BlockButtonProps[] = [
   },
 ]
 
-const optionsCount = [...markButtons, ...blockButtons].length + 3
+const optionsCount = [...markButtons, ...blockButtons].length + 5
 
 const Toolbar = () => {
   const theme = useTheme()

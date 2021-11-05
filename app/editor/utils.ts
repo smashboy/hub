@@ -1,6 +1,13 @@
 import { Editor, Element, Transforms, Range } from "slate"
 import { isUrl } from "app/core/utils/common"
-import { ElementLeafType, ElementType, ImageElement, LinkElement } from "./types"
+import {
+  ElementLeafType,
+  ElementType,
+  HeadingElement,
+  HeadingLevel,
+  ImageElement,
+  LinkElement,
+} from "./types"
 import { AllowedFileType, allowedImageTypes } from "app/core/superbase/config"
 
 const LIST_TYPES: ElementType[] = ["num-list", "bul-list"]
@@ -37,6 +44,17 @@ export const isBlockActive = (editor: Editor, format: ElementType) => {
   return !!match
 }
 
+export const isHeadingBlockActive = (editor: Editor, level: HeadingLevel) => {
+  // @ts-ignore
+  const [match] = Editor.nodes(editor, {
+    match: (n) =>
+      // @ts-ignore
+      !Editor.isEditor(n) && Element.isElement(n) && n.type === "heading" && n.level === level,
+  })
+
+  return !!match
+}
+
 export const toggleBlock = (editor: Editor, format: ElementType) => {
   const isActive = isBlockActive(editor, format)
   const isList = LIST_TYPES.includes(format)
@@ -56,6 +74,31 @@ export const toggleBlock = (editor: Editor, format: ElementType) => {
 
   if (!isActive && isList) {
     const block = { type: format, children: [] }
+    Transforms.wrapNodes(editor, block)
+  }
+}
+
+export const toggleHeadingBlock = (editor: Editor, level: HeadingLevel) => {
+  const isActive = isBlockActive(editor, "heading")
+  const isList = LIST_TYPES.includes("heading")
+
+  Transforms.unwrapNodes(editor, {
+    match: (n) =>
+      LIST_TYPES.includes(
+        // @ts-ignore
+        !Editor.isEditor(n) && Element.isElement(n) && n.type
+      ),
+    split: true,
+  })
+  const newProperties: Partial<Element> = {
+    type: isActive ? "paragraph" : isList ? "list-item" : "heading",
+    // @ts-ignore
+    level: isActive || isList ? undefined : level,
+  }
+  Transforms.setNodes(editor, newProperties)
+
+  if (!isActive && isList) {
+    const block: HeadingElement = { type: "heading", level, children: [] }
     Transforms.wrapNodes(editor, block)
   }
 }
