@@ -9223,6 +9223,11 @@ react-markdown@7.0.1:
     unist-util-visit "^4.0.0"
     vfile "^5.0.0"
 
+react-mui-confirm@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-mui-confirm/-/react-mui-confirm-1.0.0.tgz#d805aefbc4f641847ec50a8a1d02d2ccb72bab8a"
+  integrity sha512-iMOpuns11yvJoBoyHIWC0Cp1WMmXcESk+pP6+v2fQ3zT/uuHwqsur0URHcArvkmpbJcK1tSjzZDsWQ52NK8ukg==
+
 react-query@3.21.1:
   version "3.21.1"
   resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.21.1.tgz#8fe4df90bf6c6a93e0552ea9baff211d1b28f6e0"
