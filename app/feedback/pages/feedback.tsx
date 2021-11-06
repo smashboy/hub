@@ -24,7 +24,7 @@ const FeedbackList = () => {
 
   const feedback = feedbackPages
     .map(({ feedback: feedbackList }) =>
-      feedbackList.map(({ content, ...otherProps }) => ({ ...otherProps, ...content }))
+      feedbackList.map(({ content, ...otherProps }) => ({ ...otherProps, ...content! }))
     )
     .flat()
 
