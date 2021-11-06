@@ -1,6 +1,6 @@
 import { ProjectMemberRole } from "db"
-import { BlitzPage, getSession, GetServerSideProps } from "blitz"
-import { Grid, Typography, Button, Fade } from "@mui/material"
+import { BlitzPage, getSession, GetServerSideProps, useRouter, Routes } from "blitz"
+import { Grid, Typography, Button, Fade, Box, styled } from "@mui/material"
 import ColorPicker from "app/core/components/ColorPicker"
 import Form from "app/core/components/Form"
 import LabeledTextField from "app/core/components/LabeledTextField"
@@ -12,14 +12,48 @@ import ProjectSettingsLayout from "app/project/layouts/ProjectSettingsLayout"
 import { UpdateProject } from "app/project/validations"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import updateGeneralSettings from "app/project/mutations/updateGeneralSettings"
-import updateIsPrivateSetting from "app/project/mutations/updateIsPrivateSetting"
+// import updateIsPrivateSetting from "app/project/mutations/updateIsPrivateSetting"
+import deleteProject from "app/project/mutations/deleteProject"
+import { useConfirmDialog } from "react-mui-confirm"
+
+const BoldText = styled("b")(({ theme }) => ({
+  color: theme.palette.primary.main,
+}))
 
 const SettingsPage: BlitzPage<ProjectPageProps> = ({
-  project: { name, description, websiteUrl, color, isPrivate, slug },
+  project: { name, description, websiteUrl, color, slug },
 }: ProjectPageProps) => {
+  const router = useRouter()
+
+  const confirm = useConfirmDialog()
+
   const [updateGeneralSettingsMutation] = useCustomMutation(updateGeneralSettings, {
     successNotification: "General settings has been updated successfully!",
   })
+
+  const [deleteProjectMutation] = useCustomMutation(deleteProject, {
+    successNotification: "Project has been deleted successfully!",
+  })
+
+  const handleDeleteProject = () => {
+    confirm({
+      title: `Are you shure you want to delete ${name}?`,
+      confirmText: name,
+      description: (
+        <Box sx={{ paddingBottom: 3 }}>
+          This action cannot be undone. This will permanently delete the <BoldText>{name}</BoldText>
+          . <br />
+          <br /> Please type <BoldText>{name}</BoldText> to confirm.
+        </Box>
+      ),
+      onConfirm: async () => {
+        await deleteProjectMutation({
+          projectSlug: slug,
+        })
+        router.push(Routes.ProjectsPage())
+      },
+    })
+  }
 
   // const [updateIsPrivateSettingMutation] = useCustomMutation(updateIsPrivateSetting, {
   //   successNotification: "Privacy visibility setting has been updated successfully!",
@@ -101,7 +135,12 @@ const SettingsPage: BlitzPage<ProjectPageProps> = ({
                   </Grid>
                 </Grid>
                 <Grid container item xs={12} md={3} alignItems="center">
-                  <Button variant="outlined" color="secondary" fullWidth>
+                  <Button
+                    onClick={handleDeleteProject}
+                    variant="outlined"
+                    color="secondary"
+                    fullWidth
+                  >
                     Delete
                   </Button>
                 </Grid>

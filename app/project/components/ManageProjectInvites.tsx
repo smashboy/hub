@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import { useDebounce } from "use-debounce"
-import { Grid, Button, TextField } from "@mui/material"
+import { Grid, Button, TextField, Typography } from "@mui/material"
 import {
   DataGrid,
   GridRowsProp,
@@ -15,6 +15,7 @@ import useCustomMutation from "app/core/hooks/useCustomMutation"
 import deleteProjectInvite from "../mutations/deleteProjectInvite"
 import InviteMembersDialog from "./InviteMembersDialog"
 import { useMemberInvitesDialog } from "../store/MemberInvitesDialogContext"
+import { useConfirmDialog } from "react-mui-confirm"
 
 export type Invites = Array<{
   id: number
@@ -33,6 +34,8 @@ type ManageInvitesSettingsProps = {
 
 const ManageInvitesSettings: React.FC<ManageInvitesSettingsProps> = ({ invites, slug, name }) => {
   const { open, setClose } = useMemberInvitesDialog()
+
+  const confirm = useConfirmDialog()
 
   const [deleteProjectInviteMutation] = useCustomMutation(deleteProjectInvite, {
     successNotification: "Invite has been canceled!",
@@ -91,11 +94,27 @@ const ManageInvitesSettings: React.FC<ManageInvitesSettingsProps> = ({ invites, 
       {
         field: "actions",
         type: "actions",
-        getActions: ({ id }) => [
+        getActions: ({ id, row: { username } }) => [
           <GridActionsCellItem
             key={id}
             icon={<CancelIcon color="error" />}
-            onClick={() => handleDeleteProjectInvite(id)}
+            onClick={() =>
+              confirm({
+                // @ts-ignore
+                title: (
+                  <>
+                    Are you sure you want to remove invite for{" "}
+                    <Typography component="span" color="primary.main">
+                      {username}
+                    </Typography>
+                    ?
+                  </>
+                ),
+                onConfirm: async () => {
+                  await handleDeleteProjectInvite(id)
+                },
+              })
+            }
             label="Delete"
           />,
         ],

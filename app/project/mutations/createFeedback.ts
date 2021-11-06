@@ -11,7 +11,7 @@ export default resolver.pipe(
 
     title = title.trim()
 
-    const feedbackCount = await db.projectFeedback.findFirst({
+    const lastFeedback = await db.projectFeedback.findFirst({
       where: {
         projectSlug,
       },
@@ -29,11 +29,9 @@ export default resolver.pipe(
       },
     })
 
-    const newId = (feedbackCount?.content.id || 0) + 1
+    const newId = (lastFeedback?.content?.id || 0) + 1
 
-    const {
-      content: { id: feedbackId, title: feedbackTitle },
-    } = await db.projectFeedback.create({
+    const { content: createdContent } = await db.projectFeedback.create({
       data: {
         content: {
           create: {
@@ -73,6 +71,8 @@ export default resolver.pipe(
         },
       },
     })
+
+    const { id: feedbackId, title: feedbackTitle } = createdContent!
 
     const selectedMembers = await db.projectMember.findMany({
       where: {

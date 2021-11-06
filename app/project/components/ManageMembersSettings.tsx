@@ -3,7 +3,7 @@ import { ProjectMemberRole } from "db"
 import { useDebounce } from "use-debounce"
 import DeleteIcon from "@mui/icons-material/Delete"
 import ArrowIcon from "@mui/icons-material/ArrowDropDown"
-import { Grid, Button, TextField } from "@mui/material"
+import { Grid, Button, TextField, Typography } from "@mui/material"
 import {
   DataGrid,
   GridRowsProp,
@@ -19,6 +19,7 @@ import updateMemberRole from "app/project/mutations/updateMemberRole"
 import deleteProjectMember from "app/project/mutations/deleteProjectMember"
 import InviteMembersDialog from "./InviteMembersDialog"
 import { useMemberInvitesDialog } from "../store/MemberInvitesDialogContext"
+import { useConfirmDialog } from "react-mui-confirm"
 
 type ManageMembersSettingsProps = {
   slug: string
@@ -36,6 +37,8 @@ type ManageMembersSettingsProps = {
 
 const ManageMembersSettings: React.FC<ManageMembersSettingsProps> = ({ members, slug, name }) => {
   const { setOpen } = useMemberInvitesDialog()
+
+  const confirm = useConfirmDialog()
 
   const [updateMemberRoleMutation] = useCustomMutation(updateMemberRole, {
     successNotification: "Member status has been updated successfully!",
@@ -110,14 +113,30 @@ const ManageMembersSettings: React.FC<ManageMembersSettingsProps> = ({ members, 
       {
         field: "actions",
         type: "actions",
-        getActions: ({ id, row: { role } }) =>
+        getActions: ({ id, row: { role, username } }) =>
           role === ProjectMemberRole.FOUNDER
             ? []
             : [
                 <GridActionsCellItem
                   key={id}
                   icon={<DeleteIcon color="error" />}
-                  onClick={() => handleDeleteMember(id)}
+                  onClick={() =>
+                    confirm({
+                      // @ts-ignore
+                      title: (
+                        <>
+                          Are you sure you want to remove{" "}
+                          <Typography component="span" color="primary.main">
+                            {username}
+                          </Typography>{" "}
+                          from project?
+                        </>
+                      ),
+                      onConfirm: async () => {
+                        await handleDeleteMember(id)
+                      },
+                    })
+                  }
                   label="Delete"
                 />,
               ],

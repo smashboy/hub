@@ -77,6 +77,12 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
       can("decline", "project.invites")
 
       can(
+        "delete",
+        "project",
+        async (slug: string) => await checkAdminPersmissions(slug, authUserId)
+      )
+
+      can(
         "manage",
         "project.members",
         async (slug: string) => await checkAdminPersmissions(slug, authUserId)

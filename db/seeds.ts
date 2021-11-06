@@ -206,7 +206,7 @@ const createProjectDumpMembers = async (
   await db.$transaction(queries)
 }
 
-const seed = async () => {
+const seedDevDB = async () => {
   await db.$reset()
 
   const users = await createMainUsers()
@@ -220,6 +220,56 @@ const seed = async () => {
   await createProjectDumpMembers(mainProject, ProjectMemberRole.MEMBER, 45)
   await createProjectDumpMembers(mainProject, ProjectMemberRole.MODERATOR, 15)
   await createProjectDumpMembers(mainProject, ProjectMemberRole.ADMIN, 5)
+}
+
+const migrateFeedbackContent = async () => {
+  const feedback = await db.projectFeedback.findMany({
+    select: {
+      id: true,
+      projectSlug: true,
+      contentId: true,
+    },
+  })
+
+  // const removeRequests = feedback.map((item) =>
+  //   db.projectFeedbackContent.update({
+  //     where: {
+  //       id_projectSlug: {
+  //         id: item.contentId,
+  //         projectSlug: item.projectSlug,
+  //       },
+  //     },
+  //     data: {
+  //       projectFeedbackOld: {
+  //         disconnect: true,
+  //       },
+  //     },
+  //   })
+  // )
+
+  const connectRequests = feedback.map((item) =>
+    db.projectFeedback.update({
+      where: {
+        id: item.id,
+      },
+      data: {
+        content: {
+          connect: {
+            id_projectSlug: {
+              id: item.contentId,
+              projectSlug: item.projectSlug,
+            },
+          },
+        },
+      },
+    })
+  )
+
+  await db.$transaction(connectRequests)
+}
+
+const seed = async () => {
+  await migrateFeedbackContent()
 }
 
 export default seed
