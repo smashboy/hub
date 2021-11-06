@@ -53,8 +53,9 @@ export default resolver.pipe(
       },
     })
 
-    return feedback.map(({ upvotedBy, ...otherProps }) => ({
+    return feedback.map(({ upvotedBy, content, ...otherProps }) => ({
       ...otherProps,
+      content: content!,
       upvotedBy: upvotedBy.map(({ id }) => id),
     }))
   }
