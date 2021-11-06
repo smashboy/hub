@@ -79,7 +79,7 @@ const FeedbackList: React.FC<FeedbackListProps> = ({ slug, role, filter, sortBy 
 
   const feedback = feedbackPages
     .map(({ feedback: feedbackList }) =>
-      feedbackList.map(({ content, ...otherProps }) => ({ ...otherProps, ...content }))
+      feedbackList.map(({ content, ...otherProps }) => ({ ...otherProps, ...content! }))
     )
     .flat()
 
