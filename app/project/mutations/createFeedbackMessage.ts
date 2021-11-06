@@ -52,10 +52,9 @@ export default resolver.pipe(
       },
     })
 
-    const {
-      participants: selectedMembers,
-      content: { id: feedbackContentId, title },
-    } = feedback!
+    const { participants: selectedMembers, content: feedbackContent } = feedback!
+
+    const { id: feedbackContentId, title } = feedbackContent!
 
     const notifyTransactions = selectedMembers
       .filter(({ user: { id } }) => id !== authUserId)

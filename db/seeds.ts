@@ -269,7 +269,7 @@ const migrateFeedbackContent = async () => {
 }
 
 const seed = async () => {
-  await migrateFeedbackContent()
+  seedDevDB()
 }
 
 export default seed

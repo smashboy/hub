@@ -208,8 +208,6 @@ model ProjectFeedback {
   projectSlug  String
   author       User                     @relation("ProjectFeedbackAuthor", fields: [authorId], references: [id])
   authorId     Int
-  contentOld   ProjectFeedbackContent?  @relation(fields: [contentId, projectSlug], references: [id, projectSlug])
-  contentId    Int
   upvotedBy    User[]
   messages     ProjectFeedbackMessage[]
   content      ProjectFeedbackContent?  @relation("Feedback_migration")
@@ -228,17 +226,16 @@ model ProjectFeedbackMessage {
 }
 
 model ProjectFeedbackContent {
-  id                 Int
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
-  title              String
-  category           FeedbackCategory
-  status             FeedbackStatus   @default(PENDING)
-  content            String
-  projectSlug        String
-  projectFeedbackOld ProjectFeedback?
-  projectFeedback    ProjectFeedback? @relation("Feedback_migration", fields: [projectFeedbackId], references: [id], onDelete: Cascade)
-  projectFeedbackId  Int?             @unique
+  id                Int
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  title             String
+  category          FeedbackCategory
+  status            FeedbackStatus   @default(PENDING)
+  content           String
+  projectSlug       String
+  projectFeedback   ProjectFeedback  @relation("Feedback_migration", fields: [projectFeedbackId], references: [id], onDelete: Cascade)
+  projectFeedbackId Int              @unique
 
   @@id([id, projectSlug])
 }
