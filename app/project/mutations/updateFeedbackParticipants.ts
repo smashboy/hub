@@ -34,10 +34,7 @@ export default resolver.pipe(
 
     if (!feedback) throw new NotFoundError("Feedback not found.")
 
-    const {
-      participants: selectedMembers,
-      content: { id: feedbackContentId, title },
-    } = feedback
+    const { participants: selectedMembers, content } = feedback
 
     await db.projectFeedback.update({
       where: {
@@ -49,6 +46,8 @@ export default resolver.pipe(
         },
       },
     })
+
+    const { id: feedbackContentId, title } = content!
 
     const notifyTransactions = selectedMembers
       .filter(({ user: { id } }) => id !== authUserId && !participants.includes(id))
