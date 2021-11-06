@@ -204,3 +204,7 @@ export const GetChangelogFeedback = z.object({
 export const GetFeedbackSearchOptions = z.object({
   projectSlug: z.string(),
 })
+
+export const DeleteProject = z.object({
+  projectSlug: z.string(),
+})
