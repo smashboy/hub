@@ -146,7 +146,7 @@ export const RoadmapProvider: React.FC<RoadmapStoreProps> = ({
       roadmapId: info.id,
       category,
     })
-    setFeedback(updatedFeedback)
+    setFeedback(updatedFeedback!)
   }
 
   return (

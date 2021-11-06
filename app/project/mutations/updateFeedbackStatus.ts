@@ -53,11 +53,9 @@ export default resolver.pipe(
       },
     })
 
-    const {
-      participants,
-      upvotedBy,
-      content: { id: feedbackContentId, title },
-    } = feedback
+    const { participants, upvotedBy, content } = feedback
+
+    const { id: feedbackContentId, title } = content!
 
     const userIds = [
       ...Array.from(

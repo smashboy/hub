@@ -222,52 +222,6 @@ const seedDevDB = async () => {
   await createProjectDumpMembers(mainProject, ProjectMemberRole.ADMIN, 5)
 }
 
-const migrateFeedbackContent = async () => {
-  const feedback = await db.projectFeedback.findMany({
-    select: {
-      id: true,
-      projectSlug: true,
-      contentId: true,
-    },
-  })
-
-  // const removeRequests = feedback.map((item) =>
-  //   db.projectFeedbackContent.update({
-  //     where: {
-  //       id_projectSlug: {
-  //         id: item.contentId,
-  //         projectSlug: item.projectSlug,
-  //       },
-  //     },
-  //     data: {
-  //       projectFeedbackOld: {
-  //         disconnect: true,
-  //       },
-  //     },
-  //   })
-  // )
-
-  const connectRequests = feedback.map((item) =>
-    db.projectFeedback.update({
-      where: {
-        id: item.id,
-      },
-      data: {
-        content: {
-          connect: {
-            id_projectSlug: {
-              id: item.contentId,
-              projectSlug: item.projectSlug,
-            },
-          },
-        },
-      },
-    })
-  )
-
-  await db.$transaction(connectRequests)
-}
-
 const seed = async () => {
   seedDevDB()
 }
