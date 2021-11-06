@@ -194,11 +194,10 @@ export const getFeedback = async (
 
   if (!feedback) return null
 
-  const {
-    content: { id: contentId, ...content },
-    upvotedBy,
-    ...otherProps
-  } = feedback
+  const { upvotedBy, ...otherProps } = feedback
+
+  // @ts-ignore TODO FIX IMPORTANT
+  const { id: contentId, ...content } = feedback.content!
 
   return {
     feedback: { ...otherProps, ...content, contentId, upvotedBy: upvotedBy.map(({ id }) => id) },
@@ -363,6 +362,7 @@ export const getProjectRoadmaps = async (
       const totalCount = feedback.length
 
       const closedFeedbackCount = feedback.filter(
+        // @ts-ignore TODO FIX IMPORTANT
         ({ content: { status } }) =>
           status === FeedbackStatus.BLOCKED ||
           status === FeedbackStatus.CANCELED ||
@@ -440,6 +440,7 @@ export const getProjectRoadmap = async (
   const totalCount = feedback.length
 
   const closedFeedbackCount = feedback.filter(
+    // @ts-ignore TODO FIX IMPORTANT
     ({ content: { status } }) =>
       status === FeedbackStatus.BLOCKED ||
       status === FeedbackStatus.CANCELED ||
@@ -453,6 +454,7 @@ export const getProjectRoadmap = async (
       slug: roadmapSlug,
       ...otherProps,
       progress,
+      // @ts-ignore TODO FIX IMPORTANT
       feedback: feedback.map(({ upvotedBy, ...otherProps }) => ({
         ...otherProps,
         upvotedBy: upvotedBy.map(({ id }) => id),
