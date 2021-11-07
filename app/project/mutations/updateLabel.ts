@@ -1,12 +1,12 @@
 import db from "db"
 import { resolver } from "blitz"
-import { CreateLabel } from "../validations"
+import { UpdateLabel } from "../validations"
 import { authorizePipe } from "app/guard/helpers"
 
 export default resolver.pipe(
-  resolver.zod(CreateLabel),
-  authorizePipe("create", "project.labels", ({ projectSlug }) => projectSlug),
-  async ({ name, color, description, projectSlug }) => {
+  resolver.zod(UpdateLabel),
+  authorizePipe("update", "project.labels", ({ projectSlug }) => projectSlug),
+  async ({ name, color, description, projectSlug, labelId }) => {
     name = name.trim()
     description = description?.trim() || undefined
 
@@ -18,10 +18,15 @@ export default resolver.pipe(
         settings: {
           update: {
             labels: {
-              create: {
-                name,
-                description,
-                color,
+              update: {
+                where: {
+                  id: labelId,
+                },
+                data: {
+                  name,
+                  description,
+                  color,
+                },
               },
             },
           },

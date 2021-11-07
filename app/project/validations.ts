@@ -24,6 +24,17 @@ export const CreateLabel = z.object({
   description: z.string().max(100).optional(),
 })
 
+export const UpdateLabel = CreateLabel.merge(
+  z.object({
+    labelId: z.string(),
+  })
+)
+
+export const DeleteLabel = z.object({
+  labelId: z.string(),
+  projectSlug: z.string(),
+})
+
 export const FollowProject = z.object({
   slug: z.string(),
 })

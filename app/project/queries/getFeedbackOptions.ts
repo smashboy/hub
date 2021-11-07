@@ -14,6 +14,9 @@ export default resolver.pipe(
       },
       select: {
         roadmaps: {
+          orderBy: {
+            createdAt: "desc",
+          },
           where: {
             isArchived: false,
           },
@@ -23,6 +26,9 @@ export default resolver.pipe(
           },
         },
         members: {
+          orderBy: {
+            createdAt: "desc",
+          },
           select: {
             id: true,
             user: {
@@ -36,6 +42,9 @@ export default resolver.pipe(
         settings: {
           select: {
             labels: {
+              orderBy: {
+                createdAt: "desc",
+              },
               select: {
                 id: true,
                 name: true,
