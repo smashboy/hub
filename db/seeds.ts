@@ -223,7 +223,7 @@ const seedDevDB = async () => {
 }
 
 const seed = async () => {
-  seedDevDB()
+  await seedDevDB()
 }
 
 export default seed
