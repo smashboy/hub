@@ -3,7 +3,7 @@ import { ProjectMemberRole } from "db"
 import { useDebounce } from "use-debounce"
 import DeleteIcon from "@mui/icons-material/Delete"
 import ArrowIcon from "@mui/icons-material/ArrowDropDown"
-import { Grid, Button, TextField, Typography } from "@mui/material"
+import { Grid, Button, TextField, Typography, Menu, MenuItem } from "@mui/material"
 import {
   DataGrid,
   GridRowsProp,
@@ -12,12 +12,13 @@ import {
   GridActionsCellItem,
   GridLinkOperator,
   GridCellEditCommitParams,
+  GridFilterItem,
+  GridCellParams,
 } from "@mui/x-data-grid"
 import PaperBox from "app/core/components/PaperBox"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import updateMemberRole from "app/project/mutations/updateMemberRole"
 import deleteProjectMember from "app/project/mutations/deleteProjectMember"
-import InviteMembersDialog from "./InviteMembersDialog"
 import { useMemberInvitesDialog } from "../store/MemberInvitesDialogContext"
 import { useConfirmDialog } from "react-mui-confirm"
 
@@ -35,10 +36,39 @@ type ManageMembersSettingsProps = {
   }[]
 }
 
-const ManageMembersSettings: React.FC<ManageMembersSettingsProps> = ({ members, slug, name }) => {
+const roleOptions = [
+  {
+    label: "Founder",
+    value: ProjectMemberRole.FOUNDER,
+  },
+  {
+    label: "Admin",
+    value: ProjectMemberRole.ADMIN,
+  },
+  {
+    label: "Moderator",
+    value: ProjectMemberRole.MODERATOR,
+  },
+  {
+    label: "Member",
+    value: ProjectMemberRole.MEMBER,
+  },
+  {
+    label: "None",
+    value: null,
+  },
+]
+
+const ManageMembersSettings: React.FC<ManageMembersSettingsProps> = ({ members, slug }) => {
   const { setOpen } = useMemberInvitesDialog()
 
   const confirm = useConfirmDialog()
+
+  const [roleFilterMenu, setRoleFilterMenu] = useState<null | HTMLElement>(null)
+
+  const openRoleFilterMenu = Boolean(roleFilterMenu)
+
+  const [roleFilter, setRoleFilter] = useState<ProjectMemberRole | null>(null)
 
   const [updateMemberRoleMutation] = useCustomMutation(updateMemberRole, {
     successNotification: "Member status has been updated successfully!",
@@ -75,10 +105,16 @@ const ManageMembersSettings: React.FC<ManageMembersSettingsProps> = ({ members, 
           operatorValue: "contains",
           value: debouncedSearchQuery,
         },
+        {
+          id: 3,
+          columnField: "role",
+          value: roleFilter,
+          operatorValue: "is",
+        },
       ],
       linkOperator: GridLinkOperator.Or,
     }),
-    [debouncedSearchQuery]
+    [debouncedSearchQuery, roleFilter]
   )
 
   const columns: GridColDef[] = useMemo(
@@ -174,6 +210,15 @@ const ManageMembersSettings: React.FC<ManageMembersSettingsProps> = ({ members, 
     setRows(updatedRows)
   }
 
+  const handleOpenRoleFilterMenu = (event: React.MouseEvent<HTMLButtonElement>) =>
+    setRoleFilterMenu(event.currentTarget)
+  const handleCloseRoleFilterMenu = () => setRoleFilterMenu(null)
+
+  const handleSelectRole = (role: ProjectMemberRole | null) => {
+    setRoleFilter(role)
+    handleCloseRoleFilterMenu()
+  }
+
   return (
     <>
       <PaperBox title="Manage" sx={{ height: 400, paddingBottom: 9 }}>
@@ -189,13 +234,14 @@ const ManageMembersSettings: React.FC<ManageMembersSettingsProps> = ({ members, 
           </Grid>
           <Grid container item xs={12} md={2} alignItems="center">
             <Button
+              onClick={handleOpenRoleFilterMenu}
               variant="contained"
               color="secondary"
               endIcon={<ArrowIcon />}
               disableElevation
               fullWidth
             >
-              Type
+              {roleFilter ?? "Role"}
             </Button>
           </Grid>
           <Grid container item xs={12} md={3} alignItems="center">
@@ -224,6 +270,13 @@ const ManageMembersSettings: React.FC<ManageMembersSettingsProps> = ({ members, 
           </Grid>
         </Grid>
       </PaperBox>
+      <Menu anchorEl={roleFilterMenu} open={openRoleFilterMenu} onClose={handleCloseRoleFilterMenu}>
+        {roleOptions.map(({ value, label }) => (
+          <MenuItem key={label} onClick={() => handleSelectRole(value)}>
+            {label}
+          </MenuItem>
+        ))}
+      </Menu>
     </>
   )
 }

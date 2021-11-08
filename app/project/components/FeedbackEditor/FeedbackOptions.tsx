@@ -9,7 +9,6 @@ import {
   Fade,
   Chip,
   Avatar,
-  Button,
   Divider,
   MenuItem,
   ListItemAvatar,
@@ -17,7 +16,6 @@ import {
   ListItemText,
   Box,
 } from "@mui/material"
-import AddIcon from "@mui/icons-material/Add"
 import DialogForm from "app/core/components/DialogForm"
 import getFeedbackOptions from "../../queries/getFeedbackOptions"
 import { CreateLabel } from "../../validations"
@@ -30,6 +28,7 @@ import { FORM_ERROR } from "app/core/components/Form"
 import { useFeedbackEditor } from "app/project/store/FeedbackEditorContext"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import SwipeableDrawer from "app/core/components/SwipeableDrawer"
+import ManageLabelsDialog from "./ManageLabelsDialog"
 
 const generateNewLabelValues = () => ({
   name: "",
@@ -151,15 +150,7 @@ const Options = () => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Button
-            onClick={handleOpenCreateLabelDialog}
-            size="small"
-            endIcon={<AddIcon />}
-            fullWidth
-            disabled={disableActions}
-          >
-            New Label
-          </Button>
+          <ManageLabelsDialog labels={projectLabels} refetch={refetch} />
         </Grid>
         <Grid item xs={12}>
           <Divider />

@@ -1,6 +1,5 @@
-import { createContext, useContext, useState, useEffect, useMemo } from "react"
-import { Descendant } from "slate"
-import { createEditor } from "slate"
+import { createContext, useContext, useState, useEffect, useMemo, useRef } from "react"
+import { createEditor, Descendant, Transforms } from "slate"
 import { withReact } from "slate-react"
 import { withHistory } from "slate-history"
 import { EditorProps, EditorStore } from "./types"
@@ -30,7 +29,7 @@ export const EditorProvider: React.FC<EditorProps> = ({
 
   initialContent = useMemo(() => initialContent, [initialContent])
 
-  const [content2Reset, setContent2Reset] = useState<Descendant[] | null>(null)
+  const content2Reset = useRef<Descendant[] | null>(null)
   const [content, setContent] = useState<Descendant[]>(
     initialContent || [
       {
@@ -57,8 +56,11 @@ export const EditorProvider: React.FC<EditorProps> = ({
 
   useEffect(() => {
     if (disableReset) return
-    if (!readOnly) return setContent2Reset(content)
-    if (readOnly && content2Reset) handleResetContent()
+    if (!readOnly) {
+      content2Reset.current = content
+      return
+    }
+    if (readOnly) handleResetContent()
   }, [readOnly])
 
   useEffect(() => {
@@ -67,28 +69,19 @@ export const EditorProvider: React.FC<EditorProps> = ({
 
   const handleSetContent = (newContent: Descendant[]) => setContent(newContent)
   const handleResetContent = () => {
-    setContent(
-      content2Reset || [
-        {
-          type: "paragraph",
-          children: [{ text: "" }],
-        },
-      ]
-    )
-    setContent2Reset(null)
+    if (content2Reset.current) {
+      editor.children = content2Reset.current
+      content2Reset.current = null
+    }
 
-    editor.apply({
-      type: "set_selection",
-      properties: null,
-      newProperties: {
-        anchor: {
-          offset: 0,
-          path: [0, 0],
-        },
-        focus: {
-          offset: 0,
-          path: [0, 0],
-        },
+    Transforms.select(editor, {
+      anchor: {
+        offset: 0,
+        path: [0, 0],
+      },
+      focus: {
+        offset: 0,
+        path: [0, 0],
       },
     })
   }
@@ -98,7 +91,7 @@ export const EditorProvider: React.FC<EditorProps> = ({
 
   const handleSubmit = () => {
     onSubmit?.(content)
-    setContent2Reset(null)
+    content2Reset.current = null
 
     if (closeOnSubmit) onCancel?.()
   }

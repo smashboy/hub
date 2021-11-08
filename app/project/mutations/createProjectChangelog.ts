@@ -96,5 +96,7 @@ export default resolver.pipe(
     )
 
     await db.$transaction(notifyTransactions)
+
+    return slug
   }
 )

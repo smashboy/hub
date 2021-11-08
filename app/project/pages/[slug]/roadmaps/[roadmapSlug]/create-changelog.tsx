@@ -2,7 +2,7 @@ import { FeedbackCategory, ProjectMemberRole } from "db"
 import { useState } from "react"
 import { Descendant } from "slate"
 import { v4 as uuid } from "uuid"
-import { BlitzPage, GetServerSideProps, getSession } from "blitz"
+import { BlitzPage, GetServerSideProps, getSession, useRouter, Routes } from "blitz"
 import { Typography, Grid, Fade, useTheme, Container, Switch, TextField } from "@mui/material"
 import {
   getProjectInfo,
@@ -81,6 +81,8 @@ const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
   roadmap: { name, description, feedback, id: roadmapId },
   project: { slug },
 }: RoadmapPageProps) => {
+  const router = useRouter()
+
   const theme = useTheme()
 
   const { notify } = useNotifications()
@@ -124,13 +126,15 @@ const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
       previewImageUrl = publicURL
     }
 
-    await createProjectChangelogMutation({
+    const changelogSlug = await createProjectChangelogMutation({
       title,
       content: JSON.stringify({ content }),
       previewImageUrl,
       roadmapId,
       projectSlug: slug,
     })
+
+    router.push(Routes.ChangelogPage({ slug, changelogSlug }))
   }
 
   const handlePreviewImage = (files: File[]) => setPreviewImage(files[0] || null)

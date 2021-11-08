@@ -1,4 +1,4 @@
-import { createTheme } from "@mui/material"
+import { createTheme, responsiveFontSizes } from "@mui/material"
 
 const darkTheme = createTheme({
   palette: {
@@ -15,4 +15,4 @@ const darkTheme = createTheme({
   },
 })
 
-export default darkTheme
+export default responsiveFontSizes(darkTheme)

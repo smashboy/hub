@@ -2,7 +2,7 @@ import { useState, ReactNode, PropsWithoutRef } from "react"
 import { FormProvider, useForm, UseFormProps } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { Grid } from "@mui/material"
+import { Button, Grid } from "@mui/material"
 import Alert from "./Alert"
 import { LoadingButton, LoadingButtonProps } from "@mui/lab"
 import { useIsSmallDevice } from "../hooks/useIsSmallDevice"
@@ -19,6 +19,7 @@ export interface FormProps<S extends z.ZodType<any, any>>
   ButtonProps?: Omit<LoadingButtonProps, "loading" | "type" | "disabled">
   schema?: S
   onSubmit: (values: z.infer<S>) => void | Promise<void | OnSubmitResult>
+  onCancel?: () => void
   initialValues?:
     | (() => UseFormProps<z.infer<S>>["defaultValues"])
     | UseFormProps<z.infer<S>>["defaultValues"]
@@ -40,6 +41,7 @@ export function Form<S extends z.ZodType<any, any>>({
   forceEnableSubmit,
   initialValues,
   onSubmit,
+  onCancel,
   ButtonProps,
   ...props
 }: FormProps<S>) {
@@ -53,8 +55,6 @@ export function Form<S extends z.ZodType<any, any>>({
   const [formError, setFormError] = useState<string | null>(null)
 
   const disableSubmit = !forceEnableSubmit && (!ctx.formState.isValid || !ctx.formState.isDirty)
-
-  const enableUpdateButton = updateButton && !isSM
 
   return (
     <FormProvider {...ctx}>
@@ -100,20 +100,37 @@ export function Form<S extends z.ZodType<any, any>>({
               <Alert severity="error">{formError}</Alert>
             </Grid>
           )}
-          <Grid container item xs={12} justifyContent={enableUpdateButton ? "flex-end" : "center"}>
-            <LoadingButton
-              variant="contained"
-              color="primary"
-              type="submit"
-              size="medium"
-              disableElevation
-              {...ButtonProps}
-              loading={ctx.formState.isSubmitting}
-              fullWidth={!enableUpdateButton}
-              disabled={disableSubmit}
-            >
-              {submitText}
-            </LoadingButton>
+          <Grid container spacing={1} item xs={12} justifyContent="flex-end">
+            {onCancel && (
+              <Grid item xs={6} md={2}>
+                <Button
+                  onClick={onCancel}
+                  variant="contained"
+                  color="secondary"
+                  type="submit"
+                  size="medium"
+                  disableElevation
+                  fullWidth
+                >
+                  Cancel
+                </Button>
+              </Grid>
+            )}
+            <Grid item xs={updateButton ? 6 : 12} md={updateButton ? 2 : 12}>
+              <LoadingButton
+                variant="contained"
+                color="primary"
+                type="submit"
+                size="medium"
+                disableElevation
+                {...ButtonProps}
+                loading={ctx.formState.isSubmitting}
+                fullWidth
+                disabled={disableSubmit}
+              >
+                {submitText}
+              </LoadingButton>
+            </Grid>
           </Grid>
         </Grid>
       </form>

@@ -7,11 +7,10 @@ import ArrowTooltip from "./ArrowTooltip"
 import { useState } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import { rgbColor2String } from "app/core/utils/blitz"
+import { FieldProps } from "./LabeledTextField"
 
-type ColorPickerProps = {
-  label?: string
+type ColorPickerProps = FieldProps & {
   enableOpacitySlider?: boolean
-  name: string
 }
 
 const ColorPickerInput: React.FC<{
@@ -111,7 +110,12 @@ const ColorPickerTooltip = CustomPicker<{ enableOpacitySlider?: boolean }>(
   )
 )
 
-export const ColorPicker: React.FC<ColorPickerProps> = ({ name, label, enableOpacitySlider }) => {
+export const ColorPicker: React.FC<ColorPickerProps> = ({
+  name,
+  label,
+  enableOpacitySlider,
+  gridProps,
+}) => {
   const { control, setValue } = useFormContext()
 
   const color = useWatch({
@@ -134,7 +138,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ name, label, enableOpa
 
   return (
     <ClickAwayListener onClickAway={handleCloseTooptip}>
-      <Grid item xs={12}>
+      <Grid item xs={12} {...gridProps}>
         <ArrowTooltip
           title={
             <ColorPickerTooltip
