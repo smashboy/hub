@@ -1,6 +1,6 @@
 import { FeedbackStatus } from "db"
 import { Droppable, DroppableProvided } from "react-beautiful-dnd"
-import { Grid, Paper, Typography, Chip } from "@mui/material"
+import { Grid, Paper, Typography, Chip, Box } from "@mui/material"
 import { capitalizeString } from "app/core/utils/blitz"
 import RoadmapCard from "./RoadmapCard"
 import { RoadmapFeedback } from "../helpers"
@@ -12,18 +12,16 @@ type RoadmapBoardColumnProps = {
 
 const RoadmapBoardColumn: React.FC<RoadmapBoardColumnProps> = ({ status, feedback }) => {
   return (
-    <Grid
-      item
-      xs={12}
-      sm="auto"
-      container
+    <Box
       sx={{
+        display: "inline-flex",
         width: {
           xs: undefined,
           md: "290px!important",
         },
+        flexDirection: "column",
+        paddingX: 1,
       }}
-      flexDirection="column"
     >
       <Paper
         variant="outlined"
@@ -44,17 +42,17 @@ const RoadmapBoardColumn: React.FC<RoadmapBoardColumnProps> = ({ status, feedbac
           </Grid>
           <Droppable droppableId={status}>
             {(provided: DroppableProvided) => (
-              <Grid
-                item
-                container
-                rowSpacing={1}
-                xs={12}
+              <Box
                 sx={{
                   paddingBottom: 1,
                   // bgcolor: "red",
                   minHeight: 250,
                   paddingX: 1,
                   marginTop: 0.25,
+                  height: "calc(100vh - 300px)",
+                  // bgcolor: "red",
+                  overflowX: "hidden",
+                  overflowY: "auto",
                 }}
                 ref={provided.innerRef}
                 {...provided.droppableProps}
@@ -63,12 +61,12 @@ const RoadmapBoardColumn: React.FC<RoadmapBoardColumnProps> = ({ status, feedbac
                   <RoadmapCard key={card.id} feedback={card} index={index} />
                 ))}
                 {provided.placeholder}
-              </Grid>
+              </Box>
             )}
           </Droppable>
         </Grid>
       </Paper>
-    </Grid>
+    </Box>
   )
 }
 

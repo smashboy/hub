@@ -1,6 +1,7 @@
 import { ProjectMemberRole } from "db"
 import { useState } from "react"
 import randomcolor from "randomcolor"
+import { useFormContext, useWatch } from "react-hook-form"
 import {
   Button,
   DialogActions,
@@ -27,7 +28,6 @@ import { CreateLabel } from "app/project/validations"
 import LabeledTextField from "app/core/components/LabeledTextField"
 import ColorPicker from "app/core/components/ColorPicker"
 import { SxProps } from "@mui/system"
-import useIsSmallDevice from "app/core/hooks/useIsSmallDevice"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import createLabel from "app/project/mutations/createLabel"
 import { useConfirmDialog } from "react-mui-confirm"
@@ -50,6 +50,22 @@ type LabelFormProps = {
   initialValues?: Label
   onSuccess: () => void
   onCancel?: () => void
+}
+
+const LabelPreview = () => {
+  const { control } = useFormContext()
+
+  const color = useWatch({
+    name: "color",
+    control,
+  })
+
+  const name = useWatch({
+    name: "name",
+    control,
+  })
+
+  return <Chip label={name || "Label preview"} sx={{ bgcolor: color }} />
 }
 
 const LabelForm: React.FC<LabelFormProps> = ({ onSuccess, onCancel, initialValues }) => {
@@ -97,6 +113,9 @@ const LabelForm: React.FC<LabelFormProps> = ({ onSuccess, onCancel, initialValue
         }
       }}
     >
+      <Grid item xs={12}>
+        <LabelPreview />
+      </Grid>
       <LabeledTextField
         name="name"
         label="Name"
@@ -183,8 +202,6 @@ const LabelItem: React.FC<LabelItemProps> = ({ label, refetch }) => {
 }
 
 const ManageLabelsDialog: React.FC<ManageLabelsDialogProps> = ({ labels, refetch }) => {
-  const isSM = useIsSmallDevice()
-
   const { role } = useFeedbackEditor()
 
   const disableActions = !role || role === ProjectMemberRole.MEMBER

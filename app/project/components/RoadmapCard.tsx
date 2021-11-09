@@ -1,6 +1,6 @@
 import UpvoteIcon from "@mui/icons-material/ArrowDropUp"
 import { Draggable, DraggableProvided } from "react-beautiful-dnd"
-import { Card, CardContent, Typography, Grid, Chip } from "@mui/material"
+import { Card, CardContent, Typography, Grid, Chip, Box } from "@mui/material"
 import { formatRelative } from "date-fns"
 import { RoadmapFeedback } from "../helpers"
 import { useRoadmap } from "../store/RoadmapContext"
@@ -29,7 +29,7 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ feedback, index }) => {
       isDragDisabled={isUpdatingFeedback || !canManage}
     >
       {(dragProvided: DraggableProvided) => (
-        <Grid item xs={12}>
+        <Box paddingTop={1}>
           <Card
             ref={dragProvided.innerRef}
             {...dragProvided.draggableProps}
@@ -79,7 +79,7 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ feedback, index }) => {
               </Grid>
             </CardContent>
           </Card>
-        </Grid>
+        </Box>
       )}
     </Draggable>
   )
