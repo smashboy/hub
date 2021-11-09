@@ -119,6 +119,7 @@ const LabelForm: React.FC<LabelFormProps> = ({ onSuccess, onCancel, initialValue
       <LabeledTextField
         name="name"
         label="Name"
+        autoComplete="off"
         size="small"
         gridProps={{ sx: 12 as SxProps, md: 4 }}
       />
