@@ -109,48 +109,50 @@ const Options = () => {
         <Grid item xs={12}>
           <Divider />
         </Grid>
-        <Grid item xs={12}>
-          <Autocomplete
-            size="small"
-            fullWidth
-            options={projectLabels}
-            value={projectLabels.filter((label) => labelIds.includes(label.id))}
-            getOptionLabel={({ name }) => name}
-            freeSolo
-            disablePortal
-            multiple
-            disabled={disableActions}
-            onChange={(event, value) => {
-              // @ts-ignore
-              setLabels(value.map(({ id }) => id))
-            }}
-            renderOption={(props, { name, id, color, description }, { selected }) =>
-              selected ? null : (
-                <MenuItem {...props} key={id} divider sx={{ display: "flex", flexWrap: "wrap" }}>
-                  <Box sx={{ width: "100%" }}>
-                    <Chip label={name} size="small" sx={{ bgcolor: color, cursor: "pointer" }} />
-                  </Box>
+        <Grid item container rowSpacing={1}>
+          <Grid item xs={12}>
+            <Autocomplete
+              size="small"
+              fullWidth
+              options={projectLabels}
+              value={projectLabels.filter((label) => labelIds.includes(label.id))}
+              getOptionLabel={({ name }) => name}
+              freeSolo
+              disablePortal
+              multiple
+              disabled={disableActions}
+              onChange={(event, value) => {
+                // @ts-ignore
+                setLabels(value.map(({ id }) => id))
+              }}
+              renderOption={(props, { name, id, color, description }, { selected }) =>
+                selected ? null : (
+                  <MenuItem {...props} key={id} divider sx={{ display: "flex", flexWrap: "wrap" }}>
+                    <Box sx={{ width: "100%" }}>
+                      <Chip label={name} size="small" sx={{ bgcolor: color, cursor: "pointer" }} />
+                    </Box>
 
-                  {description && <ListItemText secondary={description} sx={{ paddingTop: 1 }} />}
-                </MenuItem>
-              )
-            }
-            renderTags={(labels, getTagProps) =>
-              labels.map(({ id, color, name }, index) => (
-                <Chip
-                  {...getTagProps({ index })}
-                  label={name}
-                  key={id}
-                  size="small"
-                  sx={{ bgcolor: color }}
-                />
-              ))
-            }
-            renderInput={(params) => <TextField {...params} label="Labels" />}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <ManageLabelsDialog labels={projectLabels} refetch={refetch} />
+                    {description && <ListItemText secondary={description} sx={{ paddingTop: 1 }} />}
+                  </MenuItem>
+                )
+              }
+              renderTags={(labels, getTagProps) =>
+                labels.map(({ id, color, name }, index) => (
+                  <Chip
+                    {...getTagProps({ index })}
+                    label={name}
+                    key={id}
+                    size="small"
+                    sx={{ bgcolor: color }}
+                  />
+                ))
+              }
+              renderInput={(params) => <TextField {...params} label="Labels" />}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <ManageLabelsDialog labels={projectLabels} refetch={refetch} />
+          </Grid>
         </Grid>
         <Grid item xs={12}>
           <Divider />
