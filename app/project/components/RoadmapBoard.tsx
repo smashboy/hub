@@ -6,11 +6,17 @@ import { useRoadmap } from "../store/RoadmapContext"
 import RoadmapFeedbackDialog from "./RoadmapFeedbackDialog"
 
 const RoadmapBoard = () => {
-  const { feedback, onDragEnd } = useRoadmap()
+  const { feedback, onDragEnd, info } = useRoadmap()
 
   return (
     <NoSsr>
-      <Container maxWidth="xl" sx={{ height: "calc(100vh - 225px)" }}>
+      <Container
+        maxWidth="xl"
+        sx={{
+          height: `calc(100vh - ${info.description ? 245 : 225}px)`,
+          marginTop: { xs: 0, md: info.description ? "125px" : "95px" },
+        }}
+      >
         <Box sx={{ display: { xs: "block", md: "inline-flex" } }}>
           <DragDropContext onDragEnd={onDragEnd}>
             {/* @ts-ignore */}

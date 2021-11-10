@@ -10,6 +10,8 @@ const RoadmapPage: BlitzPage<RoadmapPageProps> = ({
   roadmap,
   project: { slug: projectSlug, role, name, color },
 }: RoadmapPageProps) => {
+  const { description } = roadmap
+
   return (
     <RoadmapProvider projectSlug={projectSlug} roadmap={roadmap} memberRole={role}>
       <Grid container rowSpacing={2}>
@@ -19,7 +21,7 @@ const RoadmapPage: BlitzPage<RoadmapPageProps> = ({
           </Grid>
         </Fade>
         <Fade in timeout={750}>
-          <Grid item xs={12} sx={{ marginTop: { xs: 0, md: "95px" } }}>
+          <Grid item xs={12}>
             <RoadmapBoard />
           </Grid>
         </Fade>
