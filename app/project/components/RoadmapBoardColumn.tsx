@@ -16,11 +16,18 @@ const RoadmapBoardColumn: React.FC<RoadmapBoardColumnProps> = ({ status, feedbac
       sx={{
         display: "inline-flex",
         width: {
-          xs: undefined,
-          md: "290px!important",
+          xs: "100%",
+          md: "290px",
         },
         flexDirection: "column",
-        paddingX: 1,
+        paddingX: {
+          xs: 0,
+          md: 1,
+        },
+        paddingY: {
+          xs: 1,
+          md: 0,
+        },
       }}
     >
       <Paper

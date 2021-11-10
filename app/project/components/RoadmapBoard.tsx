@@ -19,6 +19,10 @@ const RoadmapBoard = () => {
                 display: "inline-flex",
                 overflow: "auto",
                 position: "relative",
+                flexWrap: {
+                  xs: "wrap",
+                  md: "nowrap",
+                },
                 height: "calc(100vh - 235px)",
                 userSelect: "none",
               }}
