@@ -10,21 +10,18 @@ const RoadmapBoard = () => {
 
   return (
     <NoSsr>
-      <Container maxWidth="xl">
-        <Box sx={{ userSelect: "none", display: "inline-flex" }}>
+      <Container maxWidth="xl" sx={{ height: "calc(100vh - 225px)" }}>
+        <Box sx={{ display: "inline-flex" }}>
           <DragDropContext onDragEnd={onDragEnd}>
             {/* @ts-ignore */}
             <Box
               sx={{
                 display: "inline-flex",
                 overflow: "auto",
-                position: "relative",
                 flexWrap: {
                   xs: "wrap",
                   md: "nowrap",
                 },
-                height: "calc(100vh - 235px)",
-                userSelect: "none",
               }}
             >
               <RoadmapBoardColumn

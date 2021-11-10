@@ -15,6 +15,7 @@ const RoadmapBoardColumn: React.FC<RoadmapBoardColumnProps> = ({ status, feedbac
     <Box
       sx={{
         display: "inline-flex",
+        height: "100%",
         width: {
           xs: "100%",
           md: "290px",
@@ -56,7 +57,8 @@ const RoadmapBoardColumn: React.FC<RoadmapBoardColumnProps> = ({ status, feedbac
                   minHeight: 250,
                   paddingX: 1,
                   marginTop: 0.25,
-                  height: "calc(100vh - 300px)",
+                  width: "100%",
+                  height: "calc(100vh - 275px)",
                   // bgcolor: "red",
                   overflowX: "hidden",
                   overflowY: "auto",
