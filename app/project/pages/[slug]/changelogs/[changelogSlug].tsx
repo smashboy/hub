@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { ProjectMemberRole } from "db"
+import { useState, useEffect } from "react"
 import { BlitzPage, GetServerSideProps, getSession, useRouter, Routes } from "blitz"
 import { Grid, Typography, Container, Fade, Button, Rating, TextField } from "@mui/material"
 import { LoadingButton } from "@mui/lab"
@@ -13,7 +14,10 @@ import createChangelogFeedback from "app/project/mutations/createChangelogFeedba
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import ChangelogFeedbackDialog from "app/project/components/ChangelogFeedbackDialog"
 import { RatingIconContainer } from "app/project/components/RatingIconContainer"
-import { ProjectMemberRole } from "db"
+import useLocalStorageItem from "app/core/hooks/useLocalStorageItem"
+import { getLocalStorageItem } from "app/core/utils/localStorageManager"
+
+const FEEDBACK_STORAGE_KEY = "user-changelog-feedbacks"
 
 const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
   changelog: { title, content, createdAt, id, userRating },
@@ -32,11 +36,26 @@ const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
       successNotification: "Thank you for your feedback!",
     })
 
+  const localStorageItemId = `${slug}-${id}`
+
   const [openFeedbackDialog, setOpenFeedbackDialog] = useState(false)
   const [editMode, setEditMore] = useState(false)
   const [ratingSubmitted, setRatingSubmitted] = useState(userRating !== null)
-  const [rating, setRating] = useState<number | null>(userRating)
+  const [rating, setRating] = useLocalStorageItem<number | null>(
+    FEEDBACK_STORAGE_KEY,
+    localStorageItemId,
+    userRating
+  )
   const [description, setDescription] = useState("")
+
+  useEffect(() => {
+    const item = getLocalStorageItem({
+      storageKey: FEEDBACK_STORAGE_KEY,
+      itemKey: localStorageItemId,
+    })
+
+    if (item) setRatingSubmitted(true)
+  }, [])
 
   const handleOpenFeedbackDialog = () => setOpenFeedbackDialog(true)
   const handleCloseFeedbackDialog = () => setOpenFeedbackDialog(false)
@@ -44,7 +63,7 @@ const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
   const handleCancelEditChangelog = () => setEditMore(false)
 
   const handleRating = (event: React.SyntheticEvent<Element, Event>, newValue: number | null) =>
-    setRating(newValue)
+    setRating(newValue, true)
 
   const handleFeedbackDescription = (event: React.ChangeEvent<HTMLInputElement>) =>
     setDescription(event.target.value)
@@ -68,6 +87,8 @@ const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
       rating: rating!,
       description: description || null,
     })
+
+    if (!user) setRating(rating)
 
     setRatingSubmitted(true)
   }
@@ -123,7 +144,7 @@ const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
                   readOnly={!editMode}
                 />
               </Grid>
-              {user && !editMode && (
+              {!editMode && (
                 <Grid container item xs={12} spacing={2} justifyContent="center">
                   <Grid container item xs={12} justifyContent="center">
                     <Typography variant="h6" color="text.primary">
@@ -142,7 +163,7 @@ const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
                     />
                   </Grid>
                   <Fade
-                    in={Boolean(rating !== null && user && !ratingSubmitted)}
+                    in={Boolean(rating !== null && !ratingSubmitted)}
                     timeout={250}
                     unmountOnExit
                   >

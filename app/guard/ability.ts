@@ -34,6 +34,8 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
     can("read", "feedback.settings")
     can("read", "feedback.messages")
 
+    can("create", "project.changelog.feedback")
+
     if (authUserId) {
       can("manage", "user")
       can("manage", "user.notifications")
@@ -51,7 +53,7 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
       )
 
       can("read", "project.changelog")
-      can("create", "project.changelog.feedback")
+
       can(
         "read",
         "project.changelog.feedback",

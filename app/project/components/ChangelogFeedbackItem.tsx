@@ -15,7 +15,7 @@ type ChangelogFeedbackItemProps = {
     user: {
       username: string
       avatarUrl: string | null
-    }
+    } | null
     createdAt: Date
     rating: number
     description: string | null
@@ -23,24 +23,19 @@ type ChangelogFeedbackItemProps = {
 }
 
 const ChangelogFeedbackItem: React.FC<ChangelogFeedbackItemProps> = ({
-  feedback: {
-    user: { username, avatarUrl },
-    description,
-    rating,
-    createdAt,
-  },
+  feedback: { user, description, rating, createdAt },
 }) => {
   return (
     <ListItem alignItems="flex-start" component="div" divider>
       <ListItemAvatar>
-        <Avatar src={avatarUrl || undefined} alt={username} />
+        <Avatar src={user?.avatarUrl || undefined} alt={user?.username || "anonymous"} />
       </ListItemAvatar>
       <ListItemText
         primary={
           <Grid container columnSpacing={1} alignItems="center">
             <Grid item xs="auto">
               <Typography variant="subtitle1" color="text.primary" component="div">
-                {username}
+                {user?.username || "Anonymous"}
               </Typography>
             </Grid>
             <Grid item xs="auto">
