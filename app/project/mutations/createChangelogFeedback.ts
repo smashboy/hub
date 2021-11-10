@@ -7,17 +7,19 @@ export default resolver.pipe(
   resolver.zod(CreateChangelogFeedback),
   Guard.authorizePipe("create", "project.changelog.feedback"),
   async ({ changelogId, rating, description }, ctx) => {
-    const authUserId = ctx.session.userId!
+    const authUserId = ctx.session.userId
 
     await db.changelogFeedback.create({
       data: {
         rating,
         description,
-        user: {
-          connect: {
-            id: authUserId,
-          },
-        },
+        user: authUserId
+          ? {
+              connect: {
+                id: authUserId,
+              },
+            }
+          : undefined,
         changelog: {
           connect: {
             id: changelogId,

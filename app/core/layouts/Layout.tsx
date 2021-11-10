@@ -207,7 +207,7 @@ const Layout = ({ title, disableContainer, disableNavigation, children, noIndex 
 
       {!disableNavigation && (
         <AppBar
-          position="sticky"
+          position="fixed"
           elevation={scrollTrigger ? 1 : 0}
           sx={
             scrollTrigger
@@ -229,7 +229,9 @@ const Layout = ({ title, disableContainer, disableNavigation, children, noIndex 
           </Toolbar>
         </AppBar>
       )}
-      {disableContainer ? children : <Container sx={{ paddingBottom: 5 }}>{children}</Container>}
+      <Box sx={{ marginTop: 7, paddingBottom: 5 }}>
+        {disableContainer ? children : <Container>{children}</Container>}
+      </Box>
     </>
   )
 }

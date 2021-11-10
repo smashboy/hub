@@ -140,7 +140,7 @@ const CreateChangelog: BlitzPage<RoadmapPageProps> = ({
   const handlePreviewImage = (files: File[]) => setPreviewImage(files[0] || null)
 
   return (
-    <Grid container rowSpacing={2} sx={{ marginTop: 1 }}>
+    <Grid container rowSpacing={2}>
       <Grid item xs={12}>
         <Fade in timeout={500}>
           <Typography variant="h4" color="text.primary" align="center">
