@@ -63,7 +63,30 @@ const RoadmapHeader: React.FC<{ projectName: string; brandColor: string }> = ({
   return (
     <>
       <Container>
-        <Grid container item spacing={1} xs={12}>
+        <Grid
+          container
+          item
+          spacing={1}
+          xs={12}
+          sx={{
+            position: {
+              xs: "static",
+              md: "fixed",
+            },
+            left: {
+              xs: 0,
+              md: "50%",
+            },
+            transform: {
+              xs: "none",
+              md: "translateX(-50%)",
+            },
+            width: {
+              xs: "100%",
+              md: "75%",
+            },
+          }}
+        >
           <Grid container item xs={2} md={1} alignItems="center">
             <RouteLink href={Routes.ProjectLandingPage({ slug: projectSlug })}>
               <Avatar

@@ -19,7 +19,7 @@ const RoadmapPage: BlitzPage<RoadmapPageProps> = ({
           </Grid>
         </Fade>
         <Fade in timeout={750}>
-          <Grid item xs={12}>
+          <Grid item xs={12} sx={{ marginTop: { xs: 0, md: "95px" } }}>
             <RoadmapBoard />
           </Grid>
         </Fade>

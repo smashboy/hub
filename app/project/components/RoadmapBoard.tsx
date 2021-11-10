@@ -11,13 +11,13 @@ const RoadmapBoard = () => {
   return (
     <NoSsr>
       <Container maxWidth="xl" sx={{ height: "calc(100vh - 225px)" }}>
-        <Box sx={{ display: "inline-flex" }}>
+        <Box sx={{ display: { xs: "block", md: "inline-flex" } }}>
           <DragDropContext onDragEnd={onDragEnd}>
             {/* @ts-ignore */}
             <Box
               sx={{
-                display: "inline-flex",
-                overflow: "auto",
+                display: { xs: "block", md: "inline-flex" },
+                overflow: "hidden",
                 flexWrap: {
                   xs: "wrap",
                   md: "nowrap",
