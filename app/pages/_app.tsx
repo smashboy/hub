@@ -9,67 +9,61 @@ import {
 } from "blitz"
 import { GlobalStyles, ThemeProvider } from "@mui/material"
 import AdapterDateFns from "@mui/lab/AdapterDateFns"
-import { CacheProvider } from "@emotion/react"
-import createCache, { EmotionCache } from "@emotion/cache"
+// import { CacheProvider } from "@emotion/react"
+// import createCache, { EmotionCache } from "@emotion/cache"
 import LocalizationProvider from "@mui/lab/LocalizationProvider"
 import { SnackbarProvider } from "notistack"
 // import lightTheme from "app/core/theme/lightTheme"
 import darkTheme from "app/core/theme/darkTheme"
 import { ConfirmDialogProvider } from "react-mui-confirm"
 
-const clientSideEmotionCache = createCache({ key: "css" })
+// const clientSideEmotionCache = createCache({ key: "css" })
 
-interface CustomAppProps extends AppProps {
-  emotionCache: EmotionCache
-}
+// interface CustomAppProps extends AppProps {
+//   emotionCache: EmotionCache
+// }
 
-export default function App({
-  Component,
-  pageProps,
-  emotionCache = clientSideEmotionCache,
-}: CustomAppProps) {
+export default function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
 
   return (
-    <CacheProvider value={emotionCache}>
-      <ThemeProvider theme={darkTheme}>
-        <ConfirmDialogProvider
-          confirmTextFieldProps={{
-            variant: "outlined",
-            size: "small",
-          }}
-          cancelButtonProps={{ color: "secondary" }}
-        >
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <SnackbarProvider maxSnack={3}>
-              <ErrorBoundary
-                FallbackComponent={RootErrorFallback}
-                onReset={useQueryErrorResetBoundary().reset}
-              >
-                <GlobalStyles
-                  styles={{
-                    body: { margin: 0, backgroundColor: "#121212" },
-                    "::-webkit-scrollbar": {
-                      width: 4,
-                      height: 4,
-                    },
+    <ThemeProvider theme={darkTheme}>
+      <ConfirmDialogProvider
+        confirmTextFieldProps={{
+          variant: "outlined",
+          size: "small",
+        }}
+        cancelButtonProps={{ color: "secondary" }}
+      >
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <SnackbarProvider maxSnack={3}>
+            <ErrorBoundary
+              FallbackComponent={RootErrorFallback}
+              onReset={useQueryErrorResetBoundary().reset}
+            >
+              <GlobalStyles
+                styles={{
+                  body: { margin: 0, backgroundColor: "#121212" },
+                  "::-webkit-scrollbar": {
+                    width: 4,
+                    height: 4,
+                  },
 
-                    "::-webkit-scrollbar-track": {
-                      backgroundColor: "transparent",
-                    },
+                  "::-webkit-scrollbar-track": {
+                    backgroundColor: "transparent",
+                  },
 
-                    "::-webkit-scrollbar-thumb": {
-                      background: "#ffffff",
-                    },
-                  }}
-                />
-                {getLayout(<Component {...pageProps} />, pageProps)}
-              </ErrorBoundary>
-            </SnackbarProvider>
-          </LocalizationProvider>
-        </ConfirmDialogProvider>
-      </ThemeProvider>
-    </CacheProvider>
+                  "::-webkit-scrollbar-thumb": {
+                    background: "#ffffff",
+                  },
+                }}
+              />
+              {getLayout(<Component {...pageProps} />, pageProps)}
+            </ErrorBoundary>
+          </SnackbarProvider>
+        </LocalizationProvider>
+      </ConfirmDialogProvider>
+    </ThemeProvider>
   )
 }
 
