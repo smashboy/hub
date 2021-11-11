@@ -20,7 +20,6 @@ export type SearchOption = {
 export type QueryFunc<I> = (...args: any[]) => Promise<I[]>
 
 type SearchDropdownProps<I extends Object, F extends QueryFunc<I>> = {
-  projectSlug: string
   buttonText: string
   icon: typeof SvgIcon
   queryFunc: F
@@ -33,7 +32,6 @@ type SearchDropdownProps<I extends Object, F extends QueryFunc<I>> = {
 
 export type SearchDropdownListProps<I extends Object, F extends QueryFunc<I>> = {
   queryFunc: F
-  projectSlug: string
   selected: Array<string | number>
   filtered: Array<string | number>
   renderOption: (item: ArrayElement<ReturnAsync<F>>) => Option
@@ -50,7 +48,6 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
   queryFunc,
   onSubmit,
   mapQueryResultToSearchOptions,
-  projectSlug,
 }: SearchDropdownProps<I, F>) => {
   const isSM = useIsSmallDevice()
 
@@ -153,7 +150,6 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
           onSearch={handleSearchInput}
           onClose={handleCloseMenu}
           queryFunc={queryFunc}
-          projectSlug={projectSlug}
           renderOption={renderOption}
           selected={selected}
           disableSubmit={disableApply}
@@ -170,7 +166,6 @@ const SearchDropdown = <I extends Object, F extends QueryFunc<I>>({
           onSearch={handleSearchInput}
           onClose={handleCloseMenu}
           queryFunc={queryFunc}
-          projectSlug={projectSlug}
           renderOption={renderOption}
           selected={selected}
           disableSubmit={disableApply}

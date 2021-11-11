@@ -11,12 +11,17 @@ import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import Header from "./Header"
 import Editor from "./Editor"
 import FeedbackOptions from "./FeedbackOptions"
+import { useProject } from "app/project/store/ProjectContext"
 
-const FeedbackEditor: React.FC<FeedbackEditorProps> = ({ slug, initialValues, role }) => {
+const FeedbackEditor: React.FC<FeedbackEditorProps> = ({ initialValues }) => {
   const isSM = useIsSmallDevice()
 
+  const {
+    project: { role },
+  } = useProject()
+
   return (
-    <FeedbackEditorProvider slug={slug} initialValues={initialValues} role={role}>
+    <FeedbackEditorProvider initialValues={initialValues}>
       <Container maxWidth="lg" disableGutters sx={{ marginTop: 3 }}>
         <Grid container spacing={2} sx={{ height: "fit-content" }}>
           <Grid

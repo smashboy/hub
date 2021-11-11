@@ -16,6 +16,7 @@ import deleteProjectInvite from "../mutations/deleteProjectInvite"
 import InviteMembersDialog from "./InviteMembersDialog"
 import { useMemberInvitesDialog } from "../store/MemberInvitesDialogContext"
 import { useConfirmDialog } from "react-mui-confirm"
+import { useProject } from "../store/ProjectContext"
 
 export type Invites = Array<{
   id: number
@@ -27,12 +28,14 @@ export type Invites = Array<{
 }>
 
 type ManageInvitesSettingsProps = {
-  slug: string
-  name: string
   invites: Invites
 }
 
-const ManageInvitesSettings: React.FC<ManageInvitesSettingsProps> = ({ invites, slug, name }) => {
+const ManageInvitesSettings: React.FC<ManageInvitesSettingsProps> = ({ invites }) => {
+  const {
+    project: { slug },
+  } = useProject()
+
   const { open, setClose } = useMemberInvitesDialog()
 
   const confirm = useConfirmDialog()
@@ -172,13 +175,7 @@ const ManageInvitesSettings: React.FC<ManageInvitesSettingsProps> = ({ invites, 
           </Grid>
         </Grid>
       </PaperBox>
-      <InviteMembersDialog
-        open={open}
-        onClose={setClose}
-        name={name}
-        slug={slug}
-        onSubmit={handleProjectInvites}
-      />
+      <InviteMembersDialog open={open} onClose={setClose} onSubmit={handleProjectInvites} />
     </>
   )
 }

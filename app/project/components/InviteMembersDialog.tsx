@@ -20,6 +20,7 @@ import { LoadingButton } from "@mui/lab"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import createProjectInvites from "../mutations/createProjectInvites"
 import { Invites } from "./ManageProjectInvites"
+import { useProject } from "../store/ProjectContext"
 
 export type Users = Array<{
   id: number
@@ -31,18 +32,14 @@ export type Users = Array<{
 type InviteMembersDialog = {
   open: boolean
   onClose: () => void
-  name: string
-  slug: string
   onSubmit: (newInvites: Invites) => void
 }
 
-const InviteMembersDialog: React.FC<InviteMembersDialog> = ({
-  open,
-  onClose,
-  name,
-  slug,
-  onSubmit,
-}) => {
+const InviteMembersDialog: React.FC<InviteMembersDialog> = ({ open, onClose, onSubmit }) => {
+  const {
+    project: { slug, name },
+  } = useProject()
+
   const [createProjectInvitesMutation, { isLoading: isLoadingCreateInvites }] = useCustomMutation(
     createProjectInvites,
     {

@@ -4,6 +4,7 @@ import { Card, CardContent, Typography, Grid, Chip, Box } from "@mui/material"
 import { formatRelative } from "date-fns"
 import { RoadmapFeedback } from "../helpers"
 import { useRoadmap } from "../store/RoadmapContext"
+import { useProject } from "../store/ProjectContext"
 
 type RoadmapCardProps = {
   index: number
@@ -11,7 +12,11 @@ type RoadmapCardProps = {
 }
 
 const RoadmapCard: React.FC<RoadmapCardProps> = ({ feedback, index }) => {
-  const { isUpdatingFeedback, canManage, openFeedbackDialog, memberRole } = useRoadmap()
+  const {
+    project: { role },
+  } = useProject()
+
+  const { isUpdatingFeedback, canManage, openFeedbackDialog } = useRoadmap()
 
   const {
     id,
@@ -66,7 +71,7 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ feedback, index }) => {
                   <Grid container item xs={12}>
                     <Chip label={category} size="small" />
                   </Grid>
-                  {memberRole && (
+                  {role && (
                     <Grid container item xs={12} spacing={1}>
                       {labels.map(({ name, color }) => (
                         <Grid key={name} item xs="auto">

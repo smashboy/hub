@@ -6,12 +6,17 @@ import { LoadingButton, Timeline } from "@mui/lab"
 import VirtualListItem from "app/core/components/VirtualListItem"
 import getChangelogList, { GetChangelogListInput } from "../queries/getChangelogList"
 import ChangelogListItem from "./ChangelogListItem"
+import { useProject } from "../store/ProjectContext"
 
 const getChangelogInput =
   (slug: string) =>
   (page: Partial<GetChangelogListInput> = { take: 10, skip: 0 }) => ({ ...page, slug })
 
-const ChangelogList: React.FC<{ slug: string }> = ({ slug }) => {
+const ChangelogList = () => {
+  const {
+    project: { slug },
+  } = useProject()
+
   const [changelogPages, { isFetchingNextPage, fetchNextPage, hasNextPage }] = useInfiniteQuery(
     getChangelogList,
     getChangelogInput(slug),
@@ -68,7 +73,7 @@ const ChangelogList: React.FC<{ slug: string }> = ({ slug }) => {
         components={Components}
         style={{ height: "100%" }}
         itemContent={(_, changelog) => (
-          <ChangelogListItem key={changelog.slug} projectSlug={slug} changelog={changelog} />
+          <ChangelogListItem key={changelog.slug} changelog={changelog} />
         )}
       />
     </Box>

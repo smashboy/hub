@@ -4,6 +4,7 @@ import { Components, Virtuoso } from "react-virtuoso"
 import { List, Box, ListItemButton, ListItemIcon, Checkbox, ListItemText } from "@mui/material"
 import { QueryFunc, SearchDropdownListProps } from "./index"
 import VirtualListItem from "../VirtualListItem"
+import { useProject } from "app/project/store/ProjectContext"
 
 // export type GetFeedbackSearchOptionsInput = {
 //   projectSlug: string
@@ -14,7 +15,6 @@ import VirtualListItem from "../VirtualListItem"
 
 const SearchDropdownList = <I extends Object, F extends QueryFunc<I>>({
   queryFunc,
-  projectSlug,
   renderOption,
   filtered,
   selected,
@@ -22,8 +22,12 @@ const SearchDropdownList = <I extends Object, F extends QueryFunc<I>>({
   onSelect,
   height,
 }: SearchDropdownListProps<I, F>) => {
+  const {
+    project: { slug },
+  } = useProject()
+
   const [items] = useQuery(queryFunc, {
-    projectSlug,
+    slug,
   })
 
   useEffect(() => {

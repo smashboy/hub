@@ -1,5 +1,6 @@
 import { FeedbackCategory, FeedbackMessageCategory, FeedbackStatus, ProjectMemberRole } from "db"
 import * as z from "zod"
+import { UploadImage } from "../editor/validations"
 
 export const projectName = z
   .string()
@@ -42,6 +43,13 @@ export const FollowProject = z.object({
 export const UpdateProject = CreateProject.omit({ isPrivate: true }).merge(
   z.object({
     slug: z.string(),
+  })
+)
+
+export const UploadProjectLogo = UploadImage.merge(
+  z.object({
+    projectId: z.number(),
+    projectSlug: z.string(),
   })
 )
 

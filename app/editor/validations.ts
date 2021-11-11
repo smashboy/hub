@@ -9,7 +9,7 @@ export const LinkForm = z.object({
   link,
 })
 
-const bucketIds = z.enum(["changelogs", "feedback", "feedback-messages"])
+const bucketIds = z.enum(["changelogs", "feedback", "feedback-messages", "project"])
 
 export const UploadImage = z.object({
   file: z.string(),

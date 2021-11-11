@@ -6,11 +6,11 @@ import LabeledTextField from "app/core/components/LabeledTextField"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import updateProjectRoadmap from "../mutations/updateProjectRoadmap"
 import { UpdateProjectRoadmap } from "../validations"
+import { useProject } from "../store/ProjectContext"
 
 type UpdateRoadmapDialogProps = {
   open: boolean
   onClose: () => void
-  projectSlug: string
   roadmap: {
     id: number
     name: string
@@ -24,9 +24,12 @@ const UpdateRoadmapDialog: React.FC<UpdateRoadmapDialogProps> = ({
   open,
   onClose,
   roadmap,
-  projectSlug,
   onUpdate,
 }) => {
+  const {
+    project: { slug: projectSlug },
+  } = useProject()
+
   const { name, id } = roadmap
 
   const router = useRouter()

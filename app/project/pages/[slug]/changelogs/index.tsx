@@ -5,14 +5,12 @@ import { getProjectInfo, ProjectPageProps } from "app/project/helpers"
 import ProjectLayout from "app/project/layouts/ProjectLayout"
 import ChangelogList from "app/project/components/ChangelogList"
 
-const ChangelogListPage: BlitzPage<ProjectPageProps> = ({
-  project: { slug },
-}: ProjectPageProps) => {
+const ChangelogListPage: BlitzPage<ProjectPageProps> = () => {
   return (
     <Grid container spacing={1} sx={{ marginTop: 1 }}>
       <Grid item xs={12}>
         <Suspense fallback={null}>
-          <ChangelogList slug={slug} />
+          <ChangelogList />
         </Suspense>
       </Grid>
     </Grid>

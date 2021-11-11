@@ -5,14 +5,20 @@ import { RouteLink } from "app/core/components/links"
 import Layout, { LayoutProps } from "app/core/layouts/Layout"
 import { ProjectPageProps } from "../helpers"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
+import { ProjectProvider, useProject } from "../store/ProjectContext"
 
-const ProjectMiniLayout: React.FC<LayoutProps & ProjectPageProps> = ({
+const ProjectMiniLayoutContent: React.FC<LayoutProps> = ({
   title,
   children,
-  project: { name, logoUrl, color, slug, description },
   disableContainer,
   disableNavigation,
 }) => {
+  const {
+    project: { name, logoUrl, color, slug, description },
+  } = useProject()
+
+  console.log(slug)
+
   const isSM = useIsSmallDevice()
 
   const avatarSize = useMemo(() => (isSM ? 45 : 75), [isSM])
@@ -27,7 +33,7 @@ const ProjectMiniLayout: React.FC<LayoutProps & ProjectPageProps> = ({
                 <Grid container item xs={2} md={1} alignItems="center">
                   <RouteLink href={Routes.ProjectLandingPage({ slug })}>
                     <Avatar
-                      src="broken"
+                      src={logoUrl ?? "broken"}
                       alt={name}
                       sx={{
                         bgcolor: color,
@@ -67,6 +73,18 @@ const ProjectMiniLayout: React.FC<LayoutProps & ProjectPageProps> = ({
       </Grid>
       {children}
     </Layout>
+  )
+}
+
+const ProjectMiniLayout: React.FC<LayoutProps & ProjectPageProps> = ({
+  children,
+  project,
+  ...otherProps
+}) => {
+  return (
+    <ProjectProvider initialValues={project}>
+      <ProjectMiniLayoutContent {...otherProps}>{children}</ProjectMiniLayoutContent>
+    </ProjectProvider>
   )
 }
 

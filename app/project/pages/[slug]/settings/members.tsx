@@ -15,19 +15,18 @@ import { MemberInvitesDialogProvider } from "app/project/store/MemberInvitesDial
 
 const MembersSettingPage: BlitzPage<MembersSettingsPageProps> = ({
   memberSettings: { members, invites },
-  project: { slug, name },
 }: MembersSettingsPageProps) => {
   return (
     <MemberInvitesDialogProvider>
       <Grid container spacing={2}>
         <Fade in timeout={500}>
           <Grid item xs={12}>
-            <ManageMembersSettings members={members} slug={slug} name={name} />
+            <ManageMembersSettings members={members} />
           </Grid>
         </Fade>
         <Fade in timeout={750}>
           <Grid item xs={12}>
-            <ManageProjectInvites invites={invites} slug={slug} name={name} />
+            <ManageProjectInvites invites={invites} />
           </Grid>
         </Fade>
       </Grid>

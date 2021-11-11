@@ -1,35 +1,28 @@
 import { ProjectMemberRole } from "db"
 import { BlitzPage, getSession, GetServerSideProps, useRouter, Routes } from "blitz"
-import { Grid, Typography, Button, Fade, Box, styled } from "@mui/material"
-import ColorPicker from "app/core/components/ColorPicker"
-import Form from "app/core/components/Form"
-import LabeledTextField from "app/core/components/LabeledTextField"
+import { Grid, Typography, Button, Fade, Box, styled, Avatar } from "@mui/material"
 import PaperBox from "app/core/components/PaperBox"
 // import SwitchField from "app/core/components/SwitchField"
 import { authConfig } from "app/core/configs/authConfig"
 import { getProjectInfo, ProjectPageProps } from "app/project/helpers"
 import ProjectSettingsLayout from "app/project/layouts/ProjectSettingsLayout"
-import { UpdateProject } from "app/project/validations"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import updateGeneralSettings from "app/project/mutations/updateGeneralSettings"
 // import updateIsPrivateSetting from "app/project/mutations/updateIsPrivateSetting"
 import deleteProject from "app/project/mutations/deleteProject"
 import { useConfirmDialog } from "react-mui-confirm"
+import UpdageProjectGeneralSettingsForm from "app/project/components/UpdageProjectGeneralSettingsForm"
 
 const BoldText = styled("b")(({ theme }) => ({
   color: theme.palette.primary.main,
 }))
 
 const SettingsPage: BlitzPage<ProjectPageProps> = ({
-  project: { name, description, websiteUrl, color, slug },
+  project: { name, description, websiteUrl, color, slug, logoUrl, role },
 }: ProjectPageProps) => {
   const router = useRouter()
 
   const confirm = useConfirmDialog()
-
-  const [updateGeneralSettingsMutation] = useCustomMutation(updateGeneralSettings, {
-    successNotification: "General settings has been updated successfully!",
-  })
 
   const [deleteProjectMutation] = useCustomMutation(deleteProject, {
     successNotification: "Project has been deleted successfully!",
@@ -60,45 +53,29 @@ const SettingsPage: BlitzPage<ProjectPageProps> = ({
   // })
 
   return (
-    <Grid container spacing={2}>
-      <Fade in timeout={500}>
-        <Grid item xs={12}>
-          <PaperBox title="General">
-            <Form
-              schema={UpdateProject.omit({ slug: true })}
-              initialValues={{
-                name,
-                description,
-                websiteUrl,
-                color,
-              }}
-              submitText="Update"
-              onSubmit={async (values) => {
-                await updateGeneralSettingsMutation({ ...values, slug })
-              }}
-              resetOnSuccess
-              updateButton
-            >
-              <LabeledTextField label="Project name" name="name" size="small" />
-              <LabeledTextField label="Website url" name="websiteUrl" size="small" />
-              <ColorPicker label="Brand color" name="color" />
-              <LabeledTextField
-                label="Description"
-                name="description"
-                helperText="A short description of your project so that users can understand what it is about."
-                multiline
-                rows={4}
-                maxRows={4}
+    <>
+      <Grid container spacing={2}>
+        <Fade in timeout={350}>
+          <Grid item xs={12}>
+            <PaperBox title="Logo">
+              <Avatar
+                src={logoUrl ?? "broken"}
+                alt={name}
+                sx={{ bgcolor: color, width: 75, height: 75, fontSize: 32, cursor: "pointer" }}
               />
-            </Form>
-          </PaperBox>
-        </Grid>
-      </Fade>
-      <Fade in timeout={750}>
-        <Grid item xs={12}>
-          <PaperBox title="Danger Zone" dangerZone>
-            <Grid container spacing={2}>
-              {/* <Grid item xs={12}>
+            </PaperBox>
+          </Grid>
+        </Fade>
+        <Fade in timeout={500}>
+          <Grid item xs={12}>
+            <UpdageProjectGeneralSettingsForm />
+          </Grid>
+        </Fade>
+        <Fade in timeout={750}>
+          <Grid item xs={12}>
+            <PaperBox title="Danger Zone" dangerZone>
+              <Grid container spacing={2}>
+                {/* <Grid item xs={12}>
                 <Form
                   schema={UpdateIsProjectPrivateDanger.omit({ slug: true })}
                   submitText="Update"
@@ -118,38 +95,40 @@ const SettingsPage: BlitzPage<ProjectPageProps> = ({
                   />
                 </Form>
               </Grid> */}
-              {/* <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                 <Divider />
               </Grid> */}
-              <Grid container item xs={12}>
-                <Grid container item xs={12} md={9}>
-                  <Grid item xs={12}>
-                    <Typography variant="subtitle1" color="text.secondary">
-                      Delete this project
-                    </Typography>
+                <Grid container item xs={12}>
+                  <Grid container item xs={12} md={9}>
+                    <Grid item xs={12}>
+                      <Typography variant="subtitle1" color="text.secondary">
+                        Delete this project
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography variant="caption" color="text.secondary">
+                        Once you delete a project, there is no going back. Please be certain.
+                      </Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12}>
-                    <Typography variant="caption" color="text.secondary">
-                      Once you delete a project, there is no going back. Please be certain.
-                    </Typography>
+                  <Grid container item xs={12} md={3} alignItems="center">
+                    <Button
+                      onClick={handleDeleteProject}
+                      variant="outlined"
+                      color="secondary"
+                      disabled={role !== ProjectMemberRole.FOUNDER}
+                      fullWidth
+                    >
+                      Delete
+                    </Button>
                   </Grid>
-                </Grid>
-                <Grid container item xs={12} md={3} alignItems="center">
-                  <Button
-                    onClick={handleDeleteProject}
-                    variant="outlined"
-                    color="secondary"
-                    fullWidth
-                  >
-                    Delete
-                  </Button>
                 </Grid>
               </Grid>
-            </Grid>
-          </PaperBox>
-        </Grid>
-      </Fade>
-    </Grid>
+            </PaperBox>
+          </Grid>
+        </Fade>
+      </Grid>
+    </>
   )
 }
 

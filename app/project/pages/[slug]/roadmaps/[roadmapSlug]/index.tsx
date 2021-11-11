@@ -5,19 +5,15 @@ import RoadmapBoard from "app/project/components/RoadmapBoard"
 import { RoadmapProvider } from "app/project/store/RoadmapContext"
 import RoadmapHeader from "../../../../components/RoadmapHeader"
 import Layout from "app/core/layouts/Layout"
+import { ProjectProvider } from "app/project/store/ProjectContext"
 
-const RoadmapPage: BlitzPage<RoadmapPageProps> = ({
-  roadmap,
-  project: { slug: projectSlug, role, name, color },
-}: RoadmapPageProps) => {
-  const { description } = roadmap
-
+const RoadmapPage: BlitzPage<RoadmapPageProps> = ({ roadmap }: RoadmapPageProps) => {
   return (
-    <RoadmapProvider projectSlug={projectSlug} roadmap={roadmap} memberRole={role}>
+    <RoadmapProvider roadmap={roadmap}>
       <Grid container rowSpacing={2}>
         <Fade in timeout={500}>
           <Grid item xs={12}>
-            <RoadmapHeader projectName={name} brandColor={color} />
+            <RoadmapHeader />
           </Grid>
         </Fade>
         <Fade in timeout={750}>
@@ -32,7 +28,7 @@ const RoadmapPage: BlitzPage<RoadmapPageProps> = ({
 
 RoadmapPage.getLayout = (page, props: RoadmapPageProps) => (
   <Layout title={`${props.roadmap.name} roadmap | ${props.project.name}`} disableContainer>
-    {page}
+    <ProjectProvider initialValues={props.project}>{page}</ProjectProvider>
   </Layout>
 )
 

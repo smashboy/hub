@@ -4,10 +4,8 @@ import { getProjectInfo, ProjectPageProps } from "../../../helpers"
 import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
 import FeedbackEditor from "app/project/components/FeedbackEditor"
 
-const CreateFeedbackPage: BlitzPage<ProjectPageProps> = ({
-  project: { slug, role },
-}: ProjectPageProps) => {
-  return <FeedbackEditor slug={slug} role={role} />
+const CreateFeedbackPage: BlitzPage<ProjectPageProps> = () => {
+  return <FeedbackEditor />
 }
 
 CreateFeedbackPage.authenticate = authConfig

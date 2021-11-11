@@ -1,4 +1,4 @@
-import { FeedbackCategory, ProjectMemberRole } from "db"
+import { FeedbackCategory } from "db"
 import { createContext, useContext, useState, useEffect, useMemo } from "react"
 import { Routes, useRouter } from "blitz"
 import { useDebouncedCallback } from "use-debounce"
@@ -10,12 +10,11 @@ import updateFeedback from "../mutations/updateFeedback"
 import updateFeedbackParticipants from "../mutations/updateFeedbackParticipants"
 import updateFeedbackLabels from "../mutations/updateFeedbackLabels"
 import updateFeedbackRoadmaps from "../mutations/updateFeedbackRoadmaps"
+import { useProject } from "./ProjectContext"
 
 export type CategoryType = FeedbackCategory | "none"
 
 export type FeedbackEditorProps = {
-  slug: string
-  role: ProjectMemberRole | null
   initialValues?: Omit<FeedbackPageProps, "project">
   // readOnly?: boolean
 }
@@ -23,7 +22,6 @@ export type FeedbackEditorProps = {
 export type FeedbackEditorStore = {
   title: string
   category: CategoryType
-  slug: string
   memberIds: number[]
   labelIds: string[]
   roadmapIds: number[]
@@ -31,7 +29,6 @@ export type FeedbackEditorStore = {
   initialContent?: Descendant[]
   initialValues?: Omit<FeedbackPageProps, "project">
   readOnly: boolean
-  role: ProjectMemberRole | null
   setTitle: (newTitle: string) => void
   setCategory: (newCategory: CategoryType) => void
   setMembers: (members: number[]) => void
@@ -46,11 +43,13 @@ const FeedbackEditorContext = createContext<FeedbackEditorStore | null>(null)
 
 export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
   children,
-  slug,
   initialValues,
-  role,
 }) => {
   const router = useRouter()
+
+  const {
+    project: { slug },
+  } = useProject()
 
   const initialContent = useMemo(
     // @ts-ignore
@@ -173,7 +172,6 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
   return (
     <FeedbackEditorContext.Provider
       value={{
-        slug,
         title,
         category,
         memberIds,
@@ -183,7 +181,6 @@ export const FeedbackEditorProvider: React.FC<FeedbackEditorProps> = ({
         readOnly,
         initialValues: { feedback: feedback! },
         initialContent: initialContent?.content || undefined,
-        role,
         setTitle: handleSetTitle,
         setCategory: handleSetCategory,
         setMembers: handleSetMemberIds,

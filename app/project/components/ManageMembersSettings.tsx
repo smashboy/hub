@@ -12,8 +12,6 @@ import {
   GridActionsCellItem,
   GridLinkOperator,
   GridCellEditCommitParams,
-  GridFilterItem,
-  GridCellParams,
 } from "@mui/x-data-grid"
 import PaperBox from "app/core/components/PaperBox"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
@@ -21,10 +19,9 @@ import updateMemberRole from "app/project/mutations/updateMemberRole"
 import deleteProjectMember from "app/project/mutations/deleteProjectMember"
 import { useMemberInvitesDialog } from "../store/MemberInvitesDialogContext"
 import { useConfirmDialog } from "react-mui-confirm"
+import { useProject } from "../store/ProjectContext"
 
 type ManageMembersSettingsProps = {
-  slug: string
-  name: string
   members: {
     user: {
       username: string
@@ -59,7 +56,11 @@ const roleOptions = [
   },
 ]
 
-const ManageMembersSettings: React.FC<ManageMembersSettingsProps> = ({ members, slug }) => {
+const ManageMembersSettings: React.FC<ManageMembersSettingsProps> = ({ members }) => {
+  const {
+    project: { slug },
+  } = useProject()
+
   const { setOpen } = useMemberInvitesDialog()
 
   const confirm = useConfirmDialog()

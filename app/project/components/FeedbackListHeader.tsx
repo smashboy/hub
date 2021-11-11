@@ -1,4 +1,3 @@
-import { ProjectMemberRole } from "db"
 import { useState, useMemo } from "react"
 import { Grid, Button, Chip, Menu, MenuItem } from "@mui/material"
 import RoadmapIcon from "@mui/icons-material/Map"
@@ -12,14 +11,17 @@ import getFeedbackSearchMemberOptions from "../queries/getFeedbackSearchMemberOp
 import getFeedbackSearchRoadmapOptions from "../queries/getFeedbackSearchRoadmapOptions"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import { FeedbackFilterKey, FeedbackSortKey } from "../pages/[slug]/feedback"
+import { useProject } from "../store/ProjectContext"
 
 const FeedbackListHeader: React.FC<{
-  projectSlug: string
-  role: ProjectMemberRole | null
   onOptionsFilter: (key: FeedbackFilterKey) => (ids: Array<string | number>) => void
   onSort: (key: FeedbackSortKey) => void
   onSearchQueryFilter: (newQuery: string) => void
-}> = ({ projectSlug, role, onOptionsFilter, onSearchQueryFilter, onSort }) => {
+}> = ({ onOptionsFilter, onSearchQueryFilter, onSort }) => {
+  const {
+    project: { slug, role },
+  } = useProject()
+
   const isSM = useIsSmallDevice()
 
   const [menuEl, setMenuEl] = useState<null | HTMLElement>(null)
@@ -48,7 +50,6 @@ const FeedbackListHeader: React.FC<{
           {role && (
             <>
               <SearchDropdown
-                projectSlug={projectSlug}
                 buttonText="Labels"
                 icon={LabelIcon}
                 onSubmit={onOptionsFilter("labels")}
@@ -70,7 +71,6 @@ const FeedbackListHeader: React.FC<{
                 })}
               />
               <SearchDropdown
-                projectSlug={projectSlug}
                 buttonText="Members"
                 icon={ParticipantsIcon}
                 onSubmit={onOptionsFilter("members")}
@@ -87,7 +87,6 @@ const FeedbackListHeader: React.FC<{
             </>
           )}
           <SearchDropdown
-            projectSlug={projectSlug}
             buttonText="Roadmaps"
             icon={RoadmapIcon}
             onSubmit={onOptionsFilter("roadmaps")}

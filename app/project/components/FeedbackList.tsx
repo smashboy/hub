@@ -9,10 +9,9 @@ import FeedbackListItem from "./FeedbackListItem"
 import { FeedbackFilter, FeedbackSortKey } from "../pages/[slug]/feedback"
 import { LoadingButton } from "@mui/lab"
 import useIsSmallDevice from "app/core/hooks/useIsSmallDevice"
+import { useProject } from "../store/ProjectContext"
 
 type FeedbackListProps = {
-  slug: string
-  role: ProjectMemberRole | null
   filter: FeedbackFilter
   sortBy: FeedbackSortKey
 }
@@ -65,7 +64,11 @@ const getFeedbackInput =
     return page
   }
 
-const FeedbackList: React.FC<FeedbackListProps> = ({ slug, role, filter, sortBy }) => {
+const FeedbackList: React.FC<FeedbackListProps> = ({ filter, sortBy }) => {
+  const {
+    project: { role, slug },
+  } = useProject()
+
   const isSM = useIsSmallDevice()
 
   const [feedbackPages, { isFetchingNextPage, fetchNextPage, hasNextPage }] = useInfiniteQuery(
@@ -119,9 +122,7 @@ const FeedbackList: React.FC<FeedbackListProps> = ({ slug, role, filter, sortBy 
         data={feedback}
         components={Components}
         style={{ height: "100%" }}
-        itemContent={(_, feedback) => (
-          <FeedbackListItem key={feedback.id} slug={slug} role={role} feedback={feedback} />
-        )}
+        itemContent={(_, feedback) => <FeedbackListItem key={feedback.id} feedback={feedback} />}
       />
     </Box>
   )

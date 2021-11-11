@@ -21,17 +21,18 @@ import { ButtonRouteLink, RouteLink } from "app/core/components/links"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import { feedbackOptions } from "app/project/components/FeedbackEditor/Header"
 import { CategoryType } from "app/project/store/FeedbackEditorContext"
+import { useProject } from "../store/ProjectContext"
 
-const RoadmapHeader: React.FC<{ projectName: string; brandColor: string }> = ({
-  projectName,
-  brandColor,
-}) => {
+const RoadmapHeader = () => {
+  const {
+    project: { slug: projectSlug, color: brandColor, name: projectName },
+  } = useProject()
+
   const {
     info: { name, description, dueTo, id, progress, slug },
     setInfo,
     filterRoadmap,
     canManage,
-    projectSlug,
   } = useRoadmap()
 
   const isSM = useIsSmallDevice()
@@ -177,7 +178,6 @@ const RoadmapHeader: React.FC<{ projectName: string; brandColor: string }> = ({
         open={open}
         onClose={handleCloseDialog}
         onUpdate={(updatedRoadmap) => setInfo(updatedRoadmap)}
-        projectSlug={projectSlug}
         roadmap={{
           id,
           name,

@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { BlitzPage, GetServerSideProps, getSession, useQuery } from "blitz"
-import { Grid, Divider, Tabs, Tab, Container } from "@mui/material"
+import { BlitzPage, GetServerSideProps, getSession } from "blitz"
+import { Grid, Tabs, Tab, Container } from "@mui/material"
 import ProjectMiniLayout from "app/project/layouts/ProjectMiniLayout"
 import FeedbackEditor from "app/project/components/FeedbackEditor"
 import { getProjectInfo, getFeedback, FeedbackPageProps } from "app/project/helpers"
@@ -10,7 +10,7 @@ import { FeedbackMessageCategory } from "db"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 
 const SelectedFeedbackPage: BlitzPage<FeedbackPageProps> = ({
-  project: { slug, role },
+  project: { role },
   feedback,
 }: FeedbackPageProps) => {
   const user = useCurrentUser(false)
@@ -33,7 +33,7 @@ const SelectedFeedbackPage: BlitzPage<FeedbackPageProps> = ({
     <Container maxWidth={role ? "xl" : "md"} disableGutters>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <FeedbackEditor slug={slug} initialValues={{ feedback }} role={role} />
+          <FeedbackEditor initialValues={{ feedback }} />
         </Grid>
         <Grid container item xs={12} md={role ? 9 : 12} spacing={2}>
           {(role || user?.id === id) && (
@@ -50,11 +50,7 @@ const SelectedFeedbackPage: BlitzPage<FeedbackPageProps> = ({
             </Grid>
           )}
           <Suspense fallback={null}>
-            <FeedbackMessagesList
-              feedbackId={feedback.id}
-              category={selectedMessagesCategory}
-              slug={slug}
-            />
+            <FeedbackMessagesList feedbackId={feedback.id} category={selectedMessagesCategory} />
           </Suspense>
         </Grid>
       </Grid>

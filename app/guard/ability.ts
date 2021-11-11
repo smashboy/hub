@@ -22,6 +22,8 @@ export type ExtendedResourceTypes =
 
 export type ExtendedAbilityTypes = "follow" | "upvote" | "accept" | "decline"
 
+// TODO: Replace project slug with project id
+
 const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
   async (ctx, { can, cannot }) => {
     const authUserId = ctx.session.userId

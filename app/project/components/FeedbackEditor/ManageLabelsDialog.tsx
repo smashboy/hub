@@ -33,6 +33,7 @@ import createLabel from "app/project/mutations/createLabel"
 import { useConfirmDialog } from "react-mui-confirm"
 import updateLabel from "app/project/mutations/updateLabel"
 import deleteLabel from "app/project/mutations/deleteLabel"
+import { useProject } from "app/project/store/ProjectContext"
 
 type Label = {
   id: string
@@ -69,7 +70,9 @@ const LabelPreview = () => {
 }
 
 const LabelForm: React.FC<LabelFormProps> = ({ onSuccess, onCancel, initialValues }) => {
-  const { slug } = useFeedbackEditor()
+  const {
+    project: { slug },
+  } = useProject()
 
   const [createLabelMutation] = useCustomMutation(createLabel, {
     successNotification: "New label has been created successfully!",
@@ -143,7 +146,9 @@ type LabelItemProps = {
 const LabelItem: React.FC<LabelItemProps> = ({ label, refetch }) => {
   const { color, description, name, id } = label
 
-  const { slug } = useFeedbackEditor()
+  const {
+    project: { slug },
+  } = useProject()
 
   const confirm = useConfirmDialog()
 
@@ -204,7 +209,9 @@ const LabelItem: React.FC<LabelItemProps> = ({ label, refetch }) => {
 }
 
 const ManageLabelsDialog: React.FC<ManageLabelsDialogProps> = ({ labels, refetch }) => {
-  const { role } = useFeedbackEditor()
+  const {
+    project: { role },
+  } = useProject()
 
   const disableActions = !role || role === ProjectMemberRole.MEMBER
 
