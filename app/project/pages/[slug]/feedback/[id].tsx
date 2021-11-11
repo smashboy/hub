@@ -7,11 +7,17 @@ import { getProjectInfo, getFeedback, FeedbackPageProps } from "app/project/help
 import { Suspense } from "react"
 import FeedbackMessagesList from "app/project/components/FeedbackMessagesList"
 import { FeedbackMessageCategory } from "db"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 
 const SelectedFeedbackPage: BlitzPage<FeedbackPageProps> = ({
   project: { slug, role },
   feedback,
 }: FeedbackPageProps) => {
+  const user = useCurrentUser(false)
+  const {
+    author: { id },
+  } = feedback
+
   const [selectedMessagesCategory, setSelectedMessagesCategory] = useState<FeedbackMessageCategory>(
     FeedbackMessageCategory.PUBLIC
   )
@@ -30,11 +36,16 @@ const SelectedFeedbackPage: BlitzPage<FeedbackPageProps> = ({
           <FeedbackEditor slug={slug} initialValues={{ feedback }} role={role} />
         </Grid>
         <Grid container item xs={12} md={role ? 9 : 12} spacing={2}>
-          {role && (
+          {(role || user?.id === id) && (
             <Grid item xs={12}>
               <Tabs value={selectedMessagesCategory} onChange={handleSelectMessagesCategory}>
-                <Tab value={FeedbackMessageCategory.PUBLIC} label="Public" />
-                <Tab value={FeedbackMessageCategory.INTERNAL} label="Internal" />
+                {(user?.id === id || role) && (
+                  <Tab value={FeedbackMessageCategory.PUBLIC} label="Public" />
+                )}
+                {(user?.id === id || role) && (
+                  <Tab value={FeedbackMessageCategory.PRIVATE} label="Private" />
+                )}
+                {role && <Tab value={FeedbackMessageCategory.INTERNAL} label="Internal" />}
               </Tabs>
             </Grid>
           )}

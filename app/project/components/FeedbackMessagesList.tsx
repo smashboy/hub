@@ -9,6 +9,7 @@ import updateFeedbackMessage from "../mutations/updateFeedbackMessage"
 import deleteFeedbackMessage from "../mutations/deleteFeedbackMessage"
 import { feedbackOptionsDrawerBleeding } from "./FeedbackEditor/FeedbackOptions"
 import { FeedbackMessageCategory } from "db"
+import Alert from "app/core/components/Alert"
 
 export interface FeedbackMessagesListProps {
   feedbackId: number
@@ -62,25 +63,34 @@ const FeedbackMessagesList: React.FC<FeedbackMessagesListProps> = ({
       spacing={2}
       sx={{ paddingBottom: `${feedbackOptionsDrawerBleeding + 10}px` }}
     >
-      {messages.length > 0 && (
-        <>
+      <>
+        {category === FeedbackMessageCategory.PRIVATE && (
           <Grid item xs={12}>
-            <Divider />
+            <Alert severity="info">
+              This tab is available only for feedback author and project members.
+            </Alert>
           </Grid>
-          <Grid item xs={12}>
-            <List component="div">
-              {messages.map((message) => (
-                <MessageItem
-                  key={message.id}
-                  message={message}
-                  onMessageUpdate={handleUpdateMessage}
-                  onMessageDelete={handleDeleteMessage}
-                />
-              ))}
-            </List>
-          </Grid>
-        </>
-      )}
+        )}
+        {messages.length > 0 && (
+          <>
+            <Grid item xs={12}>
+              <Divider />
+            </Grid>
+            <Grid item xs={12}>
+              <List component="div">
+                {messages.map((message) => (
+                  <MessageItem
+                    key={message.id}
+                    message={message}
+                    onMessageUpdate={handleUpdateMessage}
+                    onMessageDelete={handleDeleteMessage}
+                  />
+                ))}
+              </List>
+            </Grid>
+          </>
+        )}
+      </>
       {user && (
         <Grid item xs={12}>
           <FeedbackMessageEditor
