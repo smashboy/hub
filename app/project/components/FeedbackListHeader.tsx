@@ -19,7 +19,7 @@ const FeedbackListHeader: React.FC<{
   onSearchQueryFilter: (newQuery: string) => void
 }> = ({ onOptionsFilter, onSearchQueryFilter, onSort }) => {
   const {
-    project: { slug, role },
+    project: { role },
   } = useProject()
 
   const isSM = useIsSmallDevice()
