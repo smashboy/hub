@@ -122,7 +122,9 @@ const FeedbackList: React.FC<FeedbackListProps> = ({ filter, sortBy }) => {
         data={feedback}
         components={Components}
         style={{ height: "100%" }}
-        itemContent={(_, feedback) => <FeedbackListItem key={feedback.id} feedback={feedback} />}
+        itemContent={(_, feedback) => (
+          <FeedbackListItem key={feedback.id} slug={slug} role={role} feedback={feedback} />
+        )}
       />
     </Box>
   )

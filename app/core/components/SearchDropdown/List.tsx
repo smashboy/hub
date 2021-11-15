@@ -27,7 +27,7 @@ const SearchDropdownList = <I extends Object, F extends QueryFunc<I>>({
   } = useProject()
 
   const [items] = useQuery(queryFunc, {
-    slug,
+    projectSlug: slug,
   })
 
   useEffect(() => {
