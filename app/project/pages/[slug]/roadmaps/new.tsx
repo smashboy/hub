@@ -8,8 +8,13 @@ import Form, { FORM_ERROR } from "app/core/components/Form"
 import LabeledDatePicker from "app/core/components/LabeledDatePicker"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import createProjectRoadmap from "app/project/mutations/createProjectRoadmap"
+import { useProject } from "app/project/store/ProjectContext"
 
-const NewRoadmapPage: BlitzPage = ({ project: { slug } }: ProjectPageProps) => {
+const NewRoadmapPage: BlitzPage = () => {
+  const {
+    project: { slug },
+  } = useProject()
+
   const router = useRouter()
 
   const [createProjectRoadmapMutation] = useCustomMutation(createProjectRoadmap, {

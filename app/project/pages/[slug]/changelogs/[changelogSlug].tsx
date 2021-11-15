@@ -16,13 +16,17 @@ import ChangelogFeedbackDialog from "app/project/components/ChangelogFeedbackDia
 import { RatingIconContainer } from "app/project/components/RatingIconContainer"
 import useLocalStorageItem from "app/core/hooks/useLocalStorageItem"
 import { getLocalStorageItem } from "app/core/utils/localStorageManager"
+import { useProject } from "app/project/store/ProjectContext"
 
 const FEEDBACK_STORAGE_KEY = "user-changelog-feedbacks"
 
 const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
   changelog: { title, content, createdAt, id, userRating },
-  project: { slug, role },
 }: ChangelogPageProps) => {
+  const {
+    project: { slug, role },
+  } = useProject()
+
   const user = useCurrentUser(false)
 
   const router = useRouter()
@@ -199,7 +203,6 @@ const ChangelogPage: BlitzPage<ChangelogPageProps> = ({
       <ChangelogFeedbackDialog
         open={openFeedbackDialog}
         changelogId={id}
-        projectSlug={slug}
         onClose={handleCloseFeedbackDialog}
       />
     </>

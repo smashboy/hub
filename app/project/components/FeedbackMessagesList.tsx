@@ -9,11 +9,12 @@ import updateFeedbackMessage from "../mutations/updateFeedbackMessage"
 import deleteFeedbackMessage from "../mutations/deleteFeedbackMessage"
 import { feedbackOptionsDrawerBleeding } from "./FeedbackEditor/FeedbackOptions"
 import { FeedbackMessageCategory } from "db"
+import Alert from "app/core/components/Alert"
+import { useProject } from "../store/ProjectContext"
 
 export interface FeedbackMessagesListProps {
   feedbackId: number
   category: FeedbackMessageCategory
-  slug: string
 }
 
 // const getMessagesInput =
@@ -21,12 +22,12 @@ export interface FeedbackMessagesListProps {
 //   (page: GetFeedbackMessagesInput = { take: 10, skip: 0, feedbackId, isPublic }) =>
 //     page
 
-const FeedbackMessagesList: React.FC<FeedbackMessagesListProps> = ({
-  feedbackId,
-  category,
-  slug,
-}) => {
+const FeedbackMessagesList: React.FC<FeedbackMessagesListProps> = ({ feedbackId, category }) => {
   const user = useCurrentUser()
+
+  const {
+    project: { slug },
+  } = useProject()
 
   const [updateFeedbackMessageMutation] = useCustomMutation(updateFeedbackMessage, {
     successNotification: "Message has been updated successfully!",
@@ -62,33 +63,37 @@ const FeedbackMessagesList: React.FC<FeedbackMessagesListProps> = ({
       spacing={2}
       sx={{ paddingBottom: `${feedbackOptionsDrawerBleeding + 10}px` }}
     >
-      {messages.length > 0 && (
-        <>
+      <>
+        {category === FeedbackMessageCategory.PRIVATE && (
           <Grid item xs={12}>
-            <Divider />
+            <Alert severity="info">
+              This tab is available only for feedback author and project members.
+            </Alert>
           </Grid>
-          <Grid item xs={12}>
-            <List component="div">
-              {messages.map((message) => (
-                <MessageItem
-                  key={message.id}
-                  message={message}
-                  onMessageUpdate={handleUpdateMessage}
-                  onMessageDelete={handleDeleteMessage}
-                />
-              ))}
-            </List>
-          </Grid>
-        </>
-      )}
+        )}
+        {messages.length > 0 && (
+          <>
+            <Grid item xs={12}>
+              <Divider />
+            </Grid>
+            <Grid item xs={12}>
+              <List component="div">
+                {messages.map((message) => (
+                  <MessageItem
+                    key={message.id}
+                    message={message}
+                    onMessageUpdate={handleUpdateMessage}
+                    onMessageDelete={handleDeleteMessage}
+                  />
+                ))}
+              </List>
+            </Grid>
+          </>
+        )}
+      </>
       {user && (
         <Grid item xs={12}>
-          <FeedbackMessageEditor
-            feedbackId={feedbackId}
-            category={category}
-            refetch={refetch}
-            slug={slug}
-          />
+          <FeedbackMessageEditor feedbackId={feedbackId} category={category} refetch={refetch} />
         </Grid>
       )}
     </Grid>

@@ -14,10 +14,9 @@ import {
   AvatarGroup,
 } from "@mui/material"
 import { formatRelative } from "date-fns"
+import { useProject } from "../store/ProjectContext"
 
 type FeedbackListItemProps = {
-  slug: string
-  role?: ProjectMemberRole | null
   feedback: {
     id: number
     title: string
@@ -40,8 +39,6 @@ type FeedbackListItemProps = {
 }
 
 const FeedbackListItem: React.FC<FeedbackListItemProps> = ({
-  slug,
-  role,
   feedback: {
     status,
     title,
@@ -53,6 +50,10 @@ const FeedbackListItem: React.FC<FeedbackListItemProps> = ({
     participants,
   },
 }) => {
+  const {
+    project: { slug, role },
+  } = useProject()
+
   return (
     <Fade in timeout={500}>
       <Box>

@@ -15,23 +15,24 @@ import LoadingAnimation from "app/core/components/LoadingAnimation"
 import getChangelogFeedback from "../queries/getChangelogFeedback"
 import ChangelogFeedbackItem from "./ChangelogFeedbackItem"
 import { RatingIconContainer } from "./RatingIconContainer"
+import { useProject } from "../store/ProjectContext"
 
 type ChangelogFeedbackDialogProps = {
   open: boolean
   onClose: () => void
   changelogId: number
-  projectSlug: string
 }
 
-const Content: React.FC<Pick<ChangelogFeedbackDialogProps, "changelogId" | "projectSlug">> = ({
-  changelogId,
-  projectSlug,
-}) => {
+const Content: React.FC<Pick<ChangelogFeedbackDialogProps, "changelogId">> = ({ changelogId }) => {
+  const {
+    project: { slug },
+  } = useProject()
+
   const [feedback] = useQuery(
     getChangelogFeedback,
     {
       changelogId,
-      projectSlug,
+      projectSlug: slug,
     },
     {
       refetchOnWindowFocus: false,

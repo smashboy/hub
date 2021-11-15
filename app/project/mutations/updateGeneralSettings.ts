@@ -29,5 +29,7 @@ export default resolver.pipe(
         slug: updatedSlug,
       },
     })
+
+    return updatedSlug
   }
 )

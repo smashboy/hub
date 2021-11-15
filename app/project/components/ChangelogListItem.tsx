@@ -20,6 +20,7 @@ import {
   TimelineDot,
 } from "@mui/lab"
 import useIsSmallDevice from "app/core/hooks/useIsSmallDevice"
+import { useProject } from "../store/ProjectContext"
 
 type ChangelogListItemProps = {
   changelog: {
@@ -28,13 +29,15 @@ type ChangelogListItemProps = {
     title: string
     previewImageUrl: string | null
   }
-  projectSlug: string
 }
 
 const ChangelogListItem: React.FC<ChangelogListItemProps> = ({
   changelog: { slug, createdAt, title, previewImageUrl },
-  projectSlug,
 }) => {
+  const {
+    project: { slug: projectSlug },
+  } = useProject()
+
   const isSM = useIsSmallDevice()
 
   const theme = useTheme()

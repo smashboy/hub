@@ -29,6 +29,7 @@ import { useFeedbackEditor } from "app/project/store/FeedbackEditorContext"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
 import SwipeableDrawer from "app/core/components/SwipeableDrawer"
 import ManageLabelsDialog from "./ManageLabelsDialog"
+import { useProject } from "app/project/store/ProjectContext"
 
 const generateNewLabelValues = () => ({
   name: "",
@@ -37,7 +38,11 @@ const generateNewLabelValues = () => ({
 })
 
 const Options = () => {
-  const { slug, setMembers, setLabels, setRoadmaps, labelIds, memberIds, roadmapIds, role } =
+  const {
+    project: { slug, role },
+  } = useProject()
+
+  const { setMembers, setLabels, setRoadmaps, labelIds, memberIds, roadmapIds } =
     useFeedbackEditor()
 
   const [project, { refetch }] = useQuery(

@@ -1,9 +1,9 @@
 import { Link, Routes } from "blitz"
 import { ListItem, ListItemText, Fade, Box, Grid, LinearProgress, Typography } from "@mui/material"
 import { format } from "date-fns"
+import { useProject } from "../store/ProjectContext"
 
 type RoadmapListItemProps = {
-  projectSlug: string
   roadmap: {
     name: string
     description: string | null
@@ -15,8 +15,11 @@ type RoadmapListItemProps = {
 
 const RoadmapListItem: React.FC<RoadmapListItemProps> = ({
   roadmap: { name, description, slug, dueTo, progress },
-  projectSlug,
 }) => {
+  const {
+    project: { slug: projectSlug },
+  } = useProject()
+
   return (
     <Fade in timeout={500}>
       <Box>

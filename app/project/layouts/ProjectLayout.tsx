@@ -14,17 +14,21 @@ import followProject from "../mutations/followProject"
 import { LoadingButton } from "@mui/lab"
 import { ProjectMemberRole } from "db"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
+import { ProjectProvider, useProject } from "../store/ProjectContext"
 
 type ProjectLayoutProps = {
   selectedTab: "landing" | "changelogs" | "roadmaps" | "jobs" | "feedback"
 }
 
-const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProps> = ({
+const ProjectLayoutContent: React.FC<LayoutProps & ProjectLayoutProps> = ({
   title,
   children,
   selectedTab,
-  project: { name, description, logoUrl, websiteUrl, color, slug, role, isFollowing },
 }) => {
+  const {
+    project: { name, description, logoUrl, websiteUrl, color, slug, role, isFollowing },
+  } = useProject()
+
   const isSM = useIsSmallDevice()
 
   const [following, setIsFollowing] = useState(isFollowing)
@@ -47,7 +51,7 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
                 <Grid container>
                   <Grid container item xs={3} md={2} justifyContent="flex-end" alignItems="center">
                     <Avatar
-                      src="broken"
+                      src={logoUrl ?? "broken"}
                       alt={name}
                       sx={{
                         bgcolor: color,
@@ -178,6 +182,18 @@ const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProp
       </Grid>
       {children}
     </Layout>
+  )
+}
+
+const ProjectLayout: React.FC<LayoutProps & ProjectPageProps & ProjectLayoutProps> = ({
+  children,
+  project,
+  ...otherProps
+}) => {
+  return (
+    <ProjectProvider initialValues={project}>
+      <ProjectLayoutContent {...otherProps}>{children}</ProjectLayoutContent>
+    </ProjectProvider>
   )
 }
 

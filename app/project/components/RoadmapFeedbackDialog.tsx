@@ -24,13 +24,15 @@ import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import upvoteFeedback from "../mutations/upvoteFeedback"
 import useCustomMutation from "app/core/hooks/useCustomMutation"
 import LoadingAnimation from "app/core/components/LoadingAnimation"
+import { useProject } from "../store/ProjectContext"
 
-const Content: React.FC<{ projectSlug: string; feedbackId: number }> = ({
-  projectSlug,
-  feedbackId,
-}) => {
+const Content: React.FC<{ feedbackId: number }> = ({ feedbackId }) => {
+  const {
+    project: { slug },
+  } = useProject()
+
   const [content] = useQuery(getFeedbackContent, {
-    projectSlug,
+    projectSlug: slug,
     feedbackId,
   })
 
@@ -43,13 +45,17 @@ const Content: React.FC<{ projectSlug: string; feedbackId: number }> = ({
   )
 }
 
-const RoadmapFeedbackDialog = ({}) => {
+const RoadmapFeedbackDialog = () => {
   const user = useCurrentUser(false)
   const isSM = useIsSmallDevice()
 
-  const [upvoteFeedbackMutation, { isLoading }] = useCustomMutation(upvoteFeedback, {})
+  const {
+    project: { slug },
+  } = useProject()
 
-  const { selectedFeedback, closeFeedbackDialog, projectSlug, updateUpvoteCounter } = useRoadmap()
+  const { selectedFeedback, closeFeedbackDialog, updateUpvoteCounter } = useRoadmap()
+
+  const [upvoteFeedbackMutation, { isLoading }] = useCustomMutation(upvoteFeedback, {})
 
   const [upvotedByUser, setUpvotedByUser] = useState(false)
   const [upvotedCounter, setUpvotedCounter] = useState(0)
@@ -142,7 +148,7 @@ const RoadmapFeedbackDialog = ({}) => {
                 variant="contained"
                 color="secondary"
                 fullWidth={isSM}
-                href={Routes.SelectedFeedbackPage({ slug: projectSlug, id: contentId })}
+                href={Routes.SelectedFeedbackPage({ slug, id: contentId })}
               >
                 <OpenIcon />
               </ButtonRouteLink>
@@ -155,7 +161,7 @@ const RoadmapFeedbackDialog = ({}) => {
       </DialogTitle>
       <DialogContent>
         <Suspense fallback={<LoadingAnimation />}>
-          <Content projectSlug={projectSlug} feedbackId={contentId} />
+          <Content feedbackId={contentId} />
         </Suspense>
       </DialogContent>
       <DialogActions>

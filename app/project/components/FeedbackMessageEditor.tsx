@@ -3,18 +3,21 @@ import useCustomMutation from "app/core/hooks/useCustomMutation"
 import Editor from "app/editor/Editor"
 import createFeedbackMessage from "app/project/mutations/createFeedbackMessage"
 import { FeedbackMessagesListProps } from "./FeedbackMessagesList"
+import { useProject } from "../store/ProjectContext"
 
 interface FeedbackMessageEditor extends FeedbackMessagesListProps {
   refetch: () => void
-  slug: string
 }
 
 const FeedbackMessageEditor: React.FC<FeedbackMessageEditor> = ({
   feedbackId,
   category,
-  slug,
   refetch,
 }) => {
+  const {
+    project: { slug },
+  } = useProject()
+
   const [createFeedbackMessageMutation] = useCustomMutation(createFeedbackMessage, {})
 
   const handleCreateNewMessage = async (content: Descendant[]) => {

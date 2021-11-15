@@ -1,4 +1,4 @@
-import { Skeleton, ListItem, List, ListItemAvatar, ListItemText, Fade } from "@mui/material"
+import { Skeleton, ListItem, List, ListItemText, Fade } from "@mui/material"
 
 const FirstVariant = () => (
   <ListItem>

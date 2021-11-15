@@ -7,11 +7,9 @@ import useCustomMutation from "app/core/hooks/useCustomMutation"
 import updateFeedbackStatus from "../mutations/updateFeedbackStatus"
 import { countProgress } from "app/core/utils/blitz"
 import filterRoadmapFeedback from "../mutations/filterRoadmapFeedback"
+import { useProject } from "./ProjectContext"
 
-export type RoadmapStoreProps = Pick<RoadmapPageProps, "roadmap"> & {
-  projectSlug: string
-  memberRole: ProjectMemberRole | null
-}
+type RoadmapStoreProps = Pick<RoadmapPageProps, "roadmap">
 
 type InfoState = {
   id: number
@@ -22,14 +20,12 @@ type InfoState = {
   progress: number
 }
 
-export type RoadmapStore = {
+type RoadmapStore = {
   info: InfoState
   feedback: RoadmapFeedback[]
-  projectSlug: string
   canManage: boolean
   isUpdatingFeedback: boolean
   selectedFeedback: RoadmapFeedback | null
-  memberRole: ProjectMemberRole | null
   setInfo: (info: Partial<InfoState>) => void
   onDragEnd: (res: DropResult) => void
   openFeedbackDialog: (feedback: RoadmapFeedback) => void
@@ -41,11 +37,13 @@ export type RoadmapStore = {
 const RoadmapContext = createContext<RoadmapStore | null>(null)
 
 export const RoadmapProvider: React.FC<RoadmapStoreProps> = ({
-  projectSlug,
-  memberRole,
   roadmap: { feedback: initialFeedback, ...roadmap },
   children,
 }) => {
+  const {
+    project: { slug, role },
+  } = useProject()
+
   const user = useCurrentUser(false)
 
   const [filterRoadmapFeedbackMutation] = useCustomMutation(filterRoadmapFeedback, {})
@@ -63,11 +61,11 @@ export const RoadmapProvider: React.FC<RoadmapStoreProps> = ({
     () =>
       Boolean(
         user &&
-          (memberRole === ProjectMemberRole.FOUNDER ||
-            memberRole === ProjectMemberRole.ADMIN ||
-            memberRole === ProjectMemberRole.MODERATOR)
+          (role === ProjectMemberRole.FOUNDER ||
+            role === ProjectMemberRole.ADMIN ||
+            role === ProjectMemberRole.MODERATOR)
       ),
-    [user, memberRole]
+    [user, role]
   )
 
   const handleOpenFeedbackDialog = (feedback: RoadmapFeedback) => setSelectedFeedback(feedback)
@@ -115,7 +113,7 @@ export const RoadmapProvider: React.FC<RoadmapStoreProps> = ({
 
       await updateFeedbackStatusMutation({
         feedbackId,
-        projectSlug,
+        projectSlug: slug,
         status: newStatus,
       })
     } catch (error) {
@@ -152,13 +150,11 @@ export const RoadmapProvider: React.FC<RoadmapStoreProps> = ({
   return (
     <RoadmapContext.Provider
       value={{
-        projectSlug,
         info,
         feedback,
         canManage,
         isUpdatingFeedback,
         selectedFeedback,
-        memberRole,
         setInfo: handleSetInfo,
         onDragEnd: handleOnDragEnd,
         filterRoadmap: handleFilterRoadmap,

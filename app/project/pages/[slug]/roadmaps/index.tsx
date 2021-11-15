@@ -6,11 +6,13 @@ import { ButtonRouteLink } from "app/core/components/links"
 import RoadmapListItem from "app/project/components/RoadmapListItem"
 import { ProjectMemberRole } from "db"
 import { useIsSmallDevice } from "app/core/hooks/useIsSmallDevice"
+import { useProject } from "app/project/store/ProjectContext"
 
-const RoadmapsPage: BlitzPage<RoadmapsPageProps> = ({
-  project: { slug, role },
-  roadmaps,
-}: RoadmapsPageProps) => {
+const RoadmapsPage: BlitzPage<RoadmapsPageProps> = ({ roadmaps }: RoadmapsPageProps) => {
+  const {
+    project: { role, slug },
+  } = useProject()
+
   const isSM = useIsSmallDevice()
 
   return (
@@ -29,7 +31,7 @@ const RoadmapsPage: BlitzPage<RoadmapsPageProps> = ({
       <Grid item xs={12}>
         <List component="div">
           {roadmaps.map((roadmap) => (
-            <RoadmapListItem key={roadmap.slug} roadmap={roadmap} projectSlug={slug} />
+            <RoadmapListItem key={roadmap.slug} roadmap={roadmap} />
           ))}
         </List>
       </Grid>

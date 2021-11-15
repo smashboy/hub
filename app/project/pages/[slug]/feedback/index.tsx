@@ -104,15 +104,13 @@ const FeedbackPage: BlitzPage<ProjectPageProps> = ({
   return (
     <Grid container spacing={1} sx={{ marginTop: 1 }}>
       <FeedbackListHeader
-        projectSlug={slug}
-        role={role}
         onSort={handleSort}
         onOptionsFilter={handleFilter}
         onSearchQueryFilter={handleSearchQuery}
       />
       <Grid item xs={12}>
         <Suspense fallback={<FeedbackListPlaceholder />}>
-          <FeedbackList slug={slug} role={role} filter={debouncedFilter} sortBy={sortBy} />
+          <FeedbackList filter={debouncedFilter} sortBy={sortBy} />
         </Suspense>
       </Grid>
     </Grid>
