@@ -17,8 +17,6 @@ const ProjectMiniLayoutContent: React.FC<LayoutProps> = ({
     project: { name, logoUrl, color, slug, description },
   } = useProject()
 
-  console.log(slug)
-
   const isSM = useIsSmallDevice()
 
   const avatarSize = useMemo(() => (isSM ? 45 : 75), [isSM])
