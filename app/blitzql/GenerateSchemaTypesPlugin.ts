@@ -27,7 +27,7 @@ export default class GenerateSchemaTypesPlugin {
 
     compiler.hooks.afterCompile.tapPromise(
       GenerateSchemaTypesPlugin.pluginName,
-      (compilation) =>
+      () =>
         new Promise(async (resolve) => {
           try {
             // compilation.fileDependencies.add(this.schemaFilePath)
