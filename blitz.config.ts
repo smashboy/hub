@@ -1,5 +1,6 @@
 import { BlitzConfig, sessionMiddleware, simpleRolesIsAuthorized } from "blitz"
 import { BlitzGuardMiddleware } from "@blitz-guard/core/dist/middleware"
+import GenerateSchemaTypesPlugin from "app/blitzql/GenerateSchemaTypesPlugin"
 
 const config: BlitzConfig = {
   images: {
@@ -35,13 +36,15 @@ const config: BlitzConfig = {
       ],
     }),
   ],
-  /* Uncomment this to customize the webpack config
+
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     // Note: we provide webpack above so you should not `require` it
     // Perform customizations to webpack config
     // Important: return the modified config
+
+    config.plugins.push(new GenerateSchemaTypesPlugin())
+
     return config
   },
-  */
 }
 module.exports = config

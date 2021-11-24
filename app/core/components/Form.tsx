@@ -5,7 +5,6 @@ import { z } from "zod"
 import { Button, Grid } from "@mui/material"
 import Alert from "./Alert"
 import { LoadingButton, LoadingButtonProps } from "@mui/lab"
-import { useIsSmallDevice } from "../hooks/useIsSmallDevice"
 
 export interface FormProps<S extends z.ZodType<any, any>>
   extends Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit"> {
@@ -45,8 +44,6 @@ export function Form<S extends z.ZodType<any, any>>({
   ButtonProps,
   ...props
 }: FormProps<S>) {
-  const isSM = useIsSmallDevice()
-
   const ctx = useForm<z.infer<S>>({
     mode: "onChange",
     resolver: schema ? zodResolver(schema) : undefined,

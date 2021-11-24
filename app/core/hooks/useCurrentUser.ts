@@ -14,5 +14,5 @@ export const useCurrentUser = (suspense?: boolean) => {
 
   console.log(data)
 
-  return data.authUser
+  return data?.authUser
 }

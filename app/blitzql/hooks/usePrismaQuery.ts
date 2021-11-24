@@ -1,11 +1,11 @@
 import { useQuery } from "blitz"
 import { UseQueryOptions } from "react-query"
-import { PrismaQuery } from "../EndpointQueryPipeBuilder"
-import blitzqlQueries from "../queries/blitzqlQueries"
+import { QuerySchema } from "../types"
+import blitzqlQuery from "../queries/blitzqlQuery"
 
-export function usePrismaQuery(query: Partial<PrismaQuery>, options?: UseQueryOptions) {
+export function usePrismaQuery(query: Partial<QuerySchema>, options?: UseQueryOptions) {
   const data = useQuery(
-    blitzqlQueries,
+    blitzqlQuery,
     {
       // @ts-ignore
       query,
