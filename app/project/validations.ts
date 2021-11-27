@@ -14,10 +14,6 @@ export const CreateProject = z.object({
   isPrivate: z.boolean(),
 })
 
-export const GetCreateFeedbackInfo = z.object({
-  slug: z.string(),
-})
-
 export const CreateLabel = z.object({
   name: z.string().min(1).max(50),
   color: z.string(),
@@ -220,10 +216,6 @@ export const GetChangelogFeedback = z.object({
   projectSlug: z.string(),
 })
 
-export const GetFeedbackSearchOptions = z.object({
-  projectSlug: z.string(),
-})
-
-export const DeleteProject = z.object({
+export const ProjectSlugValidation = z.object({
   projectSlug: z.string(),
 })

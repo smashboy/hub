@@ -1,4 +1,4 @@
-import { PrismaModelNameKeys } from "app/blitzql/EndpointQueryPipeBuilder"
+import { PrismaModelNameKeys } from "app/blitzql/types"
 import { DefaultCtx, SessionContext, SimpleRolesIsAuthorized, NextPage } from "blitz"
 import { User, UserRole } from "db"
 
@@ -14,7 +14,17 @@ declare module "blitz" {
     }
   }
 
-  export type QueryNodeTypes = "authUser" | "changelogFeedbackList" | PrismaModelNameKeys
+  export type QueryNodeTypes =
+    | "authUser"
+    | "authUserNotifications"
+    | "authUserFeedback"
+    | "authUserProjectsList"
+    | "projectChangelogList"
+    | "projectFeedbackContent"
+    | "projectFeedbackList"
+    | "projectFeedbackOptions"
+    | "projectMembersList"
+    | PrismaModelNameKeys
 
   export interface BlitzPage<P = {}, IP = P> extends Omit<NextPage<P, IP>, "getLayout"> {
     getLayout?: (component: JSX.Element, pageProps: P) => JSX.Element

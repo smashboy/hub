@@ -1,29 +1,54 @@
 import { Ctx, QueryNodeTypes } from "blitz"
 import { z } from "zod"
-import { PrismaClient, Prisma } from "@prisma/client"
-
-export type PrismaModelNameKeys = Uncapitalize<Prisma.ModelName>
-type QueryMethod = "findFirst" | "findMany" | "findUnique" | "count" | "aggregate" | "groupBy"
+import { PrismaClient } from "@prisma/client"
+import {
+  AsyncReturnType,
+  MaybePromise,
+  PrismaDataClient,
+  PrismaModelNameKeys,
+  QueryMethod,
+} from "./types"
 
 interface SchemaBuilderProps {
   prismaClient: PrismaClient
 }
 
-interface AddQueryResolverProps {
-  query: any
+interface AddQueryResolverProps<
+  MT extends QueryMethod,
+  MD extends PrismaModelNameKeys,
+  P extends Boolean
+> {
+  query: P extends true
+    ? Partial<Parameters<PrismaDataClient[MD][MT]>[0]>
+    : Parameters<PrismaDataClient[MD][MT]>[0]
   ctx: Ctx
-  prismaQuery: any
+  prismaQuery: PrismaDataClient[MD][MT]
 }
 
-export interface AddQueryProps {
+export interface AddQueryProps<
+  MT extends QueryMethod,
+  MD extends PrismaModelNameKeys,
+  N extends Boolean,
+  P extends Boolean,
+  PG extends Boolean
+> {
   // pipe?: ReturnType<typeof resolver.pipe>
-  method: QueryMethod
-  model: PrismaModelNameKeys
+  method: MT
+  model: MD
+  nullable?: N
+  partialQuery?: P
+  paginated?: PG
   input?: z.ZodObject<any, any>
-  fetchResolver?: (resolveProps: AddQueryResolverProps) => any
+  fetchResolver?: (
+    resolveProps: AddQueryResolverProps<MT, MD, P>
+  ) => MaybePromise<
+    N extends true
+      ? AsyncReturnType<PrismaDataClient[MD][MT]> | null
+      : NonNullable<AsyncReturnType<PrismaDataClient[MD][MT]>>
+  >
 }
 
-export type Schema = Record<QueryNodeTypes, AddQueryProps>
+export type Schema = Record<QueryNodeTypes, AddQueryProps<any, any, any, any, any>>
 
 // TODO: replace with generated schema
 type PrismaQuery = Record<QueryNodeTypes, Object>
@@ -36,7 +61,13 @@ export default class SchemaBuilder {
     this.prismaClient = props.prismaClient
   }
 
-  addQuery(nodeName: QueryNodeTypes, props: AddQueryProps) {
+  addQuery<
+    MT extends QueryMethod,
+    MD extends PrismaModelNameKeys,
+    N extends Boolean,
+    P extends Boolean,
+    PG extends Boolean
+  >(nodeName: QueryNodeTypes, props: AddQueryProps<MT, MD, N, P, PG>) {
     this.schema[nodeName] = props
   }
 
@@ -51,7 +82,7 @@ export default class SchemaBuilder {
       const response: Partial<Record<QueryNodeTypes, any>> = {}
 
       Object.entries(query).forEach(([nodeKey, query]) => {
-        const node = schema[nodeKey] as AddQueryProps | undefined
+        const node = schema[nodeKey] as AddQueryProps<any, any, any, any, any> | undefined
 
         if (node) {
           const { model, method, fetchResolver } = node
@@ -85,6 +116,8 @@ export default class SchemaBuilder {
       return response
     }
   }
+
+  mutation() {}
 }
 
 function isPromise(promise) {

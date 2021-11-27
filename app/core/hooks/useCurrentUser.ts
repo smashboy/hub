@@ -1,7 +1,7 @@
-import { usePrismaQuery } from "app/blitzql/hooks/usePrismaQuery"
+import { useBlitzqlQuery } from "app/blitzql/hooks/useBlitzqlQuery"
 
 export const useCurrentUser = (suspense?: boolean) => {
-  const [data] = usePrismaQuery(
+  const [data] = useBlitzqlQuery(
     {
       authUser: {
         select: { id: true, username: true, email: true, role: true },
@@ -11,8 +11,6 @@ export const useCurrentUser = (suspense?: boolean) => {
       suspense: suspense ?? true,
     }
   )
-
-  console.log(data)
 
   return data?.authUser
 }

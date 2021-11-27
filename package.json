@@ -66,6 +66,7 @@
     "@types/bytes": "3.1.1",
     "@types/faker": "5.5.8",
     "@types/markdown-it": "12.2.1",
+    "@types/prettier": "2.4.2",
     "@types/preview-email": "2.0.1",
     "@types/react": "17.0.26",
     "@types/react-beautiful-dnd": "13.1.2",

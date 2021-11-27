@@ -1,16 +1,16 @@
 import db from "db"
-import { resolver, NotFoundError } from "blitz"
-import { GetCreateFeedbackInfo } from "../validations"
-import { authorizePipe } from "app/guard/helpers"
+import { resolver } from "blitz"
+import { ProjectSlugValidation } from "../validations"
 import Guard from "app/guard/ability"
 
 export default resolver.pipe(
-  resolver.zod(GetCreateFeedbackInfo),
+  resolver.zod(ProjectSlugValidation),
   Guard.authorizePipe("read", "feedback.settings"),
-  async ({ slug }) => {
+  async ({ projectSlug }) => {
     const project = await db.project.findFirst({
+      rejectOnNotFound: true,
       where: {
-        slug,
+        slug: projectSlug,
       },
       select: {
         roadmaps: {
@@ -56,8 +56,6 @@ export default resolver.pipe(
         },
       },
     })
-
-    if (!project) throw new NotFoundError("Project not found")
 
     return project
   }

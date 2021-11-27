@@ -1,14 +1,28 @@
-import { PrismaClient, Prisma, User } from "@prisma/client"
-import { BlitzqlSchema } from "./blitzqlGeneratedTypes"
+import * as P from "@prisma/client"
+import { PickSingleKeyValue } from "app/core/utils/common"
+import { BlitzqlInputSchema, BlitzqlOutputSchema } from "./blitzqlGeneratedTypes"
 
-type AsyncReturnType<T extends (...args: any) => any> = T extends (...args: any) => Promise<infer U>
+export type PrismaModelNameKeys = Uncapitalize<P.Prisma.ModelName>
+export type QueryMethod =
+  | "findFirst"
+  | "findMany"
+  | "findUnique"
+  | "count"
+  | "aggregate"
+  | "groupBy"
+
+export type AsyncReturnType<T extends (...args: any) => any> = T extends (
+  ...args: any
+) => Promise<infer U>
   ? U
   : T extends (...args: any) => infer U
   ? U
   : any
 
-type PrismaDataClient = Omit<
-  PrismaClient,
+export type MaybePromise<T> = Promise<T> | T
+
+export type PrismaDataClient = Omit<
+  InstanceType<typeof P.PrismaClient>,
   | "$disconnect"
   | "$connect"
   | "$on"
@@ -20,43 +34,19 @@ type PrismaDataClient = Omit<
   | "$queryRawUnsafe"
 >
 
-export type QuerySchema = Partial<{
-  [nodeKey in keyof BlitzqlSchema]: Parameters<
-    PrismaDataClient[BlitzqlSchema[nodeKey]["model"]][BlitzqlSchema[nodeKey]["method"]]
-  >[0]
-}>
-
-export type QuerySchemaReturnType = Partial<{
-  [nodeKey in keyof BlitzqlSchema]: AsyncReturnType<
-    PrismaDataClient[BlitzqlSchema[nodeKey]["model"]][BlitzqlSchema[nodeKey]["method"]]
-  >
-}>
-
-type Test<T extends Prisma.UserFindUniqueArgs> = Prisma.CheckSelect<
-  T,
-  any,
-  Prisma.Prisma__UserClient<Prisma.UserGetPayload<T> | null>
->
-
-type GetQueryResult<T extends QuerySchema> = {
-  [key in keyof T]: AsyncReturnType<
-    PrismaDataClient[BlitzqlSchema[key]["model"]][BlitzqlSchema[key]["method"]]
-  >
-}
-
-function prismaQuery<T extends QuerySchema>(query: T): GetQueryResult<T> {
+function prismaQuery<T extends Partial<BlitzqlInputSchema>>(query: T): BlitzqlOutputSchema<T> {
   return null as any
 }
 
-const t = prismaQuery({
+// Function that accepts queries for multiple models
+const res = prismaQuery({
   authUser: {
     select: {
       username: true,
+      avatarUrl: true,
     },
   },
-  // projectMember: {
-  //   select: {
-  //     role: true,
-  //   },
-  // },
 })
+
+// And spit out the result base on that query
+res.authUser

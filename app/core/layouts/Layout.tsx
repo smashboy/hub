@@ -35,6 +35,7 @@ import { ButtonRouteLink, RouteLink } from "../components/links"
 import logout from "app/auth/mutations/logout"
 
 import useNotificationsCounter from "app/inbox/hooks/useNotificationsCounter"
+import { useBlitzqlQuery } from "app/blitzql/hooks/useBlitzqlQuery"
 
 export interface LayoutProps {
   title?: string
@@ -45,11 +46,42 @@ export interface LayoutProps {
 }
 
 const AuthNavigation = () => {
-  const user = useCurrentUser()
+  const [data] = useBlitzqlQuery({
+    authUser: {
+      select: {
+        id: true,
+        avatarUrl: true,
+        username: true,
+        project: {
+          select: {
+            slug: true,
+          },
+        },
+      },
+    },
+    authUserNotifications: {
+      select: {
+        feedbackNotification: {
+          select: {
+            id: true,
+          },
+        },
+        newChangelogNotification: {
+          select: {
+            id: true,
+          },
+        },
+        projectInvite: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    },
+  })
 
-  const [notifications] = useNotificationsCounter()
-
-  const notificationsCounter = notifications ? Object.values(notifications).flat().length : 0
+  const user = data.authUser
+  const notificationsCounter = data?.authUserNotifications.length || 0
 
   const [menuEl, setMenuEl] = useState<null | HTMLElement>(null)
 

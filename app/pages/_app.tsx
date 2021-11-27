@@ -16,6 +16,9 @@ import { SnackbarProvider } from "notistack"
 // import lightTheme from "app/core/theme/lightTheme"
 import darkTheme from "app/core/theme/darkTheme"
 import { ConfirmDialogProvider } from "react-mui-confirm"
+import { BlitzqlProvider } from "app/blitzql/BlitzqlContext"
+import blitzqlQuery from "app/blitzql/queries/blitzqlQuery"
+import blitzqlMutation from "app/blitzql/mutations/blitzqlMutation"
 
 const clientSideEmotionCache = createCache({ key: "css" })
 
@@ -31,45 +34,52 @@ export default function App({
   const getLayout = Component.getLayout || ((page) => page)
 
   return (
-    <CacheProvider value={emotionCache}>
-      <ThemeProvider theme={darkTheme}>
-        <ConfirmDialogProvider
-          confirmTextFieldProps={{
-            variant: "outlined",
-            size: "small",
-          }}
-          cancelButtonProps={{ color: "secondary" }}
-        >
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <SnackbarProvider maxSnack={3}>
-              <ErrorBoundary
-                FallbackComponent={RootErrorFallback}
-                onReset={useQueryErrorResetBoundary().reset}
-              >
-                <GlobalStyles
-                  styles={{
-                    body: { margin: 0, backgroundColor: "#121212" },
-                    "::-webkit-scrollbar": {
-                      width: 4,
-                      height: 4,
-                    },
+    <BlitzqlProvider
+      resolvers={{
+        query: blitzqlQuery,
+        mutation: blitzqlMutation,
+      }}
+    >
+      <CacheProvider value={emotionCache}>
+        <ThemeProvider theme={darkTheme}>
+          <ConfirmDialogProvider
+            confirmTextFieldProps={{
+              variant: "outlined",
+              size: "small",
+            }}
+            cancelButtonProps={{ color: "secondary" }}
+          >
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <SnackbarProvider maxSnack={3}>
+                <ErrorBoundary
+                  FallbackComponent={RootErrorFallback}
+                  onReset={useQueryErrorResetBoundary().reset}
+                >
+                  <GlobalStyles
+                    styles={{
+                      body: { margin: 0, backgroundColor: "#121212" },
+                      "::-webkit-scrollbar": {
+                        width: 4,
+                        height: 4,
+                      },
 
-                    "::-webkit-scrollbar-track": {
-                      backgroundColor: "transparent",
-                    },
+                      "::-webkit-scrollbar-track": {
+                        backgroundColor: "transparent",
+                      },
 
-                    "::-webkit-scrollbar-thumb": {
-                      background: "#ffffff",
-                    },
-                  }}
-                />
-                {getLayout(<Component {...pageProps} />, pageProps)}
-              </ErrorBoundary>
-            </SnackbarProvider>
-          </LocalizationProvider>
-        </ConfirmDialogProvider>
-      </ThemeProvider>
-    </CacheProvider>
+                      "::-webkit-scrollbar-thumb": {
+                        background: "#ffffff",
+                      },
+                    }}
+                  />
+                  {getLayout(<Component {...pageProps} />, pageProps)}
+                </ErrorBoundary>
+              </SnackbarProvider>
+            </LocalizationProvider>
+          </ConfirmDialogProvider>
+        </ThemeProvider>
+      </CacheProvider>
+    </BlitzqlProvider>
   )
 }
 

@@ -1,5 +1,6 @@
 import path from "path"
-import { readdir, stat, writeFile, readFile } from "fs/promises"
+import prettier from "prettier"
+import { writeFile } from "fs/promises"
 import {
   quicktype,
   InputData,
@@ -8,10 +9,11 @@ import {
 } from "quicktype-core"
 import { Schema, AddQueryProps } from "./SchemaBuilder"
 import { generateMock } from "@anatine/zod-mock"
+import { QueryMethod } from "./types"
+import { capitalizeString } from "./utils"
 
-interface ParsedNode {
-  model: string
-  method: string
+interface ParsedNode
+  extends Omit<AddQueryProps<any, any, any, any, any>, "fetchResolver" | "input"> {
   inputSchema?: Object
 }
 
@@ -77,23 +79,42 @@ export default class GenerateSchemaTypesPlugin {
     return parsedSchema
   }
 
-  private createNodeType(nodeName: string, { model, method }: ParsedNode) {
-    const template = `${nodeName}: {
-      model: "${model}"
-      method: "${method}"
-    }`
+  private createQueryTypes(
+    nodeName: string,
+    { model, method, partialQuery, nullable }: ParsedNode
+  ) {
+    const capitalizedModel = capitalizeString(model)
+    const capitalizedMethod = capitalizeString(method)
 
-    return template
+    const queryInputBase = `Prisma.${capitalizedModel}${capitalizedMethod}Args`
+    const queryInput = partialQuery ? `Partial<${queryInputBase}>` : queryInputBase
+
+    const queryOutputBase = (nullable?: boolean) =>
+      nullable
+        ? `Prisma.${capitalizedModel}GetPayload<I | null>`
+        : `Prisma.${capitalizedModel}GetPayload<I>`
+
+    const queryOutput =
+      method === "findMany" ? `Array<${queryOutputBase()}>` : queryOutputBase(nullable)
+
+    const InputType = `${nodeName}: ${queryInput}`
+    const OutputType = `${nodeName}: ${queryOutput}`
+
+    return { InputType, OutputType } as const
   }
 
   private async generateSchemaTypes(schema: Partial<Schema>) {
     // const targetLanguage = new TypeScriptTargetLanguage()
     // const jsonInput = jsonInputForTargetLanguage(targetLanguage)
 
-    const res: string[] = []
+    const queryInputs: string[] = []
+    const queryOutputHelpers: string[] = []
 
     Object.entries(this.parseSchema(schema)).forEach(([nodeKey, props]) => {
-      res.push(this.createNodeType(nodeKey, props))
+      const { InputType, OutputType } = this.createQueryTypes(nodeKey, props)
+
+      queryInputs.push(InputType)
+      queryOutputHelpers.push(OutputType)
     })
 
     // await jsonInput.addSource({
@@ -114,9 +135,22 @@ export default class GenerateSchemaTypesPlugin {
 
     await writeFile(
       this.schemaFilePath,
-      `export interface BlitzqlSchema {
-        ${res.join("\n")}
-      }`
+      `
+      import { Prisma } from "@prisma/client"
+
+      export interface BlitzqlInputSchema {
+        ${queryInputs.join("\n")}
+      }
+
+      interface QueryOutputHelper<I> {
+        ${queryOutputHelpers.join("\n")}
+      }
+
+      export type BlitzqlOutputSchema<I, K = keyof I> = {
+        // @ts-ignore
+        [k in K]: QueryOutputHelper<I[k]>[k]
+      }
+      `
     )
   }
 }

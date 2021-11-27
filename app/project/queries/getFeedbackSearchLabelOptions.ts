@@ -1,9 +1,10 @@
 import db from "db"
-import { resolver, NotFoundError } from "blitz"
-import { GetFeedbackSearchOptions } from "../validations"
+import { resolver } from "blitz"
+import { ProjectSlugValidation } from "../validations"
 
-export default resolver.pipe(resolver.zod(GetFeedbackSearchOptions), async ({ projectSlug }) => {
+export default resolver.pipe(resolver.zod(ProjectSlugValidation), async ({ projectSlug }) => {
   const project = await db.project.findFirst({
+    rejectOnNotFound: true,
     where: {
       slug: projectSlug,
     },
@@ -15,8 +16,6 @@ export default resolver.pipe(resolver.zod(GetFeedbackSearchOptions), async ({ pr
       },
     },
   })
-
-  if (!project) throw new NotFoundError("Project not found")
 
   const settingsId = project.settings!.id
 
