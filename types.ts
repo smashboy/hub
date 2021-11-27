@@ -16,7 +16,7 @@ declare module "blitz" {
 
   export type QueryNodeTypes =
     | "authUser"
-    | "authUserNotifications"
+    | "authUserNotificationsCounter"
     | "authUserFeedback"
     | "authUserProjectsList"
     | "projectChangelogList"

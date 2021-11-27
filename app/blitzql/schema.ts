@@ -27,7 +27,7 @@ schema.addQuery("authUser", {
   },
 })
 
-schema.addQuery("authUserNotifications", {
+schema.addQuery("authUserNotificationsCounter", {
   model: "notification",
   method: "findMany",
   nullable: true,
@@ -49,26 +49,24 @@ schema.addQuery("authUserNotifications", {
 schema.addQuery("authUserFeedback", {
   model: "projectFeedback",
   method: "findMany",
-  fetchResolver: ({ query, ctx, prismaQuery }) => {
-    const authUserId = ctx.session.userId!
-
-    return prismaQuery({
-      ...query,
-      where: {
-        ...query?.where,
-        authorId: authUserId,
-      },
-    })
-  },
+  paginated: true,
+  modifyQuery: (query, ctx) => ({
+    ...query,
+    where: {
+      ...query?.where,
+      authorId: ctx.session.userId,
+    },
+  }),
 })
 
 schema.addQuery("authUserProjectsList", {
   model: "project",
   method: "findMany",
-  fetchResolver: ({ query, ctx, prismaQuery }) => {
+  paginated: true,
+  modifyQuery: (query, ctx) => {
     const authUserId = ctx.session.userId!
 
-    return prismaQuery({
+    return {
       ...query,
       where: {
         ...query?.where,
@@ -94,7 +92,7 @@ schema.addQuery("authUserProjectsList", {
         ],
         ...query?.where?.AND,
       },
-    })
+    }
   },
 })
 
@@ -107,6 +105,7 @@ schema.addQuery("changelogFeedback", {
 schema.addQuery("projectChangelogList", {
   model: "projectChangelog",
   method: "findMany",
+  paginated: true,
 })
 
 schema.addQuery("projectFeedbackContent", {
@@ -118,6 +117,7 @@ schema.addQuery("projectFeedbackContent", {
 schema.addQuery("projectFeedbackList", {
   model: "projectFeedback",
   method: "findMany",
+  paginated: true,
 })
 
 schema.addQuery("projectFeedbackMessage", {

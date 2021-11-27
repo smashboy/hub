@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client"
 
 export interface BlitzqlInputSchema {
   authUser: Prisma.UserFindFirstArgs
-  authUserNotifications: Prisma.NotificationFindManyArgs
+  authUserNotificationsCounter: Prisma.NotificationFindManyArgs
   authUserFeedback: Prisma.ProjectFeedbackFindManyArgs
   authUserProjectsList: Prisma.ProjectFindManyArgs
   changelogFeedback: Prisma.ChangelogFeedbackFindManyArgs
@@ -16,7 +16,7 @@ export interface BlitzqlInputSchema {
 
 interface QueryOutputHelper<I> {
   authUser: Prisma.UserGetPayload<I>
-  authUserNotifications: Array<Prisma.NotificationGetPayload<I>>
+  authUserNotificationsCounter: Array<Prisma.NotificationGetPayload<I>>
   authUserFeedback: Array<Prisma.ProjectFeedbackGetPayload<I>>
   authUserProjectsList: Array<Prisma.ProjectGetPayload<I>>
   changelogFeedback: Array<Prisma.ChangelogFeedbackGetPayload<I>>

@@ -13,14 +13,19 @@ interface SchemaBuilderProps {
   prismaClient: PrismaClient
 }
 
+type QueryArgsHelper<
+  MD extends PrismaModelNameKeys,
+  MT extends QueryMethod,
+  P extends Boolean,
+  Params = Parameters<PrismaDataClient[MD][MT]>[0]
+> = P extends true ? Partial<Params> : Params
+
 interface AddQueryResolverProps<
   MT extends QueryMethod,
   MD extends PrismaModelNameKeys,
   P extends Boolean
 > {
-  query: P extends true
-    ? Partial<Parameters<PrismaDataClient[MD][MT]>[0]>
-    : Parameters<PrismaDataClient[MD][MT]>[0]
+  query: QueryArgsHelper<MD, MT, P>
   ctx: Ctx
   prismaQuery: PrismaDataClient[MD][MT]
 }
@@ -32,13 +37,13 @@ export interface AddQueryProps<
   P extends Boolean,
   PG extends Boolean
 > {
-  // pipe?: ReturnType<typeof resolver.pipe>
   method: MT
   model: MD
   nullable?: N
   partialQuery?: P
   paginated?: PG
   input?: z.ZodObject<any, any>
+  modifyQuery?: <Q extends QueryArgsHelper<MD, MT, P>>(query: Q, ctx: Ctx) => Q
   fetchResolver?: (
     resolveProps: AddQueryResolverProps<MT, MD, P>
   ) => MaybePromise<
@@ -85,7 +90,11 @@ export default class SchemaBuilder {
         const node = schema[nodeKey] as AddQueryProps<any, any, any, any, any> | undefined
 
         if (node) {
-          const { model, method, fetchResolver } = node
+          const { model, method, fetchResolver, modifyQuery } = node
+
+          if (modifyQuery) {
+            query = modifyQuery(query, ctx)
+          }
 
           const prismaQuery = prismaClient[model][method] as any
 
@@ -95,7 +104,7 @@ export default class SchemaBuilder {
             prismaRes = fetchResolver?.({ ctx, query, prismaQuery })
           }
 
-          if (isPromise(prismaRes)) {
+          if (isPromise(prismaQuery)) {
             queries[nodeKey] = prismaRes
           } else {
             response[nodeKey] = prismaRes
