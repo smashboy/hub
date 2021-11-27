@@ -1,7 +1,7 @@
-import { useBlitzqlQuery } from "app/blitzql/hooks/useBlitzqlQuery"
+import { useQuery } from "app/blitzql/hooks/useBlitzqlQuery"
 
 export const useCurrentUser = (suspense?: boolean) => {
-  const [data] = useBlitzqlQuery(
+  const [data] = useQuery(
     {
       authUser: {
         select: { id: true, username: true, email: true, role: true },
