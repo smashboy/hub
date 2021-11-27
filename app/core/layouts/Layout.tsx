@@ -1,6 +1,6 @@
 import { ReactNode, Suspense, useState } from "react"
 import { NextSeo } from "next-seo"
-import { Head, Routes, useMutation, Link } from "blitz"
+import { Routes, useMutation, Link } from "blitz"
 import LogoIcon from "@mui/icons-material/DeviceHub"
 import {
   AppBar,
@@ -30,12 +30,10 @@ import LogoutIcon from "@mui/icons-material/Logout"
 import AddIcon from "@mui/icons-material/Add"
 import ProjectsIcon from "@mui/icons-material/Apps"
 import FeedbackIcon from "@mui/icons-material/Feed"
-import { useCurrentUser } from "../hooks/useCurrentUser"
 import { ButtonRouteLink, RouteLink } from "../components/links"
 import logout from "app/auth/mutations/logout"
 
-import useNotificationsCounter from "app/inbox/hooks/useNotificationsCounter"
-import { useBlitzqlQuery } from "app/blitzql/hooks/useBlitzqlQuery"
+import { useQuery } from "app/blitzql/hooks/useBlitzqlQuery"
 
 export interface LayoutProps {
   title?: string
@@ -46,7 +44,7 @@ export interface LayoutProps {
 }
 
 const AuthNavigation = () => {
-  const [data] = useBlitzqlQuery({
+  const [data] = useQuery({
     authUser: {
       select: {
         id: true,

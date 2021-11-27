@@ -7,7 +7,10 @@ import { UseQueryOptions } from "react-query"
 import { BlitzqlInputSchema, BlitzqlOutputSchema } from "../types/blitzqlGeneratedTypes"
 import { useInternalBlitzql } from "../BlitzqlContext"
 
-export function useQuery<T extends Partial<BlitzqlInputSchema>>(options?: UseQueryOptions) {
+export function useQuery<T extends Partial<BlitzqlInputSchema>>(
+  query: T,
+  options?: UseQueryOptions
+) {
   const blitzqlStore = useInternalBlitzql()
 
   const [data, queryOptions] = useBlitzQuery(
