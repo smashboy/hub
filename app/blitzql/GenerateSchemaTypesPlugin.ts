@@ -1,5 +1,6 @@
 import path from "path"
 import prettier from "prettier"
+import { paginate } from "blitz"
 import { writeFile } from "fs/promises"
 import {
   quicktype,
@@ -63,11 +64,13 @@ export default class GenerateSchemaTypesPlugin {
 
     Object.entries(schema).forEach(([key, props]) => {
       // What the actual fuck typescript???
-      const { model, method, input } = props!
+      const { model, method, input, paginated, nullable } = props!
 
       const parsedNode: ParsedNode = {
         model,
         method,
+        paginated,
+        nullable,
       }
 
       // @ts-ignore
@@ -79,23 +82,47 @@ export default class GenerateSchemaTypesPlugin {
     return parsedSchema
   }
 
-  private createQueryTypes(
-    nodeName: string,
-    { model, method, partialQuery, nullable }: ParsedNode
-  ) {
+  private createQueryOutputType(node: ParsedNode) {
+    const { method, nullable, paginated, model } = node
+
+    const capitalizedModel = capitalizeString(model)
+
+    const base = `Prisma.${capitalizedModel}GetPayload<I>`
+
+    const methodCheck = method === "findMany" ? `Array<${base}>` : base
+
+    const nullCheck = nullable ? `${methodCheck} | null` : methodCheck
+
+    const paginationCheck = paginated
+      ? `{
+          items: ${nullCheck};
+          nextPage: {
+              take: number;
+              skip: number;
+          } | null;
+          hasMore: boolean;
+          count: number;
+        }`
+      : nullCheck
+
+    return paginationCheck
+  }
+
+  private createQueryInputType(node: ParsedNode) {
+    const { model, method, partialQuery } = node
+
     const capitalizedModel = capitalizeString(model)
     const capitalizedMethod = capitalizeString(method)
 
     const queryInputBase = `Prisma.${capitalizedModel}${capitalizedMethod}Args`
     const queryInput = partialQuery ? `Partial<${queryInputBase}>` : queryInputBase
 
-    const queryOutputBase = (nullable?: boolean) =>
-      nullable
-        ? `Prisma.${capitalizedModel}GetPayload<I | null>`
-        : `Prisma.${capitalizedModel}GetPayload<I>`
+    return queryInput
+  }
 
-    const queryOutput =
-      method === "findMany" ? `Array<${queryOutputBase()}>` : queryOutputBase(nullable)
+  private createQueryTypes(nodeName: string, node: ParsedNode) {
+    const queryInput = this.createQueryInputType(node)
+    const queryOutput = this.createQueryOutputType(node)
 
     const InputType = `${nodeName}: ${queryInput}`
     const OutputType = `${nodeName}: ${queryOutput}`

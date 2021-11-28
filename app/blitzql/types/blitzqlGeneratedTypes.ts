@@ -15,14 +15,46 @@ export interface BlitzqlInputSchema {
 }
 
 interface QueryOutputHelper<I> {
-  authUser: Prisma.UserGetPayload<I>
-  authUserNotificationsCounter: Array<Prisma.NotificationGetPayload<I>>
-  authUserFeedback: Array<Prisma.ProjectFeedbackGetPayload<I>>
-  authUserProjectsList: Array<Prisma.ProjectGetPayload<I>>
+  authUser: Prisma.UserGetPayload<I> | null
+  authUserNotificationsCounter: Array<Prisma.NotificationGetPayload<I>> | null
+  authUserFeedback: {
+    items: Array<Prisma.ProjectFeedbackGetPayload<I>>
+    nextPage: {
+      take: number
+      skip: number
+    } | null
+    hasMore: boolean
+    count: number
+  }
+  authUserProjectsList: {
+    items: Array<Prisma.ProjectGetPayload<I>>
+    nextPage: {
+      take: number
+      skip: number
+    } | null
+    hasMore: boolean
+    count: number
+  }
   changelogFeedback: Array<Prisma.ChangelogFeedbackGetPayload<I>>
-  projectChangelogList: Array<Prisma.ProjectChangelogGetPayload<I>>
+  projectChangelogList: {
+    items: Array<Prisma.ProjectChangelogGetPayload<I>>
+    nextPage: {
+      take: number
+      skip: number
+    } | null
+    hasMore: boolean
+    count: number
+  }
   projectFeedbackContent: Prisma.ProjectFeedbackContentGetPayload<I>
-  projectFeedbackList: Array<Prisma.ProjectFeedbackGetPayload<I>>
+  projectFeedbackList: {
+    items: Array<Prisma.ProjectFeedbackGetPayload<I>>
+    nextPage: {
+      take: number
+      skip: number
+    } | null
+    hasMore: boolean
+    count: number
+  }
   projectFeedbackMessage: Array<Prisma.ProjectFeedbackMessageGetPayload<I>>
   project: Prisma.ProjectGetPayload<I>
   projectMembersList: Array<Prisma.ProjectMemberGetPayload<I>>

@@ -50,13 +50,17 @@ schema.addQuery("authUserFeedback", {
   model: "projectFeedback",
   method: "findMany",
   paginated: true,
-  modifyQuery: (query, ctx) => ({
-    ...query,
-    where: {
-      ...query?.where,
-      authorId: ctx.session.userId,
-    },
-  }),
+  modifyQuery: (query, ctx) => {
+    const authUserId = ctx.session.userId!
+
+    return {
+      ...query,
+      where: {
+        ...query?.where,
+        authorId: authUserId,
+      },
+    }
+  },
 })
 
 schema.addQuery("authUserProjectsList", {
@@ -66,11 +70,14 @@ schema.addQuery("authUserProjectsList", {
   modifyQuery: (query, ctx) => {
     const authUserId = ctx.session.userId!
 
+    const AND = query?.where?.AND || []
+
     return {
       ...query,
       where: {
         ...query?.where,
         AND: [
+          ...AND,
           {
             OR: [
               {
@@ -90,7 +97,6 @@ schema.addQuery("authUserProjectsList", {
             ],
           },
         ],
-        ...query?.where?.AND,
       },
     }
   },

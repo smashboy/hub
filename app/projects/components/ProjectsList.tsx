@@ -1,5 +1,4 @@
 import { forwardRef, useMemo } from "react"
-import { useInfiniteQuery } from "blitz"
 import { Components, Virtuoso } from "react-virtuoso"
 import { List, Box } from "@mui/material"
 import VirtualListItem from "app/core/components/VirtualListItem"
@@ -7,24 +6,72 @@ import getProjects, { GetProjectsInput } from "../queries/getProjects"
 import ProjectListItem from "./ProjectListItem"
 import { useDebounce } from "use-debounce"
 import { LoadingButton } from "@mui/lab"
+import { useInfiniteQuery, useQuery } from "app/blitzql/hooks/useBlitzqlQuery"
 
 const getProjectsInput =
   (searchQuery?: string) =>
   (page: GetProjectsInput = { take: 10, skip: 0 }) => ({ ...page, searchQuery })
 
 const ProjectsList: React.FC<{ searchQuery: string }> = ({ searchQuery }) => {
+  const [{ authUser }] = useQuery({
+    authUser: {
+      select: {
+        id: true,
+      },
+    },
+  })
+
   const [debouncedSearchQuery] = useDebounce(searchQuery, 1000)
 
-  const [projectPages, { isFetchingNextPage, fetchNextPage, hasNextPage }] = useInfiniteQuery(
-    getProjects,
-    getProjectsInput(debouncedSearchQuery || undefined),
+  const [data, { isFetchingNextPage, fetchNextPage, hasNextPage }] = useInfiniteQuery(
+    "authUserProjectsList",
     {
-      getNextPageParam: (lastPage) => lastPage.nextPage,
+      take: 10,
+      skip: 0,
+      where: {
+        AND: debouncedSearchQuery
+          ? [
+              {
+                OR: [
+                  {
+                    name: {
+                      contains: searchQuery,
+                      mode: "insensitive",
+                    },
+                  },
+                  {
+                    description: {
+                      contains: searchQuery,
+                      mode: "insensitive",
+                    },
+                  },
+                ],
+              },
+            ]
+          : undefined,
+      },
+      select: {
+        name: true,
+        color: true,
+        slug: true,
+        logoUrl: true,
+        description: true,
+        members: {
+          where: {
+            userId: authUser?.id,
+          },
+          select: {
+            role: true,
+          },
+        },
+      },
+    },
+    {
       refetchOnWindowFocus: false,
     }
   )
 
-  const projects = projectPages.map(({ projects }) => projects.map((project) => project)).flat()
+  const projects = data.map(({ items }) => items.map((item) => item)).flat()
 
   const Components: Components = useMemo(
     () => ({

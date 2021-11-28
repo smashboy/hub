@@ -79,7 +79,7 @@ const AuthNavigation = () => {
   })
 
   const user = data.authUser
-  const notificationsCounter = data?.authUserNotificationsCounter.length || 0
+  const notificationsCounter = data.authUserNotificationsCounter?.length || 0
 
   const [menuEl, setMenuEl] = useState<null | HTMLElement>(null)
 

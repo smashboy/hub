@@ -1,4 +1,4 @@
-import { Ctx, QueryNodeTypes } from "blitz"
+import { Ctx, QueryNodeTypes, paginate } from "blitz"
 import { z } from "zod"
 import { PrismaClient } from "@prisma/client"
 import {
@@ -43,7 +43,10 @@ export interface AddQueryProps<
   partialQuery?: P
   paginated?: PG
   input?: z.ZodObject<any, any>
-  modifyQuery?: <Q extends QueryArgsHelper<MD, MT, P>>(query: Q, ctx: Ctx) => Q
+  modifyQuery?: <Q extends QueryArgsHelper<MD, MT, P>>(
+    query: Q,
+    ctx: Ctx
+  ) => QueryArgsHelper<MD, MT, P>
   fetchResolver?: (
     resolveProps: AddQueryResolverProps<MT, MD, P>
   ) => MaybePromise<
@@ -83,6 +86,8 @@ export default class SchemaBuilder {
     return async function (input: I & { query: PrismaQuery }, ctx: Ctx) {
       const { query } = input
 
+      // console.log("INPUT", query)
+
       const queries: Partial<Record<QueryNodeTypes, any>> = {}
       const response: Partial<Record<QueryNodeTypes, any>> = {}
 
@@ -90,10 +95,10 @@ export default class SchemaBuilder {
         const node = schema[nodeKey] as AddQueryProps<any, any, any, any, any> | undefined
 
         if (node) {
-          const { model, method, fetchResolver, modifyQuery } = node
+          const { model, method, fetchResolver, modifyQuery, paginated } = node
 
           if (modifyQuery) {
-            query = modifyQuery(query, ctx)
+            query = modifyQuery(query, ctx) as any
           }
 
           const prismaQuery = prismaClient[model][method] as any
@@ -104,7 +109,19 @@ export default class SchemaBuilder {
             prismaRes = fetchResolver?.({ ctx, query, prismaQuery })
           }
 
-          if (isPromise(prismaQuery)) {
+          if (isPromise(prismaRes)) {
+            if (paginated) {
+              prismaRes = paginate({
+                take: query!.take as number,
+                skip: query!.skip as number,
+                count: () =>
+                  prismaClient[model].count({
+                    where: query!.where as any,
+                  }),
+                query: (paginateArgs) => prismaQuery({ ...paginateArgs, ...query }),
+              })
+            }
+
             queries[nodeKey] = prismaRes
           } else {
             response[nodeKey] = prismaRes
@@ -112,7 +129,7 @@ export default class SchemaBuilder {
         }
       })
 
-      const transactionData = await prismaClient.$transaction(Object.values(queries))
+      const transactionData = await Promise.all(Object.values(queries))
 
       Object.keys(query).forEach((nodeKey, index) => {
         const responseNode = response[nodeKey]
