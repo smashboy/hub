@@ -77,6 +77,7 @@ schema.addQuery("authUserProjectsList", {
       where: {
         ...query?.where,
         AND: [
+          // @ts-ignore
           ...AND,
           {
             OR: [

@@ -1,29 +1,62 @@
 import { forwardRef, Suspense, useMemo } from "react"
-import { useInfiniteQuery, BlitzPage } from "blitz"
+import { BlitzPage } from "blitz"
 import { Components, Virtuoso } from "react-virtuoso"
 import { List, Box, Grid, Fade, Typography } from "@mui/material"
 import VirtualListItem from "app/core/components/VirtualListItem"
 import { LoadingButton } from "@mui/lab"
 import { authConfig } from "app/core/configs/authConfig"
 import Layout from "app/core/layouts/Layout"
-import getAuthFeedbackList, { GetAuthFeedbackListInput } from "../queries/getAuthFeedbackList"
 import FeedbackListItem from "app/project/components/FeedbackListItem"
 import FeedbackListPlaceholder from "app/project/components/FeedbackListPlaceholder"
-
-const getAuthFeedbackInput = (page: GetAuthFeedbackListInput = { take: 15, skip: 0 }) => page
+import { useInfiniteQuery, useQuery } from "app/blitzql/hooks/useBlitzqlQuery"
 
 const FeedbackList = () => {
+  const [{ authUser }] = useQuery({
+    authUser: {
+      select: {
+        id: true,
+      },
+    },
+  })
+
   const [feedbackPages, { isFetchingNextPage, fetchNextPage, hasNextPage }] = useInfiniteQuery(
-    getAuthFeedbackList,
-    getAuthFeedbackInput,
+    "authUserFeedback",
     {
-      getNextPageParam: (lastPage) => lastPage.nextPage,
+      take: 15,
+      skip: 0,
+      where: {
+        authorId: authUser!.id,
+      },
+      select: {
+        _count: {
+          select: {
+            upvotedBy: true,
+          },
+        },
+        projectSlug: true,
+        content: {
+          select: {
+            id: true,
+            title: true,
+            category: true,
+            status: true,
+          },
+        },
+        createdAt: true,
+        author: {
+          select: {
+            username: true,
+          },
+        },
+      },
+    },
+    {
       refetchOnWindowFocus: false,
     }
   )
 
   const feedback = feedbackPages
-    .map(({ feedback: feedbackList }) =>
+    .map(({ items: feedbackList }) =>
       feedbackList.map(({ content, ...otherProps }) => ({ ...otherProps, ...content! }))
     )
     .flat()
