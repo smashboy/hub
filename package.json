@@ -1,6 +1,6 @@
 {
   "name": "projecthub",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "scripts": {
     "predev": "docker-compose up -d",
     "dev": "blitz dev",
