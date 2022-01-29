@@ -49,7 +49,8 @@ Roadmaps allows you to schedule and plan your releases.
 ![image](https://user-images.githubusercontent.com/30213662/151670159-60d66d44-4915-49d5-b3b8-ab026cd2089b.png)
 
 - Find users and send them invites to your project to become a member
-- Manage members roles (admin, moderator, member)Manage pending invites
+- Manage members roles (admin, moderator, member)
+- Manage pending invites
 - Search members if you have many of them
 
 
